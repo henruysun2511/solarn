@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/sidebar"
 import { BookOpenIcon, CalendarCheckIcon, CircleDollarSignIcon, ClipboardCheckIcon, LayoutDashboardIcon, SettingsIcon, ShieldCheckIcon, Sun, UserCheckIcon, UsersIcon } from "lucide-react"
 
-// This is sample data.
 export const navMain = [
   {
     title: "Tổng quan",
@@ -29,8 +28,8 @@ export const navMain = [
   {
     title: "Tài khoản",
     url: "#",
-    icon: <ShieldCheckIcon className="size-4" />, // Icon bảo mật/phân quyền
-    isActive: true,
+    icon: <ShieldCheckIcon className="size-4" />,
+    isActive: false,
     items: [
       { title: "Tài khoản", url: "#" },
       { title: "Vai trò", url: "#" },
@@ -40,8 +39,8 @@ export const navMain = [
   {
     title: "Học viên",
     url: "#",
-    icon: <UsersIcon className="size-4" />, // Icon nhóm người
-    isActive: true,
+    icon: <UsersIcon className="size-4" />,
+    isActive: false,
     items: [
       { title: "Học viên", url: "#" },
       { title: "Xét duyệt bảo lưu", url: "#" },
@@ -51,8 +50,8 @@ export const navMain = [
   {
     title: "Giáo viên",
     url: "#",
-    icon: <UserCheckIcon className="size-4" />, // Icon người có tích chọn
-    isActive: true,
+    icon: <UserCheckIcon className="size-4" />,
+    isActive: false,
     items: [
       { title: "Giáo viên", url: "#" },
       { title: "Xét duyệt dời lịch", url: "#" },
@@ -62,8 +61,8 @@ export const navMain = [
   {
     title: "Đào tạo",
     url: "#",
-    icon: <BookOpenIcon className="size-4" />, // Icon sách mở
-    isActive: true,
+    icon: <BookOpenIcon className="size-4" />,
+    isActive: false,
     items: [
       { title: "Đăng ký khóa học", url: "#" },
       { title: "Khóa học", url: "#" },
@@ -78,8 +77,8 @@ export const navMain = [
   {
     title: "Điểm danh",
     url: "#",
-    icon: <CalendarCheckIcon className="size-4" />, // Icon lịch điểm danh
-    isActive: true,
+    icon: <CalendarCheckIcon className="size-4" />,
+    isActive: false,
     items: [
       { title: "Điểm danh học viên", url: "#" },
       { title: "Điểm danh giáo viên", url: "#" },
@@ -89,14 +88,14 @@ export const navMain = [
   {
     title: "Kết quả học viên",
     url: "#",
-    icon: <ClipboardCheckIcon className="size-4" />, // Icon bảng điểm/kết quả
-    isActive: true
+    icon: <ClipboardCheckIcon className="size-4" />,
+    isActive: false
   },
   {
     title: "Tài chính",
     url: "#",
     icon: <CircleDollarSignIcon className="size-4" />, // Icon tiền tệ
-    isActive: true,
+    isActive: false,
     items: [
       { title: "Học phí", url: "#" },
       { title: "Thu phí học viên", url: "#" },
@@ -108,7 +107,7 @@ export const navMain = [
     title: "Cài đặt website",
     url: "#",
     icon: <SettingsIcon className="size-4" />, // Icon bánh răng cài đặt
-    isActive: true,
+    isActive: false,
   }
 ];
 

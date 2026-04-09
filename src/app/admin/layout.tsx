@@ -12,7 +12,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <SidebarProvider className="!bg-black text-foreground selection:bg-primary/20">
+    <SidebarProvider className="bg-black text-foreground selection:bg-primary/20">
       <AppSidebar />
       <SidebarInset className="bg-white">
         <header className="bg-white sticky top-0 z-50 flex h-16 shrink-0 items-center justify-between border-b gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-background/80 backdrop-blur-md shadow-sm">
