@@ -70,8 +70,7 @@ export function NavMain({
                         {item.items?.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title} className="relative group/sub">
                             {/* Dấu chấm: Chuyển màu khi hover vào sub-item hoặc khi active */}
-                            <div className="absolute -left-[13px] top-1/2 -translate-y-1/2 size-1.5 rounded-full bg-sidebar-border transition-colors group-hover/sub:bg-secondary group-has-[[data-active=true]]/sub:bg-secondary" />
-
+                            <div className="submenu-dot absolute -left-[13px] top-1/2 -translate-y-1/2" />
                             <SidebarMenuSubButton asChild isActive={subItem.isActive}>
                               <Link
                                 href={subItem.url}

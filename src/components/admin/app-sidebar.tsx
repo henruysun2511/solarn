@@ -10,7 +10,9 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { BookOpenIcon, CalendarCheckIcon, CircleDollarSignIcon, ClipboardCheckIcon, LayoutDashboardIcon, SettingsIcon, ShieldCheckIcon, Sun, UserCheckIcon, UsersIcon } from "lucide-react"
+import { AtomIcon, BookOpenIcon, CalendarCheckIcon, CircleDollarSignIcon, ClipboardCheckIcon, LayoutDashboardIcon, LogOut, SettingsIcon, ShieldCheckIcon, UserCheckIcon, UsersIcon } from "lucide-react"
+import { Logo } from "../common/logo"
+import { Button } from "../ui/button"
 
 export const navMain = [
   {
@@ -113,22 +115,24 @@ export const navMain = [
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" className="border-r-0 shadow-xl" {...props}>
+    <Sidebar data-role="admin" collapsible="icon" className="border-r-0 shadow-xl" {...props}>
       <SidebarHeader className="h-16 flex items-center justify-start px-6">
-        <div className="flex items-center gap-3">
-          <div className="flex size-9 items-center justify-center rounded-lg bg-secondary text-primary-foreground shadow-lg">
-            <Sun className="size-6" />
-          </div>
-          <span className="text-2xl font-bold tracking-tighter  text-foreground group-data-[collapsible=icon]:hidden">
-            SOLAR<span className="text-secondary">N</span>
-          </span>
-        </div>
+        <Logo icon={<AtomIcon />} brandText="Astromi" highlightText="Nor" iconBgColor="var(--secondary)" />
       </SidebarHeader>
       <SidebarContent className="px-2">
         <NavMain items={navMain} />
       </SidebarContent>
-      <SidebarFooter className="p-4">
-        {/* <NavUser user={data.user} /> */}
+      <SidebarFooter className="p-4 pt-0">
+        <Button
+          variant="ghost"
+          className="w-full h-12 justify-start px-4 rounded-2xl font-black text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all group overflow-hidden relative"
+        >
+          <div className="relative z-10 flex items-center">
+            <LogOut className="mr-3 size-5 transition-transform group-hover:-translate-x-1" />
+            <span className="uppercase tracking-widest text-[11px]">Đăng xuất</span>
+          </div>
+          <div className="absolute inset-0 bg-gradient-to-r from-red-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+        </Button>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

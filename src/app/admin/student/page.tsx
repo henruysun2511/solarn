@@ -82,12 +82,15 @@ const studentData = [
 
 export default function AdminStudentPage() {
     return (
-        <div className="flex flex-col gap-6 min-h-screen">
+        <div data-role="admin" className="flex flex-col gap-6 min-h-screen">
 
             {/* HEADER */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
-                    <h1 className="text-[26px] font-bold text-gray-800">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1 ml-0.5">
+                        Management
+                    </p>
+                    <h1 className="text-3xl font-black text-[var(--foreground)] tracking-tighter leading-none">
                         Student List
                     </h1>
                 </div>

@@ -13,42 +13,32 @@
   /* Core Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-
   --color-card: var(--card);
   --color-card-foreground: var(--card-foreground);
-
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
-
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
-
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);
-
   --color-muted: var(--muted);
   --color-muted-foreground: var(--muted-foreground);
-
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
-
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
 
   /* LMS States */
   --color-success: var(--success);
   --color-success-foreground: var(--success-foreground);
-
   --color-warning: var(--warning);
   --color-warning-foreground: var(--warning-foreground);
 
-  /* UI */
+  /* UI & Sidebar */
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-
-  /* Sidebar */
-  --color-sidebar: var(--sidebar);
+  --color-sidebar: var(--sidebar-background);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
@@ -57,153 +47,243 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Charts */
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-
-  /* Radius */
+  /* Utils */
+  --color-dashboard-bg: var(--dashboard-bg);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-
 }
 
-/* =========================
-   🌞 SOLARN (LIGHT THEME)
-   ========================= */
-/* =========================
-   🎓 ENGLISH CENTER (LIGHT)
-   ========================= */
-/* =========================
-   🌿 FOREST ACADEMY (LIGHT)
-   ========================= */
-:root {
-  --background: white;
-  /* Trắng kem hơi hướng xanh lá */
-  --foreground: oklch(0.2 0.04 140);
 
-  /* Primary - Deep Forest Green (Sự trưởng thành) */
+:root,
+[data-role="student"] {
+  --background: oklch(0.99 0.01 230);
+  --foreground: oklch(0.25 0.06 240);
+  --primary: oklch(0.55 0.18 250);
+  /* Royal Blue */
+  --primary-foreground: oklch(0.99 0.01 250);
+  --secondary: oklch(0.78 0.16 65);
+  /* Orange/Gold */
+  --secondary-foreground: oklch(0.35 0.08 85);
+
+  --radius: 1rem;
+  --dashboard-bg: oklch(0.97 0.01 240);
+  --border: oklch(0.92 0.01 240);
+
+  /* Sidebar Student */
+  --sidebar-background: var(--primary);
+  --sidebar-foreground: var(--primary-foreground);
+  --sidebar-primary: var(--primary-foreground);
+  --sidebar-primary-foreground: var(--primary);
+  --sidebar-accent: oklch(1 0 0 / 0.15);
+  --sidebar-border: oklch(1 0 0 / 0.1);
+  --sidebar-ring: var(--primary-foreground);
+}
+
+
+[data-role="admin"] {
   --primary: oklch(0.68 0.11 175);
+  /* Green Admin */
   --primary-foreground: oklch(0.99 0.01 175);
-
-  /* Secondary - Soft Gold (Sự chất lượng) */
   --secondary: oklch(0.82 0.12 75);
+  /* Soft Gold */
   --secondary-foreground: oklch(0.99 0.01 175);
 
-  /* Accent */
-  --accent: oklch(0.94 0.04 150);
-  --accent-foreground: var(--primary);
-
-  --radius: 0.75rem;
-  --sidebar: oklch(0.68 0.11 175);
-  --sidebar-foreground: oklch(0.25 0.05 240);
-  --sidebar-border: oklch(0.92 0.01 240);
+  --sidebar-background: var(--primary);
+  --sidebar-foreground: var(--primary-foreground);
 }
 
 /* =========================
-   🌙 LUNARN (DARK THEME)
+   🍎 TEACHER ROLE (Professional Red)
    ========================= */
+[data-role="teacher"] {
+  /* Tông đỏ chuyên nghiệp, không quá chói để bảo vệ mắt khi làm việc lâu */
+  --primary: oklch(0.55 0.21 20);
+  --primary-foreground: oklch(0.99 0.01 20);
+  --secondary: oklch(0.88 0.12 45);
+  --accent: oklch(0.95 0.03 20);
+  /* Đỏ cực nhạt cho background hover */
+  /* Màu vàng nhạt phối hợp với đỏ */
+  --secondary-foreground: oklch(0.3 0.05 25);
+
+  --sidebar-background: var(--primary);
+  --sidebar-foreground: var(--primary-foreground);
+}
+
+[data-role="auth"] {
+  /* Tông xanh chàm đậm tạo cảm giác bảo mật và chuyên nghiệp */
+  --background: oklch(0.99 0.01 260);
+  /* Trắng ánh xanh cực nhẹ */
+  --foreground: oklch(0.2 0.04 260);
+  /* Chữ xanh đen đậm */
+
+  --primary: oklch(0.45 0.14 265);
+  /* Indigo (Xanh chàm) - Màu chủ đạo cho nút Login */
+  --primary-foreground: oklch(0.99 0.01 265);
+
+  /* Màu phụ dùng cho các link hoặc nút phụ (Social Login) */
+  --secondary: oklch(0.93 0.02 260);
+  /* Xám xanh nhạt */
+  --secondary-foreground: oklch(0.4 0.05 260);
+
+  /* Màu Accent cho các thông báo quan trọng hoặc focus */
+  --accent: oklch(0.55 0.18 250);
+  /* Royal Blue nhẹ */
+  --accent-foreground: oklch(0.99 0.01 250);
+
+  /* Border và Ring cho các ô Input */
+  --border: oklch(0.88 0.02 260);
+  --ring: oklch(0.45 0.14 265 / 0.4);
+
+  --radius: 1.25rem;
+  /* Bo góc lớn hơn một chút cho các form đăng nhập hiện đại */
+
+  /* Nếu bạn dùng nền tối cho trang Auth (Dark Mode Auth) */
+  --auth-card-bg: oklch(1 0 0);
+  --auth-input-bg: oklch(0.98 0.005 260);
+}
+
+
 .dark {
   --background: oklch(0.15 0.03 260);
-  /* deep night */
   --foreground: oklch(0.92 0.02 220);
-  /* moonlight */
-
   --card: oklch(0.18 0.03 260);
   --card-foreground: var(--foreground);
-
-  --popover: oklch(0.18 0.03 260);
-  --popover-foreground: var(--foreground);
-
-  /* Primary - Moon silver */
-  --primary: oklch(0.88 0.05 220);
-  --primary-foreground: oklch(0.2 0.04 260);
-
-  /* Secondary - Deep teal */
-  --secondary: oklch(0.38 0.07 195);
-  --secondary-foreground: oklch(0.9 0.03 195);
-
-  --muted: oklch(0.22 0.03 260);
-  --muted-foreground: oklch(0.65 0.03 220);
-
-  /* Accent glow */
-  --accent: oklch(0.7 0.08 220 / 0.25);
-  --accent-foreground: var(--foreground);
-
-  /* States */
-  --success: oklch(0.7 0.14 150);
-  --success-foreground: black;
-
-  --warning: oklch(0.8 0.15 80);
-  --warning-foreground: black;
-
-  --destructive: oklch(0.7 0.2 25);
-  --destructive-foreground: white;
-
-  /* Borders */
   --border: oklch(0.28 0.03 260 / 0.6);
-  --input: oklch(0.28 0.03 260 / 0.6);
-  --ring: var(--primary);
+  --dashboard-bg: oklch(0.12 0.03 260);
 
-  /* Sidebar */
-  --sidebar: oklch(0.17 0.03 260);
+  /* Khi ở Dark mode, các Role sẽ giữ nguyên Primary nhưng nền sidebar tối hơn */
+  --sidebar-background: oklch(0.17 0.03 260);
   --sidebar-foreground: var(--foreground);
-  --sidebar-primary: var(--primary);
-  --sidebar-primary-foreground: var(--primary-foreground);
-  --sidebar-accent: oklch(0.25 0.04 260);
-  --sidebar-accent-foreground: var(--foreground);
-  --sidebar-border: var(--border);
-  --sidebar-ring: var(--primary);
-
-  /* Charts */
-  --chart-1: oklch(0.85 0.06 220);
-  --chart-2: oklch(0.38 0.07 195);
-  --chart-3: oklch(0.7 0.14 150);
-  --chart-4: oklch(0.75 0.15 40);
-  --chart-5: oklch(0.6 0.1 260);
-
-  --radius: 0.7rem;
 }
 
-/* =========================
-   BASE
-   ========================= */
+
 @layer base {
   * {
-    @apply border-border;
+    border-color: var(--border);
   }
 
   body {
     @apply bg-background text-foreground;
     transition: all 0.4s ease-in-out;
   }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: oklch(0.62 0.22 28 / 0.2);
+    /* Màu đỏ mờ */
+    border-radius: 10px;
+    transition: all 0.3s;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+    /* Hiện màu đỏ đậm khi hover */
+  }
 }
 
-/* Thêm vào layer base hoặc components trong globals.css */
 @layer components {
 
-  /* Style cho Menu đang active/mở rộng giống hình EduDash */
+  /* Style cho Menu đang active/mở rộng */
   .group\/collapsible[data-state="open"]>button {
-    @apply bg-primary text-primary-foreground rounded-md mx-2 w-[calc(100%-1rem)];
+    @apply bg-white/20 text-white rounded-md mx-2 w-[calc(100%-1rem)];
   }
 
-  /* Style cho icon khi menu mở */
   .group\/collapsible[data-state="open"] svg {
-    @apply text-primary-foreground;
+    @apply text-white;
   }
 
-  /* Điều chỉnh khoảng cách icon và text */
   [data-sidebar="menu-button"] {
     @apply h-11 px-4;
   }
 
-  /* Font chữ sidebar mảnh và sạch hơn */
   [data-sidebar="menu-item"] span {
     @apply text-[15px] tracking-tight;
+  }
+
+  /* Submenu Dot Logic */
+  .submenu-dot {
+    @apply size-1.5 rounded-full transition-all duration-300 absolute -left-[13px] top-1/2 -translate-y-1/2;
+    /* Mặc định màu trắng cho tất cả các role vì nền sidebar đều là màu đậm */
+    background-color: white;
+    opacity: 0.8;
+  }
+
+  /* Khi active: Chuyển sang màu Secondary của từng Role tương ứng */
+  .group\/sub:hover .submenu-dot,
+  .group\/sub[data-active="true"] .submenu-dot {
+    @apply scale-125;
+    background-color: var(--secondary);
+    box-shadow: 0 0 8px var(--secondary);
+    opacity: 1;
+  }
+
+  /* Text submenu khi active */
+  [data-active="true"]>[data-sidebar="menu-sub-button"] {
+    color: var(--secondary);
+    @apply font-bold;
+  }
+
+  [data-radix-popper-content-wrapper] {
+    @apply z-50;
+  }
+
+  /* Content của Dropdown */
+  .dropdown-content,
+  [role="menu"][data-side] {
+    @apply min-w-[12rem] overflow-hidden rounded-[1.5rem] border border-[var(--sidebar-border)] bg-white p-2 shadow-xl animate-in fade-in-0 zoom-in-95 dark:bg-[var(--card)];
+  }
+
+  /* Các Item trong Dropdown */
+  .dropdown-item,
+  [role="menuitem"] {
+    @apply relative flex cursor-default select-none items-center rounded-xl px-4 py-3 text-sm font-bold text-slate-600 outline-none transition-all duration-200 hover:bg-[var(--accent)] hover:text-[var(--primary)] focus:bg-[var(--accent)] focus:text-[var(--primary)] data-[disabled]:pointer-events-none data-[disabled]:opacity-50;
+  }
+
+  /* Icon bên trong item */
+  [role="menuitem"] svg {
+    @apply mr-3 size-4 text-slate-400 transition-colors group-hover:text-[var(--primary)];
+  }
+
+  /* Dropdown Label (Tiêu đề nhóm) */
+  [role="menu"] [data-radix-collection-item]+div[style*="font-weight"] {
+    @apply px-4 py-2 text-[10px] font-black uppercase tracking-[0.1em] text-slate-400;
+  }
+
+  /* Divider (Đường kẻ ngang) */
+  .dropdown-separator,
+  [role="separator"] {
+    @apply -mx-1 my-1 h-px bg-[var(--sidebar-border)];
+  }
+
+  /* Shortcut text (Nếu có) */
+  .dropdown-shortcut {
+    @apply ml-auto text-xs tracking-widest opacity-60;
+  }
+
+  /* Biến thể đặc biệt cho nút Đăng xuất (Destructive) */
+  .dropdown-item-danger {
+    @apply text-red-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30;
+  }
+
+  .select-trigger {
+    @apply flex h-12 w-full items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm transition-all;
+  }
+
+  .select-content {
+    @apply z-50 min-w-[8rem] overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-950 shadow-xl;
+  }
+
+  .select-item {
+    @apply relative flex w-full cursor-default select-none items-center rounded-lg py-2.5 pl-8 pr-2 text-sm font-bold text-slate-600 outline-none;
   }
 }
