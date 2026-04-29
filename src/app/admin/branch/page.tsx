@@ -1,6 +1,8 @@
 "use client";
 
+import { AdminPageTitle } from "@/components/admin/admin-page-title";
 import { DataPagination } from "@/components/admin/pagination/data-pagination";
+import { PaginationInfo } from "@/components/admin/pagination/pagination-info";
 import { DataTable } from "@/components/admin/table/data-table";
 import { Button } from "@/components/ui/button";
 import { BranchSortBy, SortOrder } from "@/constants/sort";
@@ -78,14 +80,10 @@ export default function AdminBranchPage() {
   return (
     <div data-role="admin" className="flex flex-col gap-6 min-h-screen">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1 ml-0.5">
-            Quản lý
-          </p>
-          <h1 className="text-3xl font-black text-[var(--foreground)] tracking-tighter leading-none">
-            Danh sách chi nhánh
-          </h1>
-        </div>
+        <AdminPageTitle
+          title="Danh sách chi nhánh"
+          subtitle="Quản lý"
+        />
 
         <Button
           onClick={handleAdd}
@@ -115,11 +113,12 @@ export default function AdminBranchPage() {
         </div>
 
         <div className="p-5 border-t border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <p className="text-sm text-gray-500">
-            Hiển thị {branches.length > 0 ? (params.page! - 1) * params.limit! + 1 : 0} đến{" "}
-            {Math.min(params.page! * params.limit!, totalItems)} trong tổng số{" "}
-            {totalItems} bản ghi
-          </p>
+          <PaginationInfo
+            page={params.page || 1}
+            limit={params.limit || 10}
+            totalItems={totalItems}
+            currentLength={branches.length}
+          />
           <DataPagination
             page={params.page!}
             totalPages={totalPages}
