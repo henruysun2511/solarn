@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/utils";
 import { Bell, Search, Star } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";

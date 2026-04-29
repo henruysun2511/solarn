@@ -274,16 +274,4 @@
   .dropdown-item-danger {
     @apply text-red-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30;
   }
-
-  .select-trigger {
-    @apply flex h-12 w-full items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-bold text-slate-700 shadow-sm transition-all;
-  }
-
-  .select-content {
-    @apply z-50 min-w-[8rem] overflow-hidden rounded-2xl border border-slate-200 bg-white text-slate-950 shadow-xl;
-  }
-
-  .select-item {
-    @apply relative flex w-full cursor-default select-none items-center rounded-lg py-2.5 pl-8 pr-2 text-sm font-bold text-slate-600 outline-none;
-  }
 }
