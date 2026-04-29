@@ -21,12 +21,11 @@ export default function TeacherHeader() {
         <header className="sticky top-0 z-50 w-full border-b border-slate-100 bg-white/70 backdrop-blur-xl shadow-[0_2px_20px_-5px_rgba(0,0,0,0.05)]">
             <div className="container mx-auto h-22 px-4 md:px-8 flex items-center justify-between">
 
-                {/* LEFT: Logo & Search */}
                 <div className="flex items-center gap-10">
                     <Logo
                         icon={<Rocket size={20} fill="currentColor" />}
-                        brandText="Teach"
-                        highlightText="Craft"
+                        brandText="Mentor"
+                        highlightText="Ships"
                         iconBgColor="var(--primary)"
                     />
 
@@ -39,7 +38,6 @@ export default function TeacherHeader() {
                     </div>
                 </div>
 
-                {/* CENTER: Navigation Menu */}
                 <nav className="hidden xl:flex items-center gap-2">
                     {navLinks.map((link) => {
                         const isActive = pathname === link.href;

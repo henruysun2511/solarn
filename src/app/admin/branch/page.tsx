@@ -1,9 +1,9 @@
 "use client";
 
 import { AdminPageTitle } from "@/components/admin/admin-page-title";
-import { DataPagination } from "@/components/admin/pagination/data-pagination";
-import { PaginationInfo } from "@/components/admin/pagination/pagination-info";
-import { DataTable } from "@/components/admin/table/data-table";
+import { DataPagination } from "@/components/common/data-pagination";
+import { DataTable } from "@/components/common/data-table";
+import { PaginationInfo } from "@/components/common/pagination-info";
 import { Button } from "@/components/ui/button";
 import { BranchSortBy, SortOrder } from "@/constants/sort";
 import {

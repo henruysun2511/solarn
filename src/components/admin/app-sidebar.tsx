@@ -21,10 +21,10 @@ export const navMain = [
     icon: <LayoutDashboardIcon className="size-4" />,
     isActive: true,
     items: [
-      { title: "Báo cáo tổng quan", url: "#" },
-      { title: "Báo cáo tư vấn", url: "#" },
-      { title: "Báo cáo tài chính", url: "#" },
-      { title: "Báo cáo đào tạo", url: "#" },
+      { title: "Báo cáo tổng quan", url: "/admin/dashboard/overview" },
+      { title: "Báo cáo tư vấn", url: "/admin/dashboard/consultation" },
+      { title: "Báo cáo tài chính", url: "/admin/dashboard/finance" },
+      { title: "Báo cáo đào tạo", url: "/admin/dashboard/training" },
     ],
   },
   {
@@ -33,9 +33,8 @@ export const navMain = [
     icon: <ShieldCheckIcon className="size-4" />,
     isActive: false,
     items: [
-      { title: "Tài khoản", url: "#" },
-      { title: "Vai trò", url: "#" },
-      { title: "Phân quyền", url: "#" },
+      { title: "Tài khoản", url: "/admin/account" },
+      { title: "Vai trò", url: "/admin/role" },
     ],
   },
   {
@@ -44,9 +43,9 @@ export const navMain = [
     icon: <UsersIcon className="size-4" />,
     isActive: false,
     items: [
-      { title: "Học viên", url: "#" },
-      { title: "Xét duyệt bảo lưu", url: "#" },
-      { title: "Xét duyệt chuyển lớp", url: "#" },
+      { title: "Học viên", url: "/admin/student" },
+      { title: "Xét duyệt bảo lưu", url: "/admin/student/leave" },
+      { title: "Xét duyệt chuyển lớp", url: "/admin/student/transfer" },
     ],
   },
   {
@@ -55,9 +54,9 @@ export const navMain = [
     icon: <UserCheckIcon className="size-4" />,
     isActive: false,
     items: [
-      { title: "Giáo viên", url: "#" },
-      { title: "Xét duyệt dời lịch", url: "#" },
-      { title: "Xử lý vi phạm", url: "#" },
+      { title: "Giáo viên", url: "/admin/teacher" },
+      { title: "Xét duyệt dời lịch", url: "/admin/change" },
+      { title: "Xử lý vi phạm", url: "/admin/violation" },
     ],
   },
   {
@@ -66,14 +65,15 @@ export const navMain = [
     icon: <BookOpenIcon className="size-4" />,
     isActive: false,
     items: [
-      { title: "Đăng ký khóa học", url: "#" },
-      { title: "Khóa học", url: "#" },
-      { title: "Tài nguyên khóa học", url: "#" },
-      { title: "Loại khóa học", url: "#" },
-      { title: "Lịch học", url: "#" },
-      { title: "Ca học", url: "#" },
-      { title: "Phòng học", url: "#" },
-      { title: "Báo cáo đánh giá", url: "#" },
+      { title: "Đăng ký khóa học", url: "/admin/enrollment" },
+      { title: "Khóa học", url: "/admin/course" },
+      { title: "Tài nguyên khóa học", url: "/admin/resource" },
+      { title: "Loại khóa học", url: "/admin/category" },
+      { title: "Lịch học", url: "/admin/schedule" },
+      { title: "Ca học", url: "/admin/shift" },
+      { title: "Phòng học", url: "/admin/room" },
+      { title: "Chi nhánh", url: "/admin/branch" },
+      { title: "Báo cáo đánh giá", url: "/admin/feedback" },
     ],
   },
   {
@@ -82,14 +82,13 @@ export const navMain = [
     icon: <CalendarCheckIcon className="size-4" />,
     isActive: false,
     items: [
-      { title: "Điểm danh học viên", url: "#" },
-      { title: "Điểm danh giáo viên", url: "#" },
-      { title: "Báo cáo điểm danh", url: "#" },
+      { title: "Điểm danh học viên", url: "/admin/attendance/student" },
+      { title: "Điểm danh giáo viên", url: "/admin/attendance/teacher" },
     ],
   },
   {
     title: "Kết quả học viên",
-    url: "#",
+    url: "/admin/result",
     icon: <ClipboardCheckIcon className="size-4" />,
     isActive: false
   },
@@ -99,15 +98,14 @@ export const navMain = [
     icon: <CircleDollarSignIcon className="size-4" />, // Icon tiền tệ
     isActive: false,
     items: [
-      { title: "Học phí", url: "#" },
-      { title: "Thu phí học viên", url: "#" },
-      { title: "Trả lương giáo viên", url: "#" },
-      { title: "Khiếu nại lương", url: "#" },
+      { title: "Thu phí học viên", url: "/admin/fee" },
+      { title: "Trả lương giáo viên", url: "/admin/salary" },
+      { title: "Khiếu nại lương", url: "/admin/complaint" },
     ],
   },
   {
     title: "Cài đặt website",
-    url: "#",
+    url: "/admin/setting",
     icon: <SettingsIcon className="size-4" />, // Icon bánh răng cài đặt
     isActive: false,
   }
