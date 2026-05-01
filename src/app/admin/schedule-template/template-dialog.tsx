@@ -54,7 +54,7 @@ export function TemplateDialog({
   const shiftCode = watch("shiftCode");
 
   // Lấy danh sách ca học để chọn
-  const { data: shiftsData } = useGetShifts({ limit: 100 });
+  const { data: shiftsData, isLoading: isLoadingShifts } = useGetShifts({ limit: 100 });
   const shifts = shiftsData?.data || [];
 
   useEffect(() => {
@@ -138,6 +138,7 @@ export function TemplateDialog({
                 <Select
                   value={shiftCode}
                   onValueChange={(val) => setValue("shiftCode", val)}
+                  disabled={isLoadingShifts}
                 >
                   <SelectTrigger className="h-12 rounded-xl border-gray-200 bg-white font-bold">
                     <SelectValue placeholder="Chọn ca" />

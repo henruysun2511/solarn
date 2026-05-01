@@ -1,11 +1,16 @@
+import { DecodedUser } from "@/constants/decodedUser";
+import Cookies from "js-cookie";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import Cookies from "js-cookie";
+
+
+
+
 
 interface AuthState {
-  user: any;
+  user: DecodedUser | null;
   accessToken: string | null;
-  setAuth: (user: any, token: string) => void;
+  setAuth: (user: DecodedUser, token: string) => void;
   setAccessToken: (token: string) => void;
   logout: () => void;
 }
@@ -16,9 +21,15 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       accessToken: null,
 
-      setAuth: (user, token) => set({ user, accessToken: token }),
+      setAuth: (user, token) => {
+        set({ user, accessToken: token });
+        Cookies.set("accessToken", token, { expires: 7 }); // Set cookie for middleware if needed
+      },
 
-      setAccessToken: (token) => set({ accessToken: token }),
+      setAccessToken: (token) => {
+        set({ accessToken: token });
+        Cookies.set("accessToken", token, { expires: 7 });
+      },
 
       logout: () => {
         set({ user: null, accessToken: null });
