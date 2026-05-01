@@ -18,3 +18,10 @@ export const StudyShiftSortBy = {
 } as const;
 
 export type StudyShiftSortBy = (typeof StudyShiftSortBy)[keyof typeof StudyShiftSortBy];
+
+export const ScheduleTemplateSortBy = {
+    TEMPLATE_NAME: 'templateName',
+    SHIFT_CODE: 'shiftCode',
+} as const;
+
+export type ScheduleTemplateSortBy = (typeof ScheduleTemplateSortBy)[keyof typeof ScheduleTemplateSortBy];

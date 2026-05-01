@@ -23,7 +23,7 @@ export const branchParamsSchema = z.object({
   sortBy: z.enum([BranchSortBy.BRANCH_CODE, BranchSortBy.BRANCH_NAME, BranchSortBy.CREATED_AT]).optional().default(BranchSortBy.CREATED_AT),
 });
 
-export type BranchParams = z.infer<typeof branchParamsSchema>;
+export type BranchParams = z.input<typeof branchParamsSchema>;
 
 export const branchInputSchema = branchSchema.omit({
   branchId: true,

@@ -23,7 +23,7 @@ export const shiftParamsSchema = z.object({
   ]).optional().default(StudyShiftSortBy.SHIFT_CODE),
 });
 
-export type StudyShiftParams = z.infer<typeof shiftParamsSchema>;
+export type StudyShiftParams = z.input<typeof shiftParamsSchema>;
 
 export const shiftInputSchema = shiftSchema.omit({
   shiftId: true,
