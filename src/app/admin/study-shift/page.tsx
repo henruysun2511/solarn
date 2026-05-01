@@ -6,47 +6,47 @@ import { DataPagination } from "@/components/common/data-pagination";
 import { DataTable } from "@/components/common/data-table";
 import { PaginationInfo } from "@/components/common/pagination-info";
 import { Button } from "@/components/ui/button";
-import { BranchSortBy, SortOrder } from "@/constants/sort";
+import { SortOrder, StudyShiftSortBy } from "@/constants/sort";
 import {
-  useCreateBranch,
-  useDeleteBranch,
-  useGetBranches,
-  useUpdateBranch,
-} from "@/queries/useBranchQuery";
-import { Branch, BranchInput, BranchParams } from "@/schemas/branch.schema";
+  useCreateShift,
+  useDeleteShift,
+  useGetShifts,
+  useUpdateShift,
+} from "@/queries/useShiftQuery";
+import { StudyShift, StudyShiftInput, StudyShiftParams } from "@/schemas/shift.schema";
 import { handleError } from "@/utils/handleError";
 import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { getColumns } from "./branch-columns";
-import { BranchDialog } from "./branch-dialog";
-import { BranchFilter } from "./branch-filter";
+import { getColumns } from "./shift-columns";
+import { ShiftDialog } from "./shift-dialog";
+import { ShiftFilter } from "./shift-filter";
 
-export default function AdminBranchPage() {
-  const [params, setParams] = useState<BranchParams>({
+export default function AdminStudyShiftPage() {
+  const [params, setParams] = useState<StudyShiftParams>({
     page: 1,
     limit: 10,
     sortOrder: SortOrder.DESC,
-    sortBy: BranchSortBy.CREATED_AT,
+    sortBy: StudyShiftSortBy.SHIFT_CODE,
   });
 
-  const { data, isLoading } = useGetBranches(params);
-  const createMutation = useCreateBranch();
-  const updateMutation = useUpdateBranch();
-  const deleteMutation = useDeleteBranch();
+  const { data, isLoading } = useGetShifts(params);
+  const createMutation = useCreateShift();
+  const updateMutation = useUpdateShift();
+  const deleteMutation = useDeleteShift();
 
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingBranch, setEditingBranch] = useState<Branch | null>(null);
+  const [editingShift, setEditingShift] = useState<StudyShift | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const handleAdd = () => {
-    setEditingBranch(null);
+    setEditingShift(null);
     setDialogOpen(true);
   };
 
-  const handleEdit = (branch: Branch) => {
-    setEditingBranch(branch);
+  const handleEdit = (shift: StudyShift) => {
+    setEditingShift(shift);
     setDialogOpen(true);
   };
 
@@ -60,12 +60,12 @@ export default function AdminBranchPage() {
     try {
       await deleteMutation.mutateAsync(deleteId, {
         onSuccess: (response: any) => {
-          toast.success(response?.message || "Xóa chi nhánh thành công");
+          toast.success(response?.message || "Xóa ca học thành công");
           setConfirmOpen(false);
           setDeleteId(null);
         },
         onError: (error: any) => {
-          handleError(error, "Không thể xóa chi nhánh");
+          handleError(error, "Không thể xóa ca học");
         }
       });
     } catch (error) {
@@ -73,11 +73,11 @@ export default function AdminBranchPage() {
     }
   };
 
-  const handleSubmit = async (formData: BranchInput) => {
+  const handleSubmit = async (formData: StudyShiftInput) => {
     try {
-      if (editingBranch?.branchId) {
+      if (editingShift?.shiftId) {
         await updateMutation.mutateAsync({
-          id: editingBranch.branchId,
+          id: editingShift.shiftId,
           data: formData,
         }, {
           onSuccess: (response: any) => {
@@ -104,7 +104,7 @@ export default function AdminBranchPage() {
     }
   };
 
-  const branches = data?.data || [];
+  const shifts = data?.data || [];
   const meta = data?.meta;
   const totalItems = meta?.total || 0;
   const totalPages = meta?.totalPages || 0;
@@ -113,7 +113,7 @@ export default function AdminBranchPage() {
     <div data-role="admin" className="flex flex-col gap-6 min-h-screen">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <AdminPageTitle
-          title="Danh sách chi nhánh"
+          title="Danh sách ca học"
           subtitle="Quản lý"
         />
 
@@ -122,12 +122,12 @@ export default function AdminBranchPage() {
           className="bg-primary text-white px-6 h-11 rounded-md font-semibold"
         >
           <PlusIcon className="mr-2 size-4" />
-          Thêm chi nhánh
+          Thêm ca học
         </Button>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-        <BranchFilter
+        <ShiftFilter
           onSearch={(val) => setParams((prev) => ({ ...prev, search: val, page: 1 }))}
           onFilterChange={(filters) => setParams((prev) => ({ ...prev, ...filters, page: 1 }))}
           onRowsPerPageChange={(val) => setParams((prev) => ({ ...prev, limit: val, page: 1 }))}
@@ -139,7 +139,7 @@ export default function AdminBranchPage() {
               onEdit: handleEdit,
               onDelete: handleDeleteTrigger,
             })}
-            data={branches}
+            data={shifts}
             loading={isLoading}
           />
         </div>
@@ -149,7 +149,7 @@ export default function AdminBranchPage() {
             page={params.page || 1}
             limit={params.limit || 10}
             totalItems={totalItems}
-            currentLength={branches.length}
+            currentLength={shifts.length}
           />
           <DataPagination
             page={params.page!}
@@ -159,11 +159,11 @@ export default function AdminBranchPage() {
         </div>
       </div>
 
-      <BranchDialog
+      <ShiftDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         onSubmit={handleSubmit}
-        initialData={editingBranch}
+        initialData={editingShift}
         loading={createMutation.isPending || updateMutation.isPending}
       />
 

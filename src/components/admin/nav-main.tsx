@@ -14,8 +14,10 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar"
+import { cn } from "@/utils/cn"
 import { ChevronRightIcon } from "lucide-react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 export function NavMain({
   items,
@@ -32,6 +34,7 @@ export function NavMain({
     }[]
   }[]
 }) {
+  const pathname = usePathname();
   return (
     <SidebarGroup>
       <SidebarMenu className="gap-1 text-white">
@@ -67,26 +70,36 @@ export function NavMain({
 
                     <CollapsibleContent>
                       <SidebarMenuSub className="relative ml-8 border-l-2 border-sidebar-border/50 pl-2 mt-1 space-y-1 group-data-[collapsible=icon]:hidden">
-                        {item.items?.map((subItem) => (
-                          <SidebarMenuSubItem key={subItem.title} className="relative group/sub">
-                            {/* Dấu chấm: Chuyển màu khi hover vào sub-item hoặc khi active */}
-                            <div className="submenu-dot absolute -left-[13px] top-1/2 -translate-y-1/2" />
-                            <SidebarMenuSubButton asChild isActive={subItem.isActive}>
-                              <Link
-                                href={subItem.url}
-                                className="
-                                  h-9 text-[14px] font-medium text-white/70 transition-colors 
-                                  !hover:text-secondary 
-                                  data-[active=true]:text-secondary 
-                                  data-[active=true]:font-semibold
-                                  flex items-center
-                                "
-                              >
-                                {subItem.title}
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
+                        {item.items?.map((subItem: any) => {
+                          // Kiểm tra trạng thái active tại đây
+                          const isSubActive = pathname === subItem.url;
+
+                          return (
+                            <SidebarMenuSubItem key={subItem.title} className="relative group/sub">
+                              {/* Dấu chấm: Chuyển màu dựa trên biến isSubActive */}
+                              <div className={cn(
+                                "submenu-dot absolute -left-[13px] top-1/2 -translate-y-1/2 size-1.5 rounded-full transition-all",
+                                isSubActive
+                                  ? "bg-secondary scale-125 shadow-[0_0_8px_rgba(var(--secondary),0.5)]"
+                                  : "bg-white/20 group-hover/sub:bg-white/50"
+                              )} />
+
+                              <SidebarMenuSubButton asChild isActive={isSubActive}>
+                                <Link
+                                  href={subItem.url}
+                                  className={cn(
+                                    "h-9 text-[14px] font-medium transition-colors flex items-center",
+                                    isSubActive
+                                      ? "text-secondary font-bold"
+                                      : "text-white/70 hover:text-secondary"
+                                  )}
+                                >
+                                  {subItem.title}
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          )
+                        })}
                       </SidebarMenuSub>
                     </CollapsibleContent>
                   </div>

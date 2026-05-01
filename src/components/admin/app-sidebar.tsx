@@ -70,7 +70,7 @@ export const navMain = [
       { title: "Tài nguyên khóa học", url: "/admin/resource" },
       { title: "Loại khóa học", url: "/admin/category" },
       { title: "Lịch học", url: "/admin/schedule" },
-      { title: "Ca học", url: "/admin/shift" },
+      { title: "Ca học", url: "/admin/study-shift" },
       { title: "Phòng học", url: "/admin/room" },
       { title: "Chi nhánh", url: "/admin/branch" },
       { title: "Báo cáo đánh giá", url: "/admin/feedback" },

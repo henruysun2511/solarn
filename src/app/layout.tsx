@@ -1,8 +1,9 @@
 import QueryProvider from "@/components/providers/query-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { cn } from "@/utils/utils";
+import { cn } from "@/utils/cn";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
@@ -36,6 +37,7 @@ export default function RootLayout({
         <QueryProvider>
           <TooltipProvider>
             {children}
+            <Toaster position="top-right" richColors />
           </TooltipProvider>
         </QueryProvider>
       </body>
