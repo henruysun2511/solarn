@@ -25,3 +25,10 @@ export const ScheduleTemplateSortBy = {
 } as const;
 
 export type ScheduleTemplateSortBy = (typeof ScheduleTemplateSortBy)[keyof typeof ScheduleTemplateSortBy];
+
+export const RoomSortBy = {
+    ROOM_CODE: 'roomCode',
+    CAPACITY: 'capacity'
+} as const;
+
+export type RoomSortBy = (typeof RoomSortBy)[keyof typeof RoomSortBy];
