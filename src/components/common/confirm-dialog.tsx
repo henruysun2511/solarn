@@ -17,6 +17,7 @@ interface ConfirmDialogProps {
     onConfirm: () => void;
     title?: string;
     description?: string;
+    buttonText?: string;
     loading?: boolean;
 }
 
@@ -26,6 +27,7 @@ export function ConfirmDialog({
     onConfirm,
     title = "Xác nhận xóa",
     description = "Hành động này không thể hoàn tác. Bạn có chắc chắn muốn xóa mục này?",
+    buttonText = "Xác nhận xóa",
     loading,
 }: ConfirmDialogProps) {
     return (
@@ -56,7 +58,7 @@ export function ConfirmDialog({
                         disabled={loading}
                         className="h-12 px-8 rounded-xl bg-red-500 text-white font-black shadow-lg shadow-red-200 hover:bg-red-600 transition-all"
                     >
-                        {loading ? "Đang xóa..." : "Xác nhận xóa"}
+                        {loading ? "Đang thực hiện" : buttonText}
                     </Button>
                 </DialogFooter>
             </DialogContent>
