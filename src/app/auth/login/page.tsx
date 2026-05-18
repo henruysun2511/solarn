@@ -3,13 +3,12 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { DecodedUser } from "@/constants/decodedUser";
+import { RoleType } from "@/constants/type";
 import { useLogin } from "@/queries/useAuthQuery";
 import { LoginInput, loginSchema } from "@/schemas/auth.schema";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { handleError } from "@/utils/handleError";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { jwtDecode } from "jwt-decode";
 import {
     Globe,
     LockIcon,
@@ -37,19 +36,20 @@ export default function AuthLoginPage() {
         try {
             await loginMutation.mutateAsync(data, {
                 onSuccess: (response: any) => {
-                    const { accessToken } = response.data.data;
-                    const user = jwtDecode<DecodedUser>(accessToken);
-                    console.log(user);
+                    const { roleName, username, accessToken } = response.data.data;
+                    const user = {
+                        roleName, username, accessToken
+                    }
 
                     setAuth(user, accessToken);
                     toast.success(response?.message || "Đăng nhập thành công!");
 
                     // Điều hướng dựa trên role
-                    if (user.role === "ADMIN") {
+                    if (user.roleName === RoleType.ADMIN) {
                         router.push("/admin/dashboard");
-                    } else if (user.role === "TEACHER") {
+                    } else if (user.roleName === RoleType.TEACHER) {
                         router.push("/teacher/dashboard");
-                    } else {
+                    } else if (user.roleName === RoleType.STUDENT) {
                         router.push("/student/dashboard");
                     }
                 },

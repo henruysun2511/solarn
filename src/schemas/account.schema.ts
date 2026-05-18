@@ -1,5 +1,6 @@
 import { AccountSortBy, SortOrder } from "@/constants/sort";
 import { AccountStatus } from "@/constants/status";
+import { GenderType } from "@/constants/type";
 import { z } from "zod";
 import { roleSchema } from "./role.schema";
 
@@ -15,6 +16,7 @@ export const accountSchema = z.object({
     email: z.string().email().optional().nullable(),
     phone: z.string().optional().nullable(),
     avatarUrl: z.string().url().optional().nullable(),
+    gender: z.nativeEnum(GenderType).optional().nullable(),
   }).optional(),
 });
 

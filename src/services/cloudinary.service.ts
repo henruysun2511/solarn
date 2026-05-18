@@ -29,7 +29,7 @@ const cloudinaryService = {
   },
 
   deleteMedia: (data: DeleteMediaInput) => {
-    return http.delete<ApiResponse<any>>(`${prefix}/media`, { data });
+    return http.delete<ApiResponse<any>>(`${prefix}/media`, { config: { data } });
   },
 };
 

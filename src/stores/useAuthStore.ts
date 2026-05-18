@@ -1,4 +1,4 @@
-import { DecodedUser } from "@/constants/decodedUser";
+import { UserResponse } from "@/constants/userResponse";
 import Cookies from "js-cookie";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -8,9 +8,9 @@ import { persist } from "zustand/middleware";
 
 
 interface AuthState {
-  user: DecodedUser | null;
+  user: UserResponse | null;
   accessToken: string | null;
-  setAuth: (user: DecodedUser, token: string) => void;
+  setAuth: (user: UserResponse, token: string) => void;
   setAccessToken: (token: string) => void;
   logout: () => void;
 }
