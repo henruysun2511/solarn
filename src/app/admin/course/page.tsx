@@ -112,7 +112,7 @@ export default function AdminCoursePage() {
     };
 
     const handleViewDetail = (id: string) => {
-        router.push(`/admin/courses/${id}`);
+        router.push(`/admin/course/${id}`);
     };
 
     const courses = data?.data || [];
