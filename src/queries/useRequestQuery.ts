@@ -42,6 +42,36 @@ export const useGetSalaryComplaints = (params?: SalaryComplaintParams) => {
   });
 };
 
+export const MY_SALARY_COMPLAINT_QUERY_KEY = ["requests", "my-salary-complaints"];
+
+export const useGetMySalaryComplaints = (params?: SalaryComplaintParams) => {
+  return useQuery({
+    queryKey: [...MY_SALARY_COMPLAINT_QUERY_KEY, params],
+    queryFn: () => requestService.getMySalaryComplaints(params).then((res) => res.data),
+  });
+};
+
+export const useGetMyLeaveRequests = (params?: LeaveRequestParams) => {
+  return useQuery({
+    queryKey: [...REQUEST_QUERY_KEY, "my-leave-requests", params],
+    queryFn: () => requestService.getMyLeaveRequests(params).then((res) => res.data),
+  });
+};
+
+export const useGetMyScheduleChanges = (params?: ScheduleChangeParams) => {
+  return useQuery({
+    queryKey: [...REQUEST_QUERY_KEY, "my-schedule-changes", params],
+    queryFn: () => requestService.getMyScheduleChanges(params).then((res) => res.data),
+  });
+};
+
+export const useGetMyTransferRequests = (params?: TransferRequestParams) => {
+  return useQuery({
+    queryKey: [...REQUEST_QUERY_KEY, "my-transfer-requests", params],
+    queryFn: () => requestService.getMyTransferRequests(params).then((res) => res.data),
+  });
+};
+
 export const useGetTransferRequests = (params?: TransferRequestParams) => {
   return useQuery({
     queryKey: [...TRANSFER_REQUEST_QUERY_KEY, params],

@@ -14,6 +14,14 @@ export const useGetAttendances = (params?: AttendanceParams) => {
   });
 };
 
+export const useGetAttendanceBySession = (sessionId: string) => {
+  return useQuery({
+    queryKey: [...ATTENDANCE_QUERY_KEY, "session", sessionId],
+    queryFn: () => attendanceService.getAttendanceBySession(sessionId).then((res) => res.data?.data),
+    enabled: !!sessionId,
+  });
+};
+
 export const useBulkUpsertAttendance = () => {
   const queryClient = useQueryClient();
   return useMutation({

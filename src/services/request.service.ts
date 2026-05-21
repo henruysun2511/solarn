@@ -46,6 +46,22 @@ const requestService = {
     return http.get<ApiResponse<Request[]>>(`${prefix}/salary-complaint`, { params });
   },
 
+  getMySalaryComplaints: (params?: SalaryComplaintParams) => {
+    return http.get<ApiResponse<Request[]>>(`${prefix}/my-salary-complaints`, { params });
+  },
+
+  getMyLeaveRequests: (params?: LeaveRequestParams) => {
+    return http.get<ApiResponse<Request[]>>(`${prefix}/my-leave-requests`, { params });
+  },
+
+  getMyScheduleChanges: (params?: ScheduleChangeParams) => {
+    return http.get<ApiResponse<Request[]>>(`${prefix}/my-schedule-changes`, { params });
+  },
+
+  getMyTransferRequests: (params?: TransferRequestParams) => {
+    return http.get<ApiResponse<Request[]>>(`${prefix}/my-transfer-requests`, { params });
+  },
+
   getTransferRequests: (params?: TransferRequestParams) => {
     return http.get<ApiResponse<Request[]>>(`${prefix}/transfer`, { params });
   },

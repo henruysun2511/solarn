@@ -3,7 +3,8 @@ import {
   Feedback, 
   FeedbackInput, 
   FeedbackParams,
-  FeedbackClassParams
+  FeedbackClassParams,
+  MyFeedbackParams
 } from "@/schemas/feedback.schema";
 import http from "@/utils/http";
 
@@ -16,6 +17,10 @@ const feedbackService = {
   
   getFeedbacksByClass: (classId: string, params?: FeedbackClassParams) => {
     return http.get<ApiResponse<Feedback[]>>(`${prefix}/class/${classId}`, { params });
+  },
+
+  getMyFeedbacks: (params?: MyFeedbackParams) => {
+    return http.get<ApiResponse<Feedback[]>>(`${prefix}/teacher/my-feedbacks`, { params });
   },
 
   createFeedback: (data: FeedbackInput) => {

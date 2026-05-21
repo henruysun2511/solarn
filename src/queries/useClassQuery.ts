@@ -74,3 +74,10 @@ export const useGetClassById = (id: string) => {
     enabled: !!id,
   });
 };
+
+export const useGetMyClasses = (params?: ClassParams) => {
+  return useQuery({
+    queryKey: [...CLASS_QUERY_KEY, "my-classes", params],
+    queryFn: () => classService.getMyClasses(params).then((res) => res.data),
+  });
+};

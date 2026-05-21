@@ -69,6 +69,13 @@ export const StudentSortBy = {
 
 export type StudentSortBy = (typeof StudentSortBy)[keyof typeof StudentSortBy];
 
+export const TeacherSortBy = {
+    NAME: 'name',
+    CODE: 'code',
+} as const;
+
+export type TeacherSortBy = (typeof TeacherSortBy)[keyof typeof TeacherSortBy];
+
 export const RequestClassSortBy = {
     CREATED_AT: 'createdAt',
     STATUS: 'status'
@@ -81,3 +88,11 @@ export const FeedbackClassSortBy = {
 } as const;
 
 export type FeedbackSortBy = (typeof FeedbackClassSortBy)[keyof typeof FeedbackClassSortBy];
+
+export const SalarySortBy = {
+    SALARY_DATE: 'salaryDate',
+    TOTAL_SESSIONS: 'totalSessions',
+    TOTAL_AMOUNT: 'totalAmount'
+} as const;
+
+export type SalarySortBy = (typeof SalarySortBy)[keyof typeof SalarySortBy];

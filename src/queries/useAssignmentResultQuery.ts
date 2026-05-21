@@ -1,5 +1,6 @@
 import { 
   AssignmentResultParams, 
+  MyAssignmentResultParams,
   BulkUpsertAssignmentResultInput 
 } from "@/schemas/assignment-result.schema";
 import assignmentResultService from "@/services/assignment-result.service";
@@ -11,6 +12,13 @@ export const useGetAssignmentResults = (params?: AssignmentResultParams) => {
   return useQuery({
     queryKey: [...ASSIGNMENT_RESULT_QUERY_KEY, params],
     queryFn: () => assignmentResultService.getAssignmentResults(params).then((res) => res.data),
+  });
+};
+
+export const useGetMyAssignmentResults = (params?: MyAssignmentResultParams) => {
+  return useQuery({
+    queryKey: [...ASSIGNMENT_RESULT_QUERY_KEY, "my", params],
+    queryFn: () => assignmentResultService.getMyAssignmentResults(params).then((res) => res.data),
   });
 };
 

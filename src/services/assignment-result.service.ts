@@ -2,6 +2,7 @@ import { ApiResponse } from "@/constants/apiResponse";
 import { 
   AssignmentResult, 
   AssignmentResultParams, 
+  MyAssignmentResultParams,
   BulkUpsertAssignmentResultInput 
 } from "@/schemas/assignment-result.schema";
 import http from "@/utils/http";
@@ -13,6 +14,10 @@ const assignmentResultService = {
     return http.get<ApiResponse<AssignmentResult[]>>(prefix, { params });
   },
   
+  getMyAssignmentResults: (params?: MyAssignmentResultParams) => {
+    return http.get<ApiResponse<AssignmentResult[]>>(`${prefix}/my`, { params });
+  },
+
   upsertBulk: (data: BulkUpsertAssignmentResultInput) => {
     return http.post<ApiResponse<any>>(`${prefix}/bulk`, data);
   },

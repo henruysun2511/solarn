@@ -1,9 +1,9 @@
-import { SortOrder } from "@/constants/sort";
+import { CourseSortBy, SortOrder } from "@/constants/sort";
 import { CourseLevel } from "@/constants/type";
 import z from "zod";
 
 export const courseSchema = z.object({
-  courseId: z.string().uuid().optional(),
+  courseId: z.string().uuid(),
   courseName: z.string().min(1, "Tên khóa học là bắt buộc").max(255),
   tuitionFee: z.number(),
   level: z.nativeEnum(CourseLevel).optional().nullable(),
@@ -22,8 +22,8 @@ export const courseParamsSchema = z.object({
   search: z.string().optional(),
   courseName: z.string().optional(),
   level: z.string().optional(),
-  sortOrder: z.enum([SortOrder.DESC, SortOrder.ASC]).optional().default(SortOrder.DESC),
-  sortBy: z.string().optional().default("courseName"),
+  sortOrder: z.enum([SortOrder.DESC, SortOrder.ASC]).default(SortOrder.DESC).optional(),
+  sortBy: z.enum(CourseSortBy).default(CourseSortBy.COURSE_NAME).optional(),
 });
 
 export type CourseParams = z.infer<typeof courseParamsSchema>;

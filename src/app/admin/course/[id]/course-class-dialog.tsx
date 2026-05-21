@@ -111,7 +111,7 @@ export function CourseClassDialog({
                       <SelectValue placeholder="Chọn giảng viên đứng lớp..." />
                     </SelectTrigger>
                     <SelectContent>
-                      {teachers?.map((t) => (
+                      {teachers?.map((t: any) => (
                         <SelectItem key={t.teacherId} value={t.teacherId}>
                           {t.profile?.fullName || "Giảng viên chưa đặt tên"} ({t.teacherCode})
                         </SelectItem>

@@ -67,7 +67,7 @@ export const navMain = [
     items: [
       { title: "Đăng ký khóa học", url: "/admin/enrollment" },
       { title: "Khóa học", url: "/admin/course" },
-      { title: "Tài nguyên khóa học", url: "/admin/resource" },
+      { title: "Tài nguyên khóa học", url: "/admin/course-resource" },
       { title: "Lịch học", url: "/admin/schedule-session" },
       { title: "Mẫu lịch học", url: "/admin/schedule-template" },
       { title: "Ca học", url: "/admin/study-shift" },

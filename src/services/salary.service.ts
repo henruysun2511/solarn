@@ -2,7 +2,8 @@ import { ApiResponse } from "@/constants/apiResponse";
 import { 
   Salary, 
   CalculateSalaryInput, 
-  SalaryParams 
+  SalaryParams,
+  MySalaryParams
 } from "@/schemas/salary.schema";
 import http from "@/utils/http";
 
@@ -13,6 +14,10 @@ const salaryService = {
     return http.get<ApiResponse<Salary[]>>(prefix, { params });
   },
   
+  getMySalaries: (params?: MySalaryParams) => {
+    return http.get<ApiResponse<Salary[]>>(`${prefix}/my-salaries`, { params });
+  },
+
   previewSalary: (data: CalculateSalaryInput) => {
     return http.post<ApiResponse<any>>(`${prefix}/preview`, data);
   },

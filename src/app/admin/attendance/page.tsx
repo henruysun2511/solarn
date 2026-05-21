@@ -1,256 +1,188 @@
-"use client"
+"use client";
 
+import { DataTable } from "@/components/common/data-table";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
+import { ScheduleSessionSortBy, SortOrder } from "@/constants/sort";
+import { AttendanceStatus } from "@/constants/type";
+import { useGetClassesByCourseId } from "@/queries/useClassQuery";
+import { useGetCourses } from "@/queries/useCourseQuery";
+import { useGetScheduleSessions } from "@/queries/useScheduleSessionQuery";
+import { useBulkUpsertAttendance, useGetAttendanceBySession } from "@/queries/useAttendanceQuery";
+import { AttendanceRecord } from "@/schemas/attendance.schema";
+import { handleError } from "@/utils/handleError";
 import {
-    Pagination,
-    PaginationContent,
-    PaginationItem,
-    PaginationLink,
-    PaginationNext,
-    PaginationPrevious
-} from "@/components/ui/pagination";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow
-} from "@/components/ui/table";
-import {
-    CalendarIcon,
-    ChevronDownIcon,
-    FileOutputIcon,
-    FilterIcon,
-    SearchIcon
+  CheckCircle2Icon,
+  ClockIcon,
+  Loader2Icon,
+  SaveAllIcon,
+  UsersIcon,
+  XCircleIcon,
 } from "lucide-react";
-
-// Dữ liệu mẫu cho điểm danh
-const attendanceData = [
-    {
-        admissionNo: "AD52365",
-        name: "Marvin McKinney",
-        rollNo: "12",
-        class: "Class 1 (A)",
-        attendance: "Absent",
-        note: "",
-        avatar: "https://i.pravatar.cc/150?u=marvin"
-    },
-    {
-        admissionNo: "AD52366",
-        name: "Cody Fisher",
-        rollNo: "8",
-        class: "Class 2 (B)",
-        attendance: "Present",
-        note: "",
-        avatar: "https://i.pravatar.cc/150?u=cody"
-    },
-    {
-        admissionNo: "AD52367",
-        name: "Jenny Wilson",
-        rollNo: "9",
-        class: "Class 3 (C)",
-        attendance: "Late",
-        note: "",
-        avatar: "https://i.pravatar.cc/150?u=jenny"
-    },
-    {
-        admissionNo: "AD52368",
-        name: "Guy Hawkins",
-        rollNo: "5",
-        class: "Class 2 (A)",
-        attendance: "Absent",
-        note: "Sick leave",
-        avatar: "https://i.pravatar.cc/150?u=guy"
-    },
-    {
-        admissionNo: "AD52369",
-        name: "Esther Howard",
-        rollNo: "15",
-        class: "Class 3 (B)",
-        attendance: "Present",
-        note: "",
-        avatar: "https://i.pravatar.cc/150?u=esther"
-    }
-];
-
-const attendanceOptions = [
-    { label: "Present", value: "Present", color: "text-green-600", border: "peer-checked:border-green-600" },
-    { label: "Late", value: "Late", color: "text-amber-500", border: "peer-checked:border-amber-500" },
-    { label: "Absent", value: "Absent", color: "text-red-500", border: "peer-checked:border-red-500" },
-    { label: "Halfday", value: "Halfday", color: "text-blue-500", border: "peer-checked:border-blue-500" },
-    { label: "Holiday", value: "Holiday", color: "text-gray-500", border: "peer-checked:border-gray-500" },
-];
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
+import { getColumns } from "./attendance-columns";
+import { AttendanceFilter } from "./attendance-filter";
 
 export default function AdminAttendancePage() {
-    return (
-        <div className="flex flex-col gap-6 min-h-screen">
+  const [params, setParams] = useState<Record<string, any>>({
+    page: 1,
+    limit: 10,
+    courseId: "",
+    classId: "",
+    shiftCode: "all",
+    sessionId: "",
+    search: "",
+  });
 
-            {/* HEADER */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                    <h1 className="text-[26px] font-bold text-gray-800">Attendance</h1>
-                    <p className="text-sm text-gray-500 flex items-center gap-2">
-                        Dashboard / <span className="text-primary font-medium">Attendance</span>
-                    </p>
-                </div>
+  const { data: coursesData } = useGetCourses({ page: 1, limit: 100, sortOrder: SortOrder.ASC });
+  const courses = coursesData?.data || [];
 
-                <div className="flex gap-3">
-                    <Button variant="outline" className="bg-white border-gray-300 h-11 px-4">
-                        <CalendarIcon className="size-4 mr-2" />
-                        Select Date
-                    </Button>
-                    <Button className="bg-primary text-white px-6 h-11 rounded-md font-semibold">
-                        Save Attendance
-                    </Button>
-                </div>
-            </div>
+  const { data: classesData } = useGetClassesByCourseId(params.courseId, { page: 1, limit: 100 });
+  const classes = classesData?.data || [];
 
-            {/* MAIN CARD */}
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+  const { data: sessionsData } = useGetScheduleSessions(
+    params.classId
+      ? { classId: params.classId, page: 1, limit: 100, sortBy: ScheduleSessionSortBy.STUDY_DATE, sortOrder: SortOrder.DESC }
+      : undefined
+  );
+  const allSessions = sessionsData?.data || [];
 
-                {/* TOOLBAR */}
-                <div className="p-5 border-b border-gray-200 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                    <div className="flex flex-wrap items-center gap-3">
-                        <Button variant="outline" className="h-10 border-gray-300 text-gray-700">
-                            <FileOutputIcon className="size-4 mr-2" />
-                            Export
-                            <ChevronDownIcon className="size-4 ml-1" />
-                        </Button>
+  const sessions = useMemo(() => {
+    if (params.shiftCode === "all") return allSessions;
+    return allSessions.filter((s: any) => s.shiftCode === params.shiftCode);
+  }, [allSessions, params.shiftCode]);
 
-                        <div className="relative w-[260px]">
-                            <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
-                            <Input
-                                placeholder="Search by name or ID..."
-                                className="pl-9 h-10 border-gray-300 bg-white"
-                            />
-                        </div>
+  const { data: attendanceData, isLoading: isAttendanceLoading } = useGetAttendanceBySession(params.sessionId);
+  const records = useMemo(() => {
+    if (!attendanceData?.records) return [];
+    return attendanceData.records as AttendanceRecord[];
+  }, [attendanceData]);
 
-                        <Button variant="outline" className="h-10 border-gray-300 text-gray-700">
-                            <FilterIcon className="size-4 mr-2" />
-                            Filter
-                            <ChevronDownIcon className="size-4 ml-1" />
-                        </Button>
-                    </div>
+  const summary = attendanceData?.summary;
 
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                        Rows per page:
-                        <Select defaultValue="10">
-                            <SelectTrigger className="w-[70px] h-10 border-gray-300">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="10">10</SelectItem>
-                                <SelectItem value="25">25</SelectItem>
-                                <SelectItem value="50">50</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </div>
+  const [attendanceValues, setAttendanceValues] = useState<Record<string, AttendanceStatus>>({});
+  const [noteValues, setNoteValues] = useState<Record<string, string>>({});
 
-                {/* TABLE */}
-                <div className="overflow-x-auto">
-                    <Table>
-                        <TableHeader className="bg-[#f8f9fa]">
-                            <TableRow className="border-none">
-                                <TableHead className="pl-6 w-12"><Checkbox /></TableHead>
-                                <TableHead className="text-sm font-bold text-gray-700">S.L</TableHead>
-                                <TableHead className="text-sm font-bold text-gray-700">Admission No</TableHead>
-                                <TableHead className="text-sm font-bold text-gray-700">Name</TableHead>
-                                <TableHead className="text-sm font-bold text-gray-700">Class</TableHead>
-                                <TableHead className="text-sm font-bold text-gray-700 text-center">Attendance</TableHead>
-                                <TableHead className="text-sm font-bold text-gray-700 pl-10">Note</TableHead>
-                            </TableRow>
-                        </TableHeader>
+  const handleFilterChange = (filters: Record<string, any>) => {
+    setParams((prev) => ({ ...prev, ...filters }));
+    if (filters.sessionId && filters.sessionId !== params.sessionId) {
+      setAttendanceValues({});
+      setNoteValues({});
+    }
+    if (filters.classId || filters.courseId) {
+      setAttendanceValues({});
+      setNoteValues({});
+    }
+  };
 
-                        <TableBody>
-                            {attendanceData.map((student, index) => (
-                                <TableRow key={student.admissionNo} className="hover:bg-gray-50 transition-colors">
-                                    <TableCell className="pl-6"><Checkbox /></TableCell>
-                                    <TableCell className="text-gray-500 font-medium">
-                                        {String(index + 1).padStart(2, "0")}
-                                    </TableCell>
-                                    <TableCell className="text-primary font-semibold">{student.admissionNo}</TableCell>
+  const handleSearch = (val: string) => {
+    setParams((prev) => ({ ...prev, search: val }));
+  };
 
-                                    <TableCell>
-                                        <div className="flex items-center gap-3">
-                                            <div className="size-9 rounded-full overflow-hidden bg-gray-100 shrink-0">
-                                                <img src={student.avatar} alt={student.name} className="w-full h-full object-cover" />
-                                            </div>
-                                            <div>
-                                                <div className="font-semibold text-gray-800 leading-tight">{student.name}</div>
-                                                <div className="text-[12px] text-gray-400">Roll No: {student.rollNo}</div>
-                                            </div>
-                                        </div>
-                                    </TableCell>
+  const handleRowsPerPageChange = (val: number) => {
+    setParams((prev) => ({ ...prev, limit: val }));
+  };
 
-                                    <TableCell className="text-gray-600">{student.class}</TableCell>
+  const handleAttendanceChange = (recordId: string, status: AttendanceStatus) => {
+    setAttendanceValues((prev) => ({ ...prev, [recordId]: status }));
+  };
 
-                                    {/* ATTENDANCE SELECTION */}
-                                    <TableCell>
-                                        <div className="flex items-center justify-center gap-4">
-                                            {attendanceOptions.map((option) => (
-                                                <label
-                                                    key={option.value}
-                                                    className="flex items-center gap-2 cursor-pointer group"
-                                                >
-                                                    <div className="relative flex items-center justify-center">
-                                                        <input
-                                                            type="radio"
-                                                            name={`attendance-${student.admissionNo}`}
-                                                            defaultChecked={student.attendance === option.value}
-                                                            className="peer sr-only"
-                                                        />
-                                                        <div className={`size-4 rounded-full border-2 border-gray-300 transition-all ${option.border} peer-checked:border-[5px]`} />
-                                                    </div>
-                                                    <span className={`text-sm font-medium text-gray-500 peer-checked:${option.color} transition-colors`}>
-                                                        {option.label}
-                                                    </span>
-                                                </label>
-                                            ))}
-                                        </div>
-                                    </TableCell>
+  const handleNoteChange = (recordId: string, note: string) => {
+    setNoteValues((prev) => ({ ...prev, [recordId]: note }));
+  };
 
-                                    {/* NOTE INPUT */}
-                                    <TableCell className="pl-10">
-                                        <Input
-                                            placeholder="Write note..."
-                                            defaultValue={student.note}
-                                            className="h-9 border-gray-200 focus-visible:ring-primary w-[180px]"
-                                        />
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>
 
-                {/* FOOTER */}
-                <div className="p-5 border-t border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                    <p className="text-sm text-gray-500 font-medium">
-                        Showing 1 to {attendanceData.length} of {attendanceData.length} entries
-                    </p>
 
-                    <Pagination className="w-auto">
-                        <PaginationContent className="gap-2">
-                            <PaginationItem>
-                                <PaginationPrevious href="#" className="border-gray-200 hover:bg-gray-100" />
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink isActive href="#" className="bg-primary text-white hover:bg-primary/90 border-none">
-                                    1
-                                </PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationNext href="#" className="border-gray-200 hover:bg-gray-100" />
-                            </PaginationItem>
-                        </PaginationContent>
-                    </Pagination>
-                </div>
-            </div>
+  const isSessionSelected = !!params.sessionId;
+
+  return (
+    <div className="flex flex-col gap-6 min-h-screen">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1 ml-0.5">
+            Quản lý
+          </p>
+          <h1 className="text-3xl font-black text-[var(--foreground)] tracking-tighter leading-none">
+            Điểm danh
+          </h1>
         </div>
-    );
+
+      </div>
+
+      {/* Filter & Content Section */}
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+        <AttendanceFilter
+          onSearch={handleSearch}
+          onFilterChange={handleFilterChange}
+          onRowsPerPageChange={handleRowsPerPageChange}
+          courses={courses.map((c: any) => ({ courseId: c.courseId, courseName: c.courseName }))}
+          selectedCourseId={params.courseId}
+          classes={classes.map((c: any) => ({ classId: c.classId, classCode: c.classCode }))}
+          selectedClassId={params.classId}
+          sessions={sessions}
+          selectedSessionId={params.sessionId}
+          selectedShiftCode={params.shiftCode}
+          shifts={Array.from(new Set(allSessions.map((s: any) => s.shiftCode))).map((code) => {
+            const session = allSessions.find((s: any) => s.shiftCode === code);
+            return { shiftCode: code as string, shiftName: (session as any)?.shift?.shiftName || (code as string) };
+          })}
+        />
+
+        {/* Summary Cards */}
+        {isSessionSelected && summary && (
+          <div className="p-5 border-b border-gray-100 grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="bg-green-50 rounded-xl p-4 flex items-center gap-3">
+              <div className="size-10 rounded-lg bg-green-100 flex items-center justify-center">
+                <CheckCircle2Icon className="size-5 text-green-600" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-wider text-green-600">Present</p>
+                <p className="text-2xl font-black text-green-700">{summary.present}</p>
+              </div>
+            </div>
+            <div className="bg-amber-50 rounded-xl p-4 flex items-center gap-3">
+              <div className="size-10 rounded-lg bg-amber-100 flex items-center justify-center">
+                <ClockIcon className="size-5 text-amber-600" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-wider text-amber-600">Late</p>
+                <p className="text-2xl font-black text-amber-700">{summary.late}</p>
+              </div>
+            </div>
+            <div className="bg-red-50 rounded-xl p-4 flex items-center gap-3">
+              <div className="size-10 rounded-lg bg-red-100 flex items-center justify-center">
+                <XCircleIcon className="size-5 text-red-600" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-wider text-red-600">Absent</p>
+                <p className="text-2xl font-black text-red-700">{summary.absent}</p>
+              </div>
+            </div>
+            <div className="bg-blue-50 rounded-xl p-4 flex items-center gap-3">
+              <div className="size-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                <UsersIcon className="size-5 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-wider text-blue-600">Total</p>
+                <p className="text-2xl font-black text-blue-700">{summary.total}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Attendance Table using DataTable */}
+        <DataTable
+          columns={getColumns({
+            attendanceValues,
+            noteValues,
+            onAttendanceChange: handleAttendanceChange,
+            onNoteChange: handleNoteChange,
+          })}
+          data={records}
+          loading={isAttendanceLoading}
+        />
+      </div>
+    </div>
+  );
 }

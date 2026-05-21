@@ -1,325 +1,285 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button";
+import { DataPagination } from "@/components/common/data-pagination";
+import { DataTable } from "@/components/common/data-table";
+import { PaginationInfo } from "@/components/common/pagination-info";
 import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow
-} from "@/components/ui/table";
-import { Textarea } from "@/components/ui/textarea";
-import {
-    AlertCircleIcon,
-    EyeIcon,
-    SearchIcon,
-    X
-} from "lucide-react";
-import { useState } from "react";
+import { SalarySortBy, SortOrder } from "@/constants/sort";
+import { useGetMySalaryComplaints, useCreateSalaryComplaint } from "@/queries/useRequestQuery";
+import { useGetMySalaries } from "@/queries/useSalaryQuery";
+import { MySalaryParams, Salary } from "@/schemas/salary.schema";
+import { SalaryComplaintParams } from "@/schemas/request.schema";
+import { handleError } from "@/utils/handleError";
+import { X } from "lucide-react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
+import { getColumns } from "./salary-columns";
+import { getComplaintColumns } from "./salary-complaint-columns";
+import { SalaryComplaintDialog } from "./salary-complaint-dialog";
+import { SalaryFilter } from "./salary-filter";
 
-// Dữ liệu mẫu theo Class Salary
-const salaryData = [
-    {
-        salaryId: "SAL-5695", // Khớp với mẫu ảnh
-        month: 1, // Tháng 1
-        year: 2025,
-        paymentDate: "15 Jan 2025",
-        employeeName: "Jon Dan",
-        phone: "+112515474",
-        paymentType: "Bank",
-        schoolName: "Star Learners",
-        schoolAddress: "Smithbroand, Unit 4, Holler Tower, San Diego",
-
-        // Chi tiết lương theo mẫu mới
-        baseSalary: 2000,
-        overtimePay: 1000,
-        bonuses: 2000,
-        deduction: 0,
-        status: "PAID"
-    },
-    {
-        salaryId: "SAL-5695", // Khớp với mẫu ảnh
-        month: 2, // Tháng 1
-        year: 2025,
-        paymentDate: "15 Jan 2025",
-        employeeName: "Jon Dan",
-        phone: "+112515474",
-        paymentType: "Bank",
-        schoolName: "Star Learners",
-        schoolAddress: "Smithbroand, Unit 4, Holler Tower, San Diego",
-        baseSalary: 2000,
-        overtimePay: 1000,
-        bonuses: 2000,
-        deduction: 0,
-        status: "PAID"
-    },
-];
+type TabKey = "salary" | "complaint";
 
 export default function TeacherSalaryPage() {
-    const [selectedSalary, setSelectedSalary] = useState<any>(null);
-    const [isDetailOpen, setIsDetailOpen] = useState(false);
-    const [isComplaintOpen, setIsComplaintOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabKey>("salary");
 
-    // Định dạng tiền tệ theo USD (giống mẫu ảnh)
-    const formatCurrency = (amount: number) => {
-        return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 0 }).format(amount);
-    };
+  // Salary tab state
+  const [salaryParams, setSalaryParams] = useState<MySalaryParams>({
+    page: 1,
+    limit: 10,
+    sortOrder: SortOrder.DESC,
+    sortBy: SalarySortBy.SALARY_DATE,
+  });
 
-    // Tính toánGross và Total
-    const calculateGross = (s: any) => s.baseSalary + s.overtimePay + s.bonuses;
-    const calculateTotal = (s: any) => calculateGross(s) - s.deduction;
+  const { data: salaryData, isLoading: salaryLoading } = useGetMySalaries(salaryParams);
 
-    return (
-        <div className="flex flex-col gap-6 min-h-screen">
-            {/* HEADER (Giữ nguyên) */}
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-black text-[var(--foreground)] tracking-tighter">Lịch sử nhận lương</h1>
-                    <p className="text-sm text-gray-500 font-bold uppercase tracking-widest mt-1">
-                        Hệ thống EduPro • Giáo viên
-                    </p>
-                </div>
-            </div>
+  // Complaint tab state
+  const [complaintParams, setComplaintParams] = useState<SalaryComplaintParams>({
+    page: 1,
+    limit: 10,
+    sortOrder: SortOrder.DESC,
+    sortBy: "createdAt",
+  });
 
-            {/* BẢNG DANH SÁCH LƯƠNG (Tối ưu nhẹ phần hành động) */}
-            <div className="bg-white rounded-[2rem] shadow-sm border border-gray-100 overflow-hidden">
-                {/* TOOLBAR (Giữ nguyên) */}
-                <div className="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-                    <div className="relative w-[300px]">
-                        <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
-                        <Input
-                            placeholder="Tìm kiếm phiếu lương..."
-                            className="pl-9 h-11 rounded-xl border-gray-100 bg-white focus-visible:ring-primary"
-                        />
-                    </div>
-                </div>
+  const { data: complaintData, isLoading: complaintLoading } = useGetMySalaryComplaints(complaintParams);
 
-                <div className="overflow-x-auto">
-                    <Table>
-                        <TableHeader>
-                            <TableRow className="border-none bg-gray-50/50 hover:bg-gray-50/50">
-                                <TableHead className="pl-8 text-[11px] font-black text-slate-400 uppercase tracking-wider py-4">Kỳ lương</TableHead>
-                                <TableHead className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Mã phiếu</TableHead>
-                                <TableHead className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Tổng nhận</TableHead>
-                                <TableHead className="text-[11px] font-black text-slate-400 uppercase tracking-wider text-center">Hành động</TableHead>
-                            </TableRow>
-                        </TableHeader>
+  // Dialogs
+  const [viewingSalary, setViewingSalary] = useState<Salary | null>(null);
+  const [complaintSalary, setComplaintSalary] = useState<Salary | null>(null);
 
-                        <TableBody>
-                            {salaryData.map((item) => (
-                                <TableRow key={item.salaryId} className="hover:bg-slate-50 border-slate-50">
-                                    <TableCell className="pl-8 font-bold text-slate-700 py-4">
-                                        {`Tháng ${item.month}/${item.year}`}
-                                    </TableCell>
-                                    <TableCell className="font-medium text-slate-500 text-xs">#{item.salaryId}</TableCell>
-                                    <TableCell className="text-primary font-black text-lg">
-                                        {formatCurrency(calculateTotal(item))}
-                                    </TableCell>
-                                    <TableCell>
-                                        <div className="flex justify-center gap-3">
-                                            <Button
-                                                variant="outline"
-                                                size="sm"
-                                                className="h-9 rounded-xl border-slate-200 font-bold text-xs gap-2 hover:bg-[var(--accent)] hover:text-primary transition-colors"
-                                                onClick={() => { setSelectedSalary(item); setIsDetailOpen(true); }}
-                                            >
-                                                <EyeIcon className="size-3.5" /> Xem phiếu
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="h-9 rounded-xl text-amber-600 hover:text-amber-700 hover:bg-amber-50 font-bold text-xs gap-2"
-                                                onClick={() => { setSelectedSalary(item); setIsComplaintOpen(true); }}
-                                            >
-                                                <AlertCircleIcon className="size-3.5" /> Khiếu nại
-                                            </Button>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
-                        </TableBody>
-                    </Table>
-                </div>
-            </div>
+  const createComplaintMutation = useCreateSalaryComplaint();
 
-            {/* ========================================= */}
-            {/* DIALOG 1: CHI TIẾT LƯƠNG - THEO MẪU ẢNH */}
-            {/* ========================================= */}
-            <Dialog open={isDetailOpen} onOpenChange={setIsDetailOpen}>
-                <DialogContent data-role="teacher" className="sm:max-w-[550px] rounded-[1rem] p-0 bg-white border border-slate-100 shadow-2xl overflow-hidden">
+  const salaries = salaryData?.data || [];
+  const salaryMeta = salaryData?.meta;
+  const salaryTotalItems = salaryMeta?.total || 0;
+  const salaryTotalPages = salaryMeta?.totalPages || 0;
 
-                    {/* Header ẩn, dùng X tự chế để khớp mẫu sạch */}
-                    <DialogHeader className="p-0 absolute top-4 right-4 z-50">
-                        <DialogClose className="rounded-full p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-500 transition-colors">
-                            <X className="size-4" />
-                            <span className="sr-only">Close</span>
-                        </DialogClose>
-                    </DialogHeader>
+  const complaints = complaintData?.data || [];
+  const complaintMeta = complaintData?.meta;
+  const complaintTotalItems = complaintMeta?.total || 0;
+  const complaintTotalPages = complaintMeta?.totalPages || 0;
 
-                    {selectedSalary && (
-                        <div className="p-10 font-sans text-slate-700">
+  const handleComplaintSubmit = async (data: { salaryId: string; proposedAmount: number; reason: string }) => {
+    try {
+      await createComplaintMutation.mutateAsync(data);
+      toast.success("Gửi khiếu nại thành công");
+      setComplaintSalary(null);
+    } catch (error) {
+      handleError(error, "Không thể gửi khiếu nại");
+    }
+  };
 
-                            {/* 1. Phần tiêu đề Trường (Top Center) */}
-                            <div className="text-center mb-8">
-                                <h1 className="text-2xl font-bold text-slate-900">Bảng lương</h1>
-                                <p className="text-sm text-slate-500 font-medium mt-1">Tháng 3/2026</p>
-                            </div>
+  const formatCurrency = (amount: number | string) => {
+    return Number(amount).toLocaleString() + "₫";
+  };
 
-                            {/* 2. Phần thông tin chung (Left & Right) */}
-                            <div className="flex justify-between items-start mb-8 text-sm gap-6">
-                                {/* Left Info */}
-                                <div className="space-y-1.5 font-medium">
-                                    <p><span className="text-slate-500">Mã lương</span> : #{selectedSalary.salaryId}</p>
-                                    <p><span className="text-slate-500">Giáo viên</span> : Ms.Thúy Hoài</p>
-                                    <p><span className="text-slate-500">Số điện thoại</span> : {selectedSalary.phone}</p>
-                                </div>
-                                {/* Right Info (Payslip) */}
-                                <div className="text-right space-y-1 font-medium">
-                                    <p className="font-bold text-slate-900 text-base mb-2">Payslip</p>
-                                    <p><span className="text-slate-500">Tháng</span>: {`Tháng 3/2026`}</p>
-                                    <p><span className="text-slate-500">Ngày thanh toán</span>: {selectedSalary.paymentDate}</p>
-                                </div>
-                            </div>
-
-                            <div className="space-y-3 py-4 border-t border-b border-dashed border-slate-100 my-4">
-                                <div className="flex justify-between items-center text-sm">
-                                    <div className="text-slate-500 font-medium">Số buổi dạy:</div>
-                                    <div className="font-bold text-slate-800">24 buổi</div>
-                                </div>
-
-                                <div className="flex justify-between items-center text-sm">
-                                    <div className="text-slate-500 font-medium">Số giờ dạy:</div>
-                                    <div className="font-bold text-slate-800">48 giờ</div>
-                                </div>
-
-                                <div className="flex justify-between items-center text-sm">
-                                    <div className="text-slate-500 font-medium">Buổi vắng có phép:</div>
-                                    <div className="font-bold text-amber-600">01</div>
-                                </div>
-
-                                <div className="flex justify-between items-center text-sm">
-                                    <div className="text-slate-500 font-medium">Buổi vắng không phép:</div>
-                                    <div className="font-bold text-red-500">00</div>
-                                </div>
-                            </div>
-
-                            {/* 3. BẢNG CHI TIẾT LƯƠNG (Hòa tan vào nền trắng) */}
-                            <div className="border border-slate-100 rounded-lg overflow-hidden mb-6">
-                                <Table>
-                                    <TableHeader className="bg-slate-50/50">
-                                        <TableRow className="border-none">
-                                            <TableHead className="font-bold text-slate-900 h-10 py-0 pl-5">Name</TableHead>
-                                            <TableHead className="font-bold text-slate-900 h-10 py-0 text-right pr-5">Amount</TableHead>
-                                        </TableRow>
-                                    </TableHeader>
-                                    <TableBody className="text-sm">
-                                        <TableRow className="border-slate-100">
-                                            <TableCell className="pl-5 font-medium py-3">Lương cơ bản</TableCell>
-                                            <TableCell className="text-right pr-5 font-medium py-3 text-slate-900">
-                                                {formatCurrency(selectedSalary.baseSalary)}
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow className="border-slate-100">
-                                            <TableCell className="pl-5 font-medium py-3">Lương dạy thêm</TableCell>
-                                            <TableCell className="text-right pr-5 font-medium py-3 text-slate-900">
-                                                {formatCurrency(selectedSalary.overtimePay)}
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow className="border-slate-100">
-                                            <TableCell className="pl-5 font-medium py-3">Thưởng thêm</TableCell>
-                                            <TableCell className="text-right pr-5 font-medium py-3 text-slate-900">
-                                                {formatCurrency(selectedSalary.bonuses)}
-                                            </TableCell>
-                                        </TableRow>
-                                        <TableRow className="border-slate-100">
-                                            <TableCell className="pl-5 font-medium py-3">Phạt</TableCell>
-                                            <TableCell className="text-right pr-5 font-medium py-3 text-slate-900">
-                                                {formatCurrency(calculateGross(selectedSalary))}
-                                            </TableCell>
-                                        </TableRow>
-                                        {/* Row TOTAL đậm và nền xám nhẹ cuối cùng */}
-                                        <TableRow className="border-none bg-slate-50/50 font-bold">
-                                            <TableCell className="pl-5 py-4 text-slate-900">Tổng</TableCell>
-                                            <TableCell className="text-right pr-5 py-4 text-slate-900 text-lg">
-                                                {formatCurrency(calculateTotal(selectedSalary))}
-                                            </TableCell>
-                                        </TableRow>
-                                    </TableBody>
-                                </Table>
-                            </div>
-
-                            {/* 4. Thông tin thanh toán (Bank) */}
-                            <p className="text-sm font-medium text-slate-800 mb-10">
-                                <span className="text-slate-500">Phương thức thanh toán</span> : {selectedSalary.paymentType}
-                            </p>
-
-                            {/* 5. Footer "Thanks" */}
-                            <div className="text-center space-y-2 mt-16 border-t border-dashed border-slate-100 pt-8">
-                                <h3 className="text-xl font-bold text-slate-900">Thanks</h3>
-                                <p className="text-xs text-slate-500 font-medium">
-                                    Nếu cần hỗ trợ, hãy liên hệ HR tại số <span className="text-slate-900">-362832880</span>
-                                </p>
-                            </div>
-
-                        </div>
-                    )}
-                </DialogContent>
-            </Dialog>
-
-            {/* DIALOG 2: KHIẾU NẠI LƯƠNG (Nền trắng, nút màu Hổ phách/Vàng) */}
-            <Dialog open={isComplaintOpen} onOpenChange={setIsComplaintOpen}>
-                {/* Thêm data-role="teacher" vào DialogContent hoặc bọc ngoài để CSS Variable có hiệu lực */}
-                <DialogContent
-                    data-role="teacher"
-                    className="sm:max-w-[480px] rounded-[1.5rem] p-8 bg-white border border-slate-100 overflow-hidden"
-                >
-                    <DialogHeader>
-                        <DialogTitle className="text-2xl font-black text-gray-800 flex items-center gap-3">
-                            {/* Sử dụng opacity của primary thay vì màu amber cứng */}
-                            <div className="p-2.5 bg-[var(--primary)]/10 rounded-xl text-[var(--primary)]">
-                                <AlertCircleIcon className="size-6" />
-                            </div>
-                            Gửi khiếu nại lương
-                        </DialogTitle>
-                    </DialogHeader>
-
-                    <div className="py-6 space-y-5">
-                        <div className="space-y-2 px-1">
-                            <label className="text-[11px] font-black text-slate-400 uppercase ml-2 tracking-widest">
-                                Mô tả vấn đề cần khiếu nại
-                            </label>
-                            <Textarea
-                                placeholder="Vui lòng cho biết chi tiết vấn đề..."
-                                className="min-h-[150px] rounded-2xl border-slate-200 focus-visible:ring-[var(--primary)] font-medium p-4"
-                            />
-                        </div>
-                    </div>
-
-                    <DialogFooter className="gap-3 sm:gap-0 bg-white pt-2">
-                        <Button
-                            variant="ghost"
-                            className="flex-1 h-12 rounded-xl font-bold text-slate-500"
-                            onClick={() => setIsComplaintOpen(false)}
-                        >
-                            Hủy
-                        </Button>
-                        {/* Nút bấm chính sử dụng bg-primary và shadow theo màu primary */}
-                        <Button className="flex-1 h-12 rounded-xl font-black bg-[var(--primary)] text-white shadow-lg shadow-[var(--primary)]/20 hover:opacity-90 transition-all">
-                            Gửi yêu cầu
-                        </Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
+  return (
+    <div data-role="teacher" className="w-full max-w-full overflow-x-hidden">
+      <div className="flex flex-col gap-6 min-h-screen">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-black text-[var(--foreground)] tracking-tighter">Lịch sử lương</h1>
+            <p className="text-sm text-gray-500 font-bold uppercase tracking-widest mt-1">
+              Giáo viên
+            </p>
+          </div>
         </div>
-    );
+
+        {/* Tabs */}
+        <div className="flex gap-1 border-b border-gray-200">
+          <button
+            onClick={() => setActiveTab("salary")}
+            className={`px-6 py-3 text-sm font-bold rounded-t-xl transition-colors ${
+              activeTab === "salary"
+                ? "bg-white text-[var(--primary)] border border-b-white border-gray-200 -mb-px"
+                : "text-gray-400 hover:text-gray-600"
+            }`}
+          >
+            Danh sách lương
+          </button>
+          <button
+            onClick={() => setActiveTab("complaint")}
+            className={`px-6 py-3 text-sm font-bold rounded-t-xl transition-colors ${
+              activeTab === "complaint"
+                ? "bg-white text-[var(--primary)] border border-b-white border-gray-200 -mb-px"
+                : "text-gray-400 hover:text-gray-600"
+            }`}
+          >
+            Khiếu nại lương
+          </button>
+        </div>
+
+        {/* Salary Tab */}
+        {activeTab === "salary" && (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <SalaryFilter
+              onFilterChange={(filters) =>
+                setSalaryParams((prev) => ({ ...prev, ...filters, page: 1 }))
+              }
+              onRowsPerPageChange={(val) =>
+                setSalaryParams((prev) => ({ ...prev, limit: val, page: 1 }))
+              }
+            />
+
+            <DataTable
+              columns={getColumns({
+                onView: (salary) => setViewingSalary(salary),
+                onComplaint: (salary) => setComplaintSalary(salary),
+              })}
+              data={salaries}
+              loading={salaryLoading}
+            />
+
+            <div className="p-5 border-t border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <PaginationInfo
+                page={salaryParams.page || 1}
+                limit={salaryParams.limit || 10}
+                totalItems={salaryTotalItems}
+                currentLength={salaries.length}
+                label="phiếu lương"
+              />
+              <DataPagination
+                page={salaryParams.page!}
+                totalPages={salaryTotalPages}
+                onPageChange={(p) =>
+                  setSalaryParams((prev) => ({ ...prev, page: p }))
+                }
+              />
+            </div>
+          </div>
+        )}
+
+        {/* Complaint Tab */}
+        {activeTab === "complaint" && (
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+            <div className="p-0">
+              <DataTable
+                columns={getComplaintColumns()}
+                data={complaints}
+                loading={complaintLoading}
+              />
+            </div>
+
+            <div className="p-5 border-t border-gray-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <PaginationInfo
+                page={complaintParams.page || 1}
+                limit={complaintParams.limit || 10}
+                totalItems={complaintTotalItems}
+                currentLength={complaints.length}
+                label="khiếu nại"
+              />
+              <DataPagination
+                page={complaintParams.page!}
+                totalPages={complaintTotalPages}
+                onPageChange={(p) =>
+                  setComplaintParams((prev) => ({ ...prev, page: p }))
+                }
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* View Salary Detail Dialog */}
+      <Dialog open={!!viewingSalary} onOpenChange={() => setViewingSalary(null)}>
+        <DialogContent
+          data-role="teacher"
+          className="sm:max-w-[550px] rounded-[1rem] p-0 bg-white border border-slate-100 shadow-2xl overflow-hidden"
+        >
+          <DialogHeader className="p-0 absolute top-4 right-4 z-50">
+            <DialogClose className="rounded-full p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-500 transition-colors">
+              <X className="size-4" />
+              <span className="sr-only">Close</span>
+            </DialogClose>
+          </DialogHeader>
+
+          {viewingSalary && (
+            <div className="p-10 font-sans text-slate-700">
+              <div className="text-center mb-8">
+                <h1 className="text-2xl font-bold text-slate-900">Bảng lương</h1>
+                <p className="text-sm text-slate-500 font-medium mt-1">
+                  {(() => {
+                    const d = new Date(viewingSalary.salaryDate);
+                    return `Tháng ${d.getMonth() + 1}/${d.getFullYear()}`;
+                  })()}
+                </p>
+              </div>
+
+              <div className="flex justify-between items-start mb-8 text-sm gap-6">
+                <div className="space-y-1.5 font-medium">
+                  <p>
+                    <span className="text-slate-500">Mã phiếu</span> : #{viewingSalary.salaryId}
+                  </p>
+                  <p>
+                    <span className="text-slate-500">Số buổi dạy</span> : {viewingSalary.totalSessions} buổi
+                  </p>
+                </div>
+                <div className="text-right space-y-1 font-medium">
+                  <p className="font-bold text-slate-900 text-base mb-2">Payslip</p>
+                  <p>
+                    <span className="text-slate-500">Ngày thanh toán</span>:{" "}
+                    {new Date(viewingSalary.salaryDate).toLocaleDateString("vi-VN")}
+                  </p>
+                </div>
+              </div>
+
+              <div className="border border-slate-100 rounded-lg overflow-hidden mb-6">
+                <table className="w-full text-sm">
+                  <thead className="bg-slate-50/50">
+                    <tr className="border-none">
+                      <th className="font-bold text-slate-900 h-10 py-0 pl-5 text-left">Khoản mục</th>
+                      <th className="font-bold text-slate-900 h-10 py-0 pr-5 text-right">Số tiền</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-sm">
+                    {[
+                      { label: "Lương cơ bản + buổi dạy", value: Number(viewingSalary.totalAmount) + Number(viewingSalary.deduction) - Number(viewingSalary.bonus) },
+                      { label: "Thưởng", value: Number(viewingSalary.bonus) },
+                      { label: "Khấu trừ", value: -Number(viewingSalary.deduction) },
+                    ].map((item, idx) => (
+                      <tr key={idx} className="border-slate-100 border-b">
+                        <td className="pl-5 font-medium py-3">{item.label}</td>
+                        <td className={`text-right pr-5 font-medium py-3 ${item.value < 0 ? "text-red-500" : "text-slate-900"}`}>
+                          {item.value >= 0 ? "" : "-"}{formatCurrency(Math.abs(item.value))}
+                        </td>
+                      </tr>
+                    ))}
+                    <tr className="border-none bg-slate-50/50 font-bold">
+                      <td className="pl-5 py-4 text-slate-900">Tổng thực nhận</td>
+                      <td className="text-right pr-5 py-4 text-slate-900 text-lg">
+                        {formatCurrency(viewingSalary.totalAmount)}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="text-center space-y-2 mt-16 border-t border-dashed border-slate-100 pt-8">
+                <h3 className="text-xl font-bold text-slate-900">Thanks</h3>
+                <p className="text-xs text-slate-500 font-medium">
+                  Nếu cần hỗ trợ, hãy liên hệ qua bộ phận kế toán
+                </p>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Salary Complaint Dialog */}
+      <SalaryComplaintDialog
+        open={!!complaintSalary}
+        onOpenChange={(open) => {
+          if (!open) setComplaintSalary(null);
+        }}
+        salary={complaintSalary}
+        onSubmit={handleComplaintSubmit}
+        isPending={createComplaintMutation.isPending}
+      />
+    </div>
+  );
 }

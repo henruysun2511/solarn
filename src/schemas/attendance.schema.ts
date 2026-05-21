@@ -34,3 +34,38 @@ export const upsertAttendanceSchema = z.object({
 
 export const bulkUpsertAttendanceSchema = z.array(upsertAttendanceSchema);
 export type BulkUpsertAttendanceInput = z.infer<typeof bulkUpsertAttendanceSchema>;
+
+export const attendanceProfileSchema = z.object({
+  fullName: z.string().nullable().optional(),
+  email: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
+});
+
+export const attendanceStudentSchema = z.object({
+  studentCode: z.string(),
+  profile: attendanceProfileSchema.nullable().optional(),
+});
+
+export const attendanceRecordSchema = z.object({
+  attendanceId: z.string(),
+  studentId: z.string(),
+  sessionId: z.string(),
+  status: z.nativeEnum(AttendanceStatus),
+  note: z.string().nullable().optional(),
+  student: attendanceStudentSchema,
+});
+export type AttendanceRecord = z.infer<typeof attendanceRecordSchema>;
+
+export const attendanceSummarySchema = z.object({
+  present: z.number(),
+  absent: z.number(),
+  late: z.number(),
+  total: z.number(),
+});
+export type AttendanceSummary = z.infer<typeof attendanceSummarySchema>;
+
+export const attendanceSessionResponseSchema = z.object({
+  records: z.array(attendanceRecordSchema),
+  summary: attendanceSummarySchema,
+});
+export type AttendanceSessionResponse = z.infer<typeof attendanceSessionResponseSchema>;

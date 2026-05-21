@@ -1,6 +1,7 @@
 import { 
   CalculateSalaryInput, 
-  SalaryParams 
+  SalaryParams,
+  MySalaryParams
 } from "@/schemas/salary.schema";
 import salaryService from "@/services/salary.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -11,6 +12,13 @@ export const useGetSalaries = (params?: SalaryParams) => {
   return useQuery({
     queryKey: [...SALARY_QUERY_KEY, params],
     queryFn: () => salaryService.getSalaries(params).then((res) => res.data),
+  });
+};
+
+export const useGetMySalaries = (params?: MySalaryParams) => {
+  return useQuery({
+    queryKey: [...SALARY_QUERY_KEY, "my", params],
+    queryFn: () => salaryService.getMySalaries(params).then((res) => res.data),
   });
 };
 

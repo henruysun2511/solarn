@@ -21,18 +21,13 @@ const sidebarItems = [
     {
         icon: LayoutDashboard,
         label: "Tổng quan",
-        href: "/teacher/dashboard"
+        href: "/teacher/overview"
     },
-    {
-        icon: UserCircle,
-        label: "Hồ sơ",
-        href: "/teacher/profile"
-    },
-    {
-        icon: Users,
-        label: "Khóa học & Lớp học",
-        href: "/teacher/course"
-    },
+    // {
+    //     icon: UserCircle,
+    //     label: "Hồ sơ",
+    //     href: "/teacher/profile"
+    // },
     {
         icon: Users,
         label: "Học viên",
@@ -41,7 +36,7 @@ const sidebarItems = [
     {
         icon: Calendar,
         label: "Lịch dạy",
-        href: "/teacher/schedule"
+        href: "/teacher/schedule-session"
     },
     {
         icon: CheckSquare,
@@ -51,12 +46,12 @@ const sidebarItems = [
     {
         icon: GraduationCap,
         label: "Nhập điểm",
-        href: "/teacher/result"
+        href: "/teacher/assignment-result"
     },
     {
         icon: BookOpen,
         label: "Upload tài liệu",
-        href: "/teacher/document"
+        href: "/teacher/course-resource"
     },
     {
         icon: CreditCard,

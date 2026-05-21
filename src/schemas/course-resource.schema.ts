@@ -8,6 +8,9 @@ export const courseResourceSchema = z.object({
   title: z.string().min(1),
   fileUrl: z.string().url(),
   type: z.nativeEnum(ResourceType),
+  course: z.object({
+    courseName: z.string(),
+  }).optional()
 });
 export type CourseResource = z.infer<typeof courseResourceSchema>;
 

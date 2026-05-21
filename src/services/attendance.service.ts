@@ -2,6 +2,7 @@ import { ApiResponse } from "@/constants/apiResponse";
 import { 
   Attendance, 
   AttendanceParams, 
+  AttendanceSessionResponse,
   BulkUpsertAttendanceInput 
 } from "@/schemas/attendance.schema";
 import http from "@/utils/http";
@@ -11,6 +12,10 @@ const prefix = "/attendances";
 const attendanceService = {
   getAttendances: (params?: AttendanceParams) => {
     return http.get<ApiResponse<Attendance[]>>(prefix, { params });
+  },
+
+  getAttendanceBySession: (sessionId: string) => {
+    return http.get<ApiResponse<AttendanceSessionResponse>>(`${prefix}/session/${sessionId}`);
   },
   
   upsertBulk: (data: BulkUpsertAttendanceInput) => {

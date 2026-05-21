@@ -11,7 +11,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-import { FeedbackClassSortBy, SortOrder } from "@/constants/sort";
+import { FeedbackClassSortBy, FeedbackSortBy, SortOrder } from "@/constants/sort";
 import { useDebounce } from "@/hooks/useDebouce";
 import { useGetFeedbacksByClass } from "@/queries/useFeedbackQuery";
 import { Calendar, MessageSquare, Search, SortAsc, SortDesc } from "lucide-react";
@@ -21,7 +21,7 @@ export function ClassFeedbackTab({ classId }: { classId: string }) {
     const [searchTerm, setSearchTerm] = useState("");
     const debouncedSearch = useDebounce(searchTerm, 500);
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.DESC);
-    const [sortBy, setSortBy] = useState<FeedbackClassSortBy>(FeedbackClassSortBy.CREATED_AT);
+    const [sortBy, setSortBy] = useState<FeedbackSortBy>(FeedbackClassSortBy.CREATED_AT);
     const [params, setParams] = useState({
         page: 1,
         limit: 6,
@@ -70,7 +70,7 @@ export function ClassFeedbackTab({ classId }: { classId: string }) {
                         <Select
                             value={sortBy}
                             onValueChange={(val) => {
-                                setSortBy(val as FeedbackClassSortBy);
+                                setSortBy(val as FeedbackSortBy);
                                 setParams((prev) => ({ ...prev, page: 1 }));
                             }}
                         >
