@@ -275,3 +275,12 @@
     @apply text-red-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950/30;
   }
 }
+
+@keyframes loading-bar {
+  0% {
+    left: -50%;
+  }
+  100% {
+    left: 100%;
+  }
+}

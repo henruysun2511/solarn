@@ -1,5 +1,6 @@
 import { 
   RequestParams,
+  RequestClassParams,
   SalaryComplaintInput,
   TransferRequestInput,
   LeaveRequestInput,
@@ -18,6 +19,14 @@ export const useGetRequests = (params?: RequestParams) => {
   return useQuery({
     queryKey: [...REQUEST_QUERY_KEY, params],
     queryFn: () => requestService.getRequests(params).then((res) => res.data),
+  });
+};
+
+export const useGetRequestsByClass = (classId: string, params?: RequestClassParams) => {
+  return useQuery({
+    queryKey: [...REQUEST_QUERY_KEY, "class", classId, params],
+    queryFn: () => requestService.getRequestsByClass(classId, params).then((res) => res.data),
+    enabled: !!classId,
   });
 };
 

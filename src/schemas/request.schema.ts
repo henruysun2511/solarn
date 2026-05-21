@@ -1,5 +1,5 @@
 import { RequestType, RequestStatus } from "@/constants/type";
-import { SortOrder } from "@/constants/sort";
+import { SortOrder, RequestClassSortBy } from "@/constants/sort";
 import z from "zod";
 
 export const requestSchema = z.object({
@@ -37,6 +37,15 @@ export const requestParamsSchema = z.object({
   sortBy: z.string().optional().default("createdAt"),
 });
 export type RequestParams = z.infer<typeof requestParamsSchema>;
+
+export const requestClassParamsSchema = z.object({
+  page: z.coerce.number().optional().default(1),
+  limit: z.coerce.number().optional().default(10),
+  search: z.string().optional(),
+  sortOrder: z.enum([SortOrder.DESC, SortOrder.ASC]).optional().default(SortOrder.DESC),
+  sortBy: z.enum([RequestClassSortBy.CREATED_AT, RequestClassSortBy.STATUS]).optional().default(RequestClassSortBy.CREATED_AT),
+});
+export type RequestClassParams = z.infer<typeof requestClassParamsSchema>;
 
 export const salaryComplaintSchema = z.object({
   salaryId: z.string().uuid(),

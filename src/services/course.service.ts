@@ -20,6 +20,10 @@ const courseService = {
   deleteCourse: (id: string) => {
     return http.delete<ApiResponse<any>>(`${prefix}/${id}`);
   },
+
+  getCourseById: (id: string) => {
+    return http.get<ApiResponse<Course>>(`${prefix}/${id}`);
+  },
 };
 
 export default courseService;

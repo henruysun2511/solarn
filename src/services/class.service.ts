@@ -29,6 +29,14 @@ const classService = {
   addStudentToClass: (classId: string, data: AddStudentToClassInput) => {
     return http.post<ApiResponse<any>>(`${prefix}/${classId}/students`, data);
   },
+
+  getClassById: (id: string) => {
+    return http.get<ApiResponse<Class>>(`${prefix}/${id}`);
+  },
+
+  getClassesByCourseId: (courseId: string, params?: ClassParams) => {
+    return http.get<ApiResponse<Class[]>>(`${prefix}/course/${courseId}`, { params });
+  },
 };
 
 export default classService;

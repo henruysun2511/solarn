@@ -3,7 +3,7 @@ import { z } from "zod";
 import { shiftSchema } from "./shift.schema";
 
 export const templateSchema = z.object({
-  templateId: z.string().uuid().optional(),
+  templateId: z.string().uuid(),
   templateName: z.string().min(1, "Tên lịch mẫu là bắt buộc").max(255),
   weekdays: z.string()
     .min(1, "Các thứ trong tuần là bắt buộc")

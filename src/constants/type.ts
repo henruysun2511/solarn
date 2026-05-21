@@ -4,6 +4,7 @@ export enum GenderType {
     UNKNOWN = 'UNKNOWN'
 };
 
+
 export enum StatusType {
     SUCCESS = 'SUCCESS',
     FAILED = 'FAILED',

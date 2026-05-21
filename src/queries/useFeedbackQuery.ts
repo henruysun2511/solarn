@@ -1,6 +1,7 @@
 import { 
   FeedbackInput, 
-  FeedbackParams 
+  FeedbackParams,
+  FeedbackClassParams
 } from "@/schemas/feedback.schema";
 import feedbackService from "@/services/feedback.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -11,6 +12,14 @@ export const useGetFeedbacks = (params?: FeedbackParams) => {
   return useQuery({
     queryKey: [...FEEDBACK_QUERY_KEY, params],
     queryFn: () => feedbackService.getFeedbacks(params).then((res) => res.data),
+  });
+};
+
+export const useGetFeedbacksByClass = (classId: string, params?: FeedbackClassParams) => {
+  return useQuery({
+    queryKey: [...FEEDBACK_QUERY_KEY, "class", classId, params],
+    queryFn: () => feedbackService.getFeedbacksByClass(classId, params).then((res) => res.data),
+    enabled: !!classId,
   });
 };
 

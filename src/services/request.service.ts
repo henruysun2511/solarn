@@ -3,6 +3,7 @@ import {
   LeaveRequestInput,
   Request,
   RequestParams,
+  RequestClassParams,
   SalaryComplaintInput,
   ScheduleChangeInput,
   TransferRequestInput,
@@ -19,6 +20,10 @@ const prefix = "/requests";
 const requestService = {
   getRequests: (params?: RequestParams) => {
     return http.get<ApiResponse<Request[]>>(prefix, { params });
+  },
+
+  getRequestsByClass: (classId: string, params?: RequestClassParams) => {
+    return http.get<ApiResponse<Request[]>>(`${prefix}/class/${classId}`, { params });
   },
 
   createSalaryComplaint: (data: SalaryComplaintInput) => {

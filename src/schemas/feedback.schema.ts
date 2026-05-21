@@ -1,4 +1,4 @@
-import { SortOrder } from "@/constants/sort";
+import { SortOrder, FeedbackClassSortBy } from "@/constants/sort";
 import z from "zod";
 
 export const feedbackSchema = z.object({
@@ -22,6 +22,15 @@ export const feedbackParamsSchema = z.object({
   sortBy: z.string().optional().default("createdAt"),
 });
 export type FeedbackParams = z.infer<typeof feedbackParamsSchema>;
+
+export const feedbackClassParamsSchema = z.object({
+  page: z.coerce.number().optional().default(1),
+  limit: z.coerce.number().optional().default(10),
+  search: z.string().optional(),
+  sortOrder: z.enum([SortOrder.DESC, SortOrder.ASC]).optional().default(SortOrder.DESC),
+  sortBy: z.enum([FeedbackClassSortBy.CREATED_AT]).optional().default(FeedbackClassSortBy.CREATED_AT),
+});
+export type FeedbackClassParams = z.infer<typeof feedbackClassParamsSchema>;
 
 export const feedbackInputSchema = z.object({
   classId: z.string().uuid(),

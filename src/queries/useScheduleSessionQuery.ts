@@ -1,6 +1,7 @@
-import { 
-  UpdateSessionStatusInput, 
-  ScheduleSessionParams 
+import {
+  UpdateSessionStatusInput,
+  ScheduleSessionParams,
+  ScheduleSessionClassParams
 } from "@/schemas/schedule-session.schema";
 import scheduleSessionService from "@/services/schedule-session.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -14,10 +15,18 @@ export const useGetScheduleSessions = (params?: ScheduleSessionParams) => {
   });
 };
 
+export const useGetScheduleSessionsByClass = (classId: string, params?: ScheduleSessionClassParams) => {
+  return useQuery({
+    queryKey: [...SCHEDULE_SESSION_QUERY_KEY, "class", classId, params],
+    queryFn: () => scheduleSessionService.getScheduleSessionsByClass(classId, params).then((res) => res.data),
+    enabled: !!classId,
+  });
+};
+
 export const useUpdateSessionStatus = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: UpdateSessionStatusInput }) => 
+    mutationFn: ({ id, data }: { id: string; data: UpdateSessionStatusInput }) =>
       scheduleSessionService.updateStatus(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: SCHEDULE_SESSION_QUERY_KEY });

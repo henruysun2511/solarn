@@ -35,3 +35,11 @@ export const useDeleteCourse = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: COURSE_QUERY_KEY }),
   });
 };
+
+export const useGetCourseById = (id: string) => {
+  return useQuery({
+    queryKey: [...COURSE_QUERY_KEY, id],
+    queryFn: () => courseService.getCourseById(id).then((res) => res.data),
+    enabled: !!id,
+  });
+};

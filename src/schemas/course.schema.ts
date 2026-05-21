@@ -5,12 +5,13 @@ import z from "zod";
 export const courseSchema = z.object({
   courseId: z.string().uuid().optional(),
   courseName: z.string().min(1, "Tên khóa học là bắt buộc").max(255),
-  tuitionFee: z.string().regex(/^\d+(\.\d{1,2})?$/, "Học phí phải là số hợp lệ"),
+  tuitionFee: z.number(),
   level: z.nativeEnum(CourseLevel).optional().nullable(),
   totalSessions: z.number().int().min(1, "Số buổi học phải ít nhất là 1"),
   image: z.string().url().optional().nullable(),
   description: z.string().optional().nullable(),
   totalClasses: z.number().optional(),
+  estimatedRevenue: z.number().optional(),
 });
 
 export type Course = z.infer<typeof courseSchema>;

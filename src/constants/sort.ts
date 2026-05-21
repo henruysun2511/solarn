@@ -48,3 +48,36 @@ export const CourseSortBy = {
 } as const;
 
 export type CourseSortBy = (typeof CourseSortBy)[keyof typeof CourseSortBy];
+
+export const ClassSortBy = {
+    CLASS_ID: 'classId',
+    START_DATE: 'startDate'
+} as const;
+
+export type ClassSortBy = (typeof ClassSortBy)[keyof typeof ClassSortBy];
+
+export const ScheduleSessionSortBy = {
+    STUDY_DATE: 'studyDate',
+    STATUS: 'status'
+} as const;
+
+export type ScheduleSessionSortBy = (typeof ScheduleSessionSortBy)[keyof typeof ScheduleSessionSortBy];
+
+export const StudentSortBy = {
+    NAME: 'name',
+} as const;
+
+export type StudentSortBy = (typeof StudentSortBy)[keyof typeof StudentSortBy];
+
+export const RequestClassSortBy = {
+    CREATED_AT: 'createdAt',
+    STATUS: 'status'
+} as const;
+
+export type RequestClassSortBy = (typeof RequestClassSortBy)[keyof typeof RequestClassSortBy];
+
+export const FeedbackClassSortBy = {
+    CREATED_AT: 'createdAt'
+} as const;
+
+export type FeedbackSortBy = (typeof FeedbackClassSortBy)[keyof typeof FeedbackClassSortBy];

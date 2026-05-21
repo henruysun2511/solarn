@@ -2,7 +2,8 @@ import { ApiResponse } from "@/constants/apiResponse";
 import { 
   Feedback, 
   FeedbackInput, 
-  FeedbackParams 
+  FeedbackParams,
+  FeedbackClassParams
 } from "@/schemas/feedback.schema";
 import http from "@/utils/http";
 
@@ -13,6 +14,10 @@ const feedbackService = {
     return http.get<ApiResponse<Feedback[]>>(prefix, { params });
   },
   
+  getFeedbacksByClass: (classId: string, params?: FeedbackClassParams) => {
+    return http.get<ApiResponse<Feedback[]>>(`${prefix}/class/${classId}`, { params });
+  },
+
   createFeedback: (data: FeedbackInput) => {
     return http.post<ApiResponse<Feedback>>(prefix, data);
   },

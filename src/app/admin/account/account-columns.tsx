@@ -1,5 +1,6 @@
 "use client";
 
+import { UserAvatar } from "@/components/common/user-avatar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
@@ -21,20 +22,15 @@ export const getColumns = ({ onChangeStatus }: ColumnProps): ColumnDef<Account>[
       const profile = row.original.profile;
       const avatarUrl = profile?.avatarUrl;
       const gender = profile?.gender;
-
-      let defaultAvatar = "https://i.pinimg.com/1200x/44/be/0b/44be0b0016c6eaa7edfc2a2e2c4a5e33.jpg"; // Default MALE
-      if (gender === GenderType.FEMALE) {
-        defaultAvatar = "https://i.pinimg.com/1200x/60/33/23/603323075ee7f7c1b7c4a1f600ea4b2d.jpg";
-      }
+      const fullName = profile?.fullName;
 
       return (
         <div className="flex items-center gap-3">
-          <Avatar className="size-10 border border-gray-100 shadow-sm">
-            <AvatarImage src={avatarUrl || defaultAvatar} alt={profile?.fullName} className="object-cover" />
-            <AvatarFallback className="bg-primary/5 text-primary text-xs font-bold">
-              {profile?.fullName?.substring(0, 2).toUpperCase() || row.original.username.substring(0, 2).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
+          <UserAvatar
+            avatarUrl={avatarUrl}
+            gender={gender}
+            fullName={fullName}
+          />
           <div className="flex flex-col">
             <span className="font-bold text-primary leading-none mb-1">{row.original.username}</span>
           </div>
