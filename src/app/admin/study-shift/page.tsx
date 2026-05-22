@@ -74,6 +74,8 @@ export default function AdminStudyShiftPage() {
   };
 
   const handleSubmit = async (formData: StudyShiftInput) => {
+    console.log("Submit called with data:", formData);
+    console.log("Editing shift:", editingShift);
     try {
       if (editingShift?.shiftId) {
         await updateMutation.mutateAsync({

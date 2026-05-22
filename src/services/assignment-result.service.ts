@@ -14,8 +14,12 @@ const assignmentResultService = {
     return http.get<ApiResponse<AssignmentResult[]>>(prefix, { params });
   },
   
-  getMyAssignmentResults: (params?: MyAssignmentResultParams) => {
-    return http.get<ApiResponse<AssignmentResult[]>>(`${prefix}/my`, { params });
+  getMyTeacherAssignmentResults: (params?: MyAssignmentResultParams) => {
+    return http.get<ApiResponse<AssignmentResult[]>>(`${prefix}/my-teacher`, { params });
+  },
+
+  getMyStudentAssignmentResults: (params?: MyAssignmentResultParams) => {
+    return http.get<ApiResponse<AssignmentResult[]>>(`${prefix}/my-student`, { params });
   },
 
   upsertBulk: (data: BulkUpsertAssignmentResultInput) => {

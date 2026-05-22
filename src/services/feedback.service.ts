@@ -23,12 +23,24 @@ const feedbackService = {
     return http.get<ApiResponse<Feedback[]>>(`${prefix}/teacher/my-feedbacks`, { params });
   },
 
+  getMyStudentFeedbacks: (params?: MyFeedbackParams) => {
+    return http.get<ApiResponse<Feedback[]>>(`${prefix}/my`, { params });
+  },
+
   createFeedback: (data: FeedbackInput) => {
     return http.post<ApiResponse<Feedback>>(prefix, data);
   },
 
   deleteFeedback: (id: string) => {
     return http.delete<ApiResponse<any>>(`${prefix}/${id}`);
+  },
+
+  updateIsFeatured: (feedbackId: string, isFeatured: boolean) => {
+    return http.patch<ApiResponse<any>>(`${prefix}/${feedbackId}/featured`, { isFeatured });
+  },
+
+  getFeaturedFeedbacks: () => {
+    return http.get<ApiResponse<any>>(`${prefix}/featured`);
   },
 };
 

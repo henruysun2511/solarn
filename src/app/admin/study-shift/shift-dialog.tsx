@@ -46,7 +46,7 @@ export function ShiftDialog({
     watch,
     formState: { errors },
   } = useForm<ShiftFormInput>({
-    resolver: zodResolver(shiftInputSchema.omit({ timeRange: true })) as any,
+    resolver: zodResolver(shiftInputSchema.omit({ timeRange: true }), undefined, { raw: true }) as any,
     defaultValues: {
       shiftCode: "",
       shiftName: "",

@@ -9,6 +9,7 @@ export const classSchema = z.object({
   maxStudents: z.number().int().min(1),
   scheduleTemplateId: z.string().uuid().optional().nullable(),
   roomCode: z.string(),
+  enrollmentId: z.string().uuid().optional().nullable(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
   // Joined fields from list by courseId API

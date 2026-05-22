@@ -8,7 +8,26 @@ export const feedbackSchema = z.object({
   teacherId: z.string().uuid(),
   content: z.string().min(1),
   starRating: z.number().int().min(1).max(5),
+  isFeatured: z.boolean().optional(),
   createdAt: z.string().optional(),
+  student: z.object({
+    studentCode: z.string().optional(),
+    profile: z.object({
+      fullName: z.string().nullable().optional(),
+      avatarUrl: z.string().nullable().optional(),
+    }).nullable().optional(),
+  }).nullable().optional(),
+  teacher: z.object({
+    profile: z.object({
+      fullName: z.string().nullable().optional(),
+    }).nullable().optional(),
+  }).nullable().optional(),
+  class: z.object({
+    roomCode: z.string(),
+    course: z.object({
+      courseName: z.string(),
+    }),
+  }).nullable().optional(),
 });
 export type Feedback = z.infer<typeof feedbackSchema>;
 
@@ -19,6 +38,8 @@ export const feedbackParamsSchema = z.object({
   studentId: z.string().uuid().optional(),
   classId: z.string().uuid().optional(),
   teacherId: z.string().uuid().optional(),
+  starRating: z.coerce.number().int().min(1).max(5).optional(),
+  isFeatured: z.string().optional(),
   sortOrder: z.enum([SortOrder.DESC, SortOrder.ASC]).optional().default(SortOrder.DESC),
   sortBy: z.string().optional().default("createdAt"),
 });

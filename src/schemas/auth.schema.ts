@@ -34,13 +34,14 @@ export const verifyOtpSchema = z.object({
 export type VerifyOtpInput = z.infer<typeof verifyOtpSchema>;
 
 export interface AuthResponse {
-  user: {
-    accountId: string;
-    username: string;
-    fullName: string;
-    email: string;
-    role: string;
-    avatar?: string;
-  };
+  roleName: string;
+  username: string;
   accessToken: string;
+  refreshToken: string;
+}
+
+export interface RefreshTokenResponse {
+  accessToken: string;
+  roleName: string;
+  username: string;
 }

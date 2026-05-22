@@ -48,6 +48,7 @@ export function CourseClassTab({ courseId }: CourseClassTabProps) {
   const createClassMutation = useCreateClass();
 
   const handleCreateClass = (data: ClassInput) => {
+    console.log(data);
     createClassMutation.mutate(data, {
       onSuccess: () => {
         toast.success("Khai giảng lớp học mới thành công!");

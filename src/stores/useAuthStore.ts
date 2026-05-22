@@ -3,10 +3,6 @@ import Cookies from "js-cookie";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-
-
-
-
 interface AuthState {
   user: UserResponse | null;
   accessToken: string | null;

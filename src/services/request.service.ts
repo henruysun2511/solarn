@@ -81,6 +81,22 @@ const requestService = {
   deleteRequest: (id: string) => {
     return http.delete<ApiResponse<any>>(`${prefix}/${id}`);
   },
+
+  processLeaveRequest: (requestId: string, data: { isSuccess: boolean; approvalNote?: string }) => {
+    return http.patch<ApiResponse<any>>(`${prefix}/leave-request/${requestId}/process`, data);
+  },
+
+  processTransferRequest: (requestId: string, data: { isSuccess: boolean; approvalNote?: string }) => {
+    return http.patch<ApiResponse<any>>(`${prefix}/transfer/${requestId}/process`, data);
+  },
+
+  processScheduleChangeRequest: (requestId: string, data: { isSuccess: boolean; approvalNote?: string }) => {
+    return http.patch<ApiResponse<any>>(`${prefix}/schedule-change/${requestId}/process`, data);
+  },
+
+  processSalaryComplaintRequest: (requestId: string, data: { isSuccess: boolean; approvalNote?: string }) => {
+    return http.patch<ApiResponse<any>>(`${prefix}/salary-complaint/${requestId}/process`, data);
+  },
 };
 
 export default requestService;

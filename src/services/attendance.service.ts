@@ -3,7 +3,9 @@ import {
   Attendance, 
   AttendanceParams, 
   AttendanceSessionResponse,
-  BulkUpsertAttendanceInput 
+  BulkUpsertAttendanceInput,
+  MyAttendance,
+  MyAttendanceParams
 } from "@/schemas/attendance.schema";
 import http from "@/utils/http";
 
@@ -24,6 +26,10 @@ const attendanceService = {
 
   deleteAttendance: (id: string) => {
     return http.delete<ApiResponse<any>>(`${prefix}/${id}`);
+  },
+
+  getMyAttendances: (params?: MyAttendanceParams) => {
+    return http.get<ApiResponse<MyAttendance[]>>(`${prefix}/my`, { params });
   },
 };
 

@@ -1,9 +1,6 @@
 import StudentHeader from "@/components/student/student-header";
 import { StudentSidebar } from "@/components/student/student-sidebar";
-import { Button } from "@/components/ui/button";
-import {
-    LogOut
-} from "lucide-react";
+import { LogoutButton } from "@/components/auth/logout-button";
 
 export default function StudentLayout({
     children,
@@ -26,9 +23,7 @@ export default function StudentLayout({
                             </div>
 
 
-                            <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50 font-black h-14 rounded-2xl px-6">
-                                <LogOut className="mr-3 w-5 h-5" /> Đăng xuất
-                            </Button>
+                            <LogoutButton className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50 font-black h-14 rounded-2xl px-6" />
                         </aside>
 
                         {/* 3. MAIN CONTENT */}

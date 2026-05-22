@@ -11,16 +11,8 @@ import {
     GitPullRequest,
     GraduationCap,
     LayoutDashboard,
-    UserCircle // Thêm icon cho trang cá nhân nếu cần
-    ,
-
-
-
-
-
-
-
-
+    MessageSquareQuote,
+    UserCircle,
     Users
 } from "lucide-react";
 import Link from "next/link";
@@ -30,22 +22,17 @@ const sidebarItems = [
     {
         icon: LayoutDashboard,
         label: "Tổng quan",
-        href: "/student/dashboard"
+        href: "/student/overview"
     },
-    {
-        icon: UserCircle,
-        label: "Hồ sơ",
-        href: "/student/profile"
-    },
-    {
-        icon: Users,
-        label: "Khóa học & Lớp học",
-        href: "/student/course"
-    },
+    // {
+    //     icon: UserCircle,
+    //     label: "Hồ sơ",
+    //     href: "/student/profile"
+    // },
     {
         icon: Calendar,
         label: "Lịch học",
-        href: "/student/schedule"
+        href: "/student/schedule-session"
     },
     {
         icon: CheckSquare,
@@ -55,17 +42,17 @@ const sidebarItems = [
     {
         icon: GraduationCap,
         label: "Kết quả học tập",
-        href: "/student/result"
+        href: "/student/assignment-result"
     },
     {
         icon: BookOpen,
         label: "Tài liệu",
-        href: "/student/document"
+        href: "/student/course-resource"
     },
     {
         icon: CreditCard,
-        label: "Học phí",
-        href: "/student/fee"
+        label: "Lịch sử thanh toán",
+        href: "/student/invoice"
     },
     {
         icon: GitPullRequest,
@@ -76,6 +63,11 @@ const sidebarItems = [
         icon: ClipboardEdit,
         label: "Yêu cầu bảo lưu",
         href: "/student/leave"
+    },
+    {
+        icon: MessageSquareQuote,
+        label: "Đánh giá",
+        href: "/student/feedback"
     },
     {
         icon: Bell,

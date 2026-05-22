@@ -24,6 +24,18 @@ const courseService = {
   getCourseById: (id: string) => {
     return http.get<ApiResponse<Course>>(`${prefix}/${id}`);
   },
+
+  getMyStudentProgress: () => {
+    return http.get<ApiResponse<any>>(`${prefix}/my-progress`);
+  },
+
+  getTeacherProgress: (params?: { classId?: string }) => {
+    return http.get<ApiResponse<any>>(`${prefix}/teacher-progress`, { params });
+  },
+
+  getStudentProgressList: (courseId: string) => {
+    return http.get<ApiResponse<any>>(`${prefix}/${courseId}/students/progress`);
+  },
 };
 
 export default courseService;

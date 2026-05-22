@@ -2,6 +2,12 @@ import { RequestType, RequestStatus } from "@/constants/type";
 import { SortOrder, RequestClassSortBy } from "@/constants/sort";
 import z from "zod";
 
+const classRefSchema = z.object({
+  classId: z.string().uuid(),
+  roomCode: z.string(),
+  course: z.object({ courseName: z.string() }).optional(),
+});
+
 export const requestSchema = z.object({
   requestId: z.string().uuid().optional(),
   type: z.nativeEnum(RequestType),
@@ -12,7 +18,7 @@ export const requestSchema = z.object({
   approvalNote: z.string().optional().nullable(),
   createdAt: z.string().optional(),
   updatedAt: z.string().optional(),
-  
+
   // Specific fields
   sessionId: z.string().uuid().optional().nullable(),
   proposedShiftCode: z.string().optional().nullable(),
@@ -24,6 +30,15 @@ export const requestSchema = z.object({
   leaveEndDate: z.string().optional().nullable(),
   fromClassId: z.string().uuid().optional().nullable(),
   toClassId: z.string().uuid().optional().nullable(),
+  fromClass: classRefSchema.optional().nullable(),
+  toClass: classRefSchema.optional().nullable(),
+  progressAtRequest: z.string().optional().nullable(),
+  leaveStatus: z.string().optional().nullable(),
+  enrollment: z.object({
+    enrollmentId: z.string().uuid(),
+    status: z.string(),
+    class: classRefSchema,
+  }).optional().nullable(),
 });
 export type Request = z.infer<typeof requestSchema>;
 
@@ -101,7 +116,7 @@ export const transferRequestParamsSchema = z.object({
   sortOrder: z.enum([SortOrder.DESC, SortOrder.ASC]).optional().default(SortOrder.DESC),
   sortBy: z.string().optional().default("createdAt"),
 });
-export type TransferRequestParams = z.infer<typeof transferRequestParamsSchema>;
+export type TransferRequestParams = z.input<typeof transferRequestParamsSchema>;
 
 export const leaveRequestParamsSchema = z.object({
   page: z.coerce.number().optional().default(1),

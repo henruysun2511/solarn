@@ -50,3 +50,18 @@ export const teacherDashboardSchema = z.object({
 });
 
 export type TeacherDashboard = z.infer<typeof teacherDashboardSchema>;
+
+export const studentDashboardSchema = z.object({
+  totalClasses: z.number(),
+  totalAttended: z.number(),
+  totalAbsent: z.number(),
+  attendanceRate: z.number(),
+  averageScore: z.number(),
+  upcomingSessions: z.array(todaySessionSchema),
+  totalInvoices: z.number(),
+  paidInvoices: z.number(),
+  unpaidInvoices: z.number(),
+  pendingLeaveRequests: z.number(),
+});
+
+export type StudentDashboard = z.infer<typeof studentDashboardSchema>;

@@ -142,3 +142,51 @@ export const useDeleteRequest = () => {
     },
   });
 };
+
+export const useProcessLeaveRequest = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ requestId, data }: { requestId: string; data: { isSuccess: boolean; approvalNote?: string } }) =>
+      requestService.processLeaveRequest(requestId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: LEAVE_REQUEST_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: REQUEST_QUERY_KEY });
+    },
+  });
+};
+
+export const useProcessTransferRequest = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ requestId, data }: { requestId: string; data: { isSuccess: boolean; approvalNote?: string } }) =>
+      requestService.processTransferRequest(requestId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: TRANSFER_REQUEST_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: REQUEST_QUERY_KEY });
+    },
+  });
+};
+
+export const useProcessScheduleChangeRequest = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ requestId, data }: { requestId: string; data: { isSuccess: boolean; approvalNote?: string } }) =>
+      requestService.processScheduleChangeRequest(requestId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: SCHEDULE_CHANGE_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: REQUEST_QUERY_KEY });
+    },
+  });
+};
+
+export const useProcessSalaryComplaintRequest = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ requestId, data }: { requestId: string; data: { isSuccess: boolean; approvalNote?: string } }) =>
+      requestService.processSalaryComplaintRequest(requestId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: SALARY_COMPLAINT_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: REQUEST_QUERY_KEY });
+    },
+  });
+};

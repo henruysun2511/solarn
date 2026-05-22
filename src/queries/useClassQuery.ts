@@ -81,3 +81,10 @@ export const useGetMyClasses = (params?: ClassParams) => {
     queryFn: () => classService.getMyClasses(params).then((res) => res.data),
   });
 };
+
+export const useGetMyEnrolledClasses = (params?: ClassParams) => {
+  return useQuery({
+    queryKey: [...CLASS_QUERY_KEY, "my-enrolled-classes", params],
+    queryFn: () => classService.getMyEnrolledClasses(params).then((res) => res.data),
+  });
+};

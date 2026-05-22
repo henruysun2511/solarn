@@ -1,5 +1,5 @@
 import AdminHeader from "@/components/admin/admin-header";
-import { AppSidebar } from "@/components/admin/app-sidebar";
+import { AppSidebar } from "@/components/admin/admin-sidebar";
 import {
   SidebarInset,
   SidebarProvider

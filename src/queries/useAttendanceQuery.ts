@@ -1,6 +1,7 @@
 import { 
   AttendanceParams, 
-  BulkUpsertAttendanceInput 
+  BulkUpsertAttendanceInput,
+  MyAttendanceParams
 } from "@/schemas/attendance.schema";
 import attendanceService from "@/services/attendance.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -40,5 +41,12 @@ export const useDeleteAttendance = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ATTENDANCE_QUERY_KEY });
     },
+  });
+};
+
+export const useGetMyAttendances = (params?: MyAttendanceParams) => {
+  return useQuery({
+    queryKey: [...ATTENDANCE_QUERY_KEY, "my", params],
+    queryFn: () => attendanceService.getMyAttendances(params).then((res) => res.data),
   });
 };

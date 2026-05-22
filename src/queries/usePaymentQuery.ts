@@ -1,6 +1,7 @@
 import { 
   InvoiceInput, 
-  InvoiceParams 
+  InvoiceParams,
+  MyInvoiceParams
 } from "@/schemas/payment.schema";
 import paymentService from "@/services/payment.service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -11,6 +12,13 @@ export const useGetInvoices = (params?: InvoiceParams) => {
   return useQuery({
     queryKey: [...PAYMENT_QUERY_KEY, params],
     queryFn: () => paymentService.getInvoices(params).then((res) => res.data),
+  });
+};
+
+export const useGetMyInvoices = (params?: MyInvoiceParams) => {
+  return useQuery({
+    queryKey: [...PAYMENT_QUERY_KEY, "my", params],
+    queryFn: () => paymentService.getMyInvoices(params).then((res) => res.data),
   });
 };
 

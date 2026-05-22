@@ -1,6 +1,7 @@
 import { ApiResponse } from "@/constants/apiResponse";
-import { AuthResponse, LoginInput, RegisterInput, VerifyOtpInput } from "@/schemas/auth.schema";
+import { AuthResponse, LoginInput, RefreshTokenResponse, RegisterInput, VerifyOtpInput } from "@/schemas/auth.schema";
 import http from "@/utils/http";
+import { refreshApi } from "@/utils/axios";
 
 const prefix = "/auth";
 
@@ -15,6 +16,14 @@ const authService = {
 
   verifyEmail: (data: VerifyOtpInput) => {
     return http.post<ApiResponse<any>>(`${prefix}/verify-email`, data);
+  },
+
+  logout: () => {
+    return http.post<ApiResponse<null>>(`${prefix}/logout`);
+  },
+
+  refreshToken: () => {
+    return refreshApi.post<ApiResponse<RefreshTokenResponse>>(`${prefix}/refresh-token`);
   },
 };
 

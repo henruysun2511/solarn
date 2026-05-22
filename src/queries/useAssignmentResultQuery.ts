@@ -15,10 +15,17 @@ export const useGetAssignmentResults = (params?: AssignmentResultParams) => {
   });
 };
 
-export const useGetMyAssignmentResults = (params?: MyAssignmentResultParams) => {
+export const useGetMyTeacherAssignmentResults = (params?: MyAssignmentResultParams) => {
   return useQuery({
-    queryKey: [...ASSIGNMENT_RESULT_QUERY_KEY, "my", params],
-    queryFn: () => assignmentResultService.getMyAssignmentResults(params).then((res) => res.data),
+    queryKey: [...ASSIGNMENT_RESULT_QUERY_KEY, "my-teacher", params],
+    queryFn: () => assignmentResultService.getMyTeacherAssignmentResults(params).then((res) => res.data),
+  });
+};
+
+export const useGetMyStudentAssignmentResults = (params?: MyAssignmentResultParams) => {
+  return useQuery({
+    queryKey: [...ASSIGNMENT_RESULT_QUERY_KEY, "my-student", params],
+    queryFn: () => assignmentResultService.getMyStudentAssignmentResults(params).then((res) => res.data),
   });
 };
 

@@ -43,3 +43,29 @@ export const useGetCourseById = (id: string) => {
     enabled: !!id,
   });
 };
+
+export const MY_STUDENT_PROGRESS_QUERY_KEY = ["my-student-progress"];
+export const TEACHER_PROGRESS_QUERY_KEY = ["teacher-progress"];
+export const STUDENT_PROGRESS_LIST_QUERY_KEY = ["student-progress-list"];
+
+export const useGetMyStudentProgress = () => {
+  return useQuery({
+    queryKey: MY_STUDENT_PROGRESS_QUERY_KEY,
+    queryFn: () => courseService.getMyStudentProgress().then((res) => res.data),
+  });
+};
+
+export const useGetTeacherProgress = (params?: { classId?: string }) => {
+  return useQuery({
+    queryKey: [...TEACHER_PROGRESS_QUERY_KEY, params],
+    queryFn: () => courseService.getTeacherProgress(params).then((res) => res.data),
+  });
+};
+
+export const useGetStudentProgressList = (courseId: string) => {
+  return useQuery({
+    queryKey: [...STUDENT_PROGRESS_LIST_QUERY_KEY, courseId],
+    queryFn: () => courseService.getStudentProgressList(courseId).then((res) => res.data.data),
+    enabled: !!courseId,
+  });
+};

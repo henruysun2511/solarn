@@ -13,6 +13,7 @@ import {
 import { AtomIcon, BookOpenIcon, CalendarCheckIcon, CircleDollarSignIcon, ClipboardCheckIcon, LayoutDashboardIcon, LogOut, SettingsIcon, ShieldCheckIcon, UserCheckIcon, UsersIcon } from "lucide-react"
 import { Logo } from "../common/logo"
 import { Button } from "../ui/button"
+import { LogoutButton } from "../auth/logout-button"
 
 export const navMain = [
   {
@@ -21,6 +22,7 @@ export const navMain = [
     icon: <LayoutDashboardIcon className="size-4" />,
     isActive: true,
     items: [
+      { title: "Giám sát phòng học", url: "/admin/dashboard/monitor" },
       { title: "Báo cáo tổng quan", url: "/admin/dashboard/overview" },
       { title: "Báo cáo tư vấn", url: "/admin/dashboard/consultation" },
       { title: "Báo cáo tài chính", url: "/admin/dashboard/finance" },
@@ -44,8 +46,8 @@ export const navMain = [
     isActive: false,
     items: [
       { title: "Học viên", url: "/admin/student" },
-      { title: "Xét duyệt bảo lưu", url: "/admin/student/leave" },
-      { title: "Xét duyệt chuyển lớp", url: "/admin/student/transfer" },
+      { title: "Xét duyệt bảo lưu", url: "/admin/leave" },
+      { title: "Xét duyệt chuyển lớp", url: "/admin/transfer" },
     ],
   },
   {
@@ -55,7 +57,7 @@ export const navMain = [
     isActive: false,
     items: [
       { title: "Giáo viên", url: "/admin/teacher" },
-      { title: "Xét duyệt dời lịch", url: "/admin/change" },
+      { title: "Xét duyệt dời lịch", url: "/admin/schedule-change" },
       { title: "Xử lý vi phạm", url: "/admin/violation" },
     ],
   },
@@ -77,18 +79,14 @@ export const navMain = [
     ],
   },
   {
-    title: "Điểm danh",
-    url: "#",
+    title: "Điểm danh học viên",
+    url: "/admin/attendance",
     icon: <CalendarCheckIcon className="size-4" />,
-    isActive: false,
-    items: [
-      { title: "Điểm danh học viên", url: "/admin/attendance/student" },
-      { title: "Điểm danh giáo viên", url: "/admin/attendance/teacher" },
-    ],
+    isActive: false
   },
   {
     title: "Kết quả học viên",
-    url: "/admin/result",
+    url: "/admin/assignment-result",
     icon: <ClipboardCheckIcon className="size-4" />,
     isActive: false
   },
@@ -98,9 +96,9 @@ export const navMain = [
     icon: <CircleDollarSignIcon className="size-4" />, // Icon tiền tệ
     isActive: false,
     items: [
-      { title: "Thu phí học viên", url: "/admin/fee" },
+      { title: "Thu phí học viên", url: "/admin/invoice" },
       { title: "Trả lương giáo viên", url: "/admin/salary" },
-      { title: "Khiếu nại lương", url: "/admin/complaint" },
+      { title: "Khiếu nại lương", url: "/admin/salary-complaint" },
     ],
   },
   {
@@ -121,7 +119,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavMain items={navMain} />
       </SidebarContent>
       <SidebarFooter className="p-4 pt-0">
-        <Button
+        {/* <Button
           variant="ghost"
           className="w-full h-12 justify-start px-4 rounded-2xl font-black text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all group overflow-hidden relative"
         >
@@ -130,7 +128,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <span className="uppercase tracking-widest text-[11px]">Đăng xuất</span>
           </div>
           <div className="absolute inset-0 bg-gradient-to-r from-red-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-        </Button>
+        </Button> */}
+        <LogoutButton className="w-full h-12 justify-start px-4 rounded-2xl font-black text-slate-500 hover:bg-red-50 hover:text-red-600 transition-all group overflow-hidden relative" />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

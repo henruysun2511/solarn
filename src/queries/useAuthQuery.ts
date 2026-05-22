@@ -1,10 +1,57 @@
+import { handleError } from "@/utils/handleError";
 import { LoginInput, RegisterInput, VerifyOtpInput } from "@/schemas/auth.schema";
 import authService from "@/services/auth.service";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/stores/useAuthStore";
+import Cookies from "js-cookie";
+import { RoleType } from "@/constants/type";
+
+const ACCESS_TOKEN_KEY = "accessToken";
 
 export const useLogin = () => {
+  const router = useRouter();
+  const { setAuth } = useAuthStore();
+
   return useMutation({
     mutationFn: (data: LoginInput) => authService.login(data),
+    onSuccess: async (response) => {
+      const { roleName, username, accessToken } = response.data.data;
+      const user = { roleName, username, accessToken };
+      setAuth(user, accessToken);
+      Cookies.set(ACCESS_TOKEN_KEY, accessToken, { expires: 7 });
+
+      const rolePath = roleName === RoleType.TEACHER ? "/teacher/overview" : roleName === RoleType.ADMIN ? "/admin/overview" : "/student/overview";
+      router.replace(rolePath);
+    }
+  });
+};
+
+export const useLogout = () => {
+  const router = useRouter();
+  const { logout } = useAuthStore();
+
+  return useMutation({
+    mutationFn: () => authService.logout(),
+    onSuccess: () => {
+      logout();
+      Cookies.remove(ACCESS_TOKEN_KEY);
+      router.replace("/auth/login");
+    },
+    onError: () => {
+      logout();
+      Cookies.remove(ACCESS_TOKEN_KEY);
+      router.replace("/auth/login");
+    },
+  });
+};
+
+export const useRefreshToken = () => {
+  return useQuery({
+    queryKey: ["refreshToken"],
+    queryFn: () => authService.refreshToken(),
+    retry: false,
+    enabled: false,
   });
 };
 

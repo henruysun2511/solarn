@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { CourseClassTab } from "./course-class-tab";
+import { CourseProgressTab } from "./course-progress-tab";
 import { CourseResourceTab } from "./course-resource-tab";
 import { CourseTeacherTab } from "./course-teacher-tab";
 
@@ -144,6 +145,7 @@ export default function AdminCourseDetailPage() {
                             { value: "classes", label: "Lớp học phụ trách" },
                             { value: "teachers", label: "Đội ngũ giảng viên" },
                             { value: "resources", label: "Kho tài liệu" },
+                            { value: "progress", label: "Tiến độ học viên" },
                         ].map((tab) => (
                             <TabsTrigger
                                 key={tab.value}
@@ -168,6 +170,11 @@ export default function AdminCourseDetailPage() {
                     {/* TAB CONTENT: KHO TÀI LIỆU */}
                     <TabsContent value="resources" className="mt-0 outline-none">
                         <CourseResourceTab courseId={course.courseId!} />
+                    </TabsContent>
+
+                    {/* TAB CONTENT: TIẾN ĐỘ HỌC VIÊN */}
+                    <TabsContent value="progress" className="mt-0 outline-none">
+                        <CourseProgressTab courseId={course.courseId!} />
                     </TabsContent>
                 </Tabs>
             </div>

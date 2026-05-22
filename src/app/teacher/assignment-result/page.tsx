@@ -5,7 +5,7 @@ import { DataTable } from "@/components/common/data-table";
 import { PaginationInfo } from "@/components/common/pagination-info";
 import { Button } from "@/components/ui/button";
 import { SortOrder } from "@/constants/sort";
-import { useGetMyAssignmentResults, useBulkUpsertAssignmentResults } from "@/queries/useAssignmentResultQuery";
+import { useGetMyTeacherAssignmentResults, useBulkUpsertAssignmentResults } from "@/queries/useAssignmentResultQuery";
 import { useGetMyClasses } from "@/queries/useClassQuery";
 import { useGetScheduleSessionsByClass } from "@/queries/useScheduleSessionQuery";
 import { useGetStudentsByClass } from "@/queries/useStudentQuery";
@@ -49,7 +49,7 @@ export default function TeacherAssignmentResultPage() {
     fullName: s.profile?.fullName || s.studentCode,
   })), [studentsData]);
 
-  const { data, isLoading } = useGetMyAssignmentResults(params);
+  const { data, isLoading } = useGetMyTeacherAssignmentResults(params);
   const upsertMutation = useBulkUpsertAssignmentResults();
 
   const results = data?.data || [];

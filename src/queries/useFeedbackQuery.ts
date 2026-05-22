@@ -31,6 +31,13 @@ export const useGetMyFeedbacks = (params?: MyFeedbackParams) => {
   });
 };
 
+export const useGetMyStudentFeedbacks = (params?: MyFeedbackParams) => {
+  return useQuery({
+    queryKey: [...FEEDBACK_QUERY_KEY, "my-student", params],
+    queryFn: () => feedbackService.getMyStudentFeedbacks(params).then((res) => res.data),
+  });
+};
+
 export const useCreateFeedback = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -48,5 +55,23 @@ export const useDeleteFeedback = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: FEEDBACK_QUERY_KEY });
     },
+  });
+};
+
+export const useUpdateFeedbackIsFeatured = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ feedbackId, isFeatured }: { feedbackId: string; isFeatured: boolean }) =>
+      feedbackService.updateIsFeatured(feedbackId, isFeatured),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: FEEDBACK_QUERY_KEY });
+    },
+  });
+};
+
+export const useGetFeaturedFeedbacks = () => {
+  return useQuery({
+    queryKey: [...FEEDBACK_QUERY_KEY, "featured"],
+    queryFn: () => feedbackService.getFeaturedFeedbacks().then((res) => res.data?.data),
   });
 };

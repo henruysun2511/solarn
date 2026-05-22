@@ -41,6 +41,10 @@ const classService = {
   getMyClasses: (params?: ClassParams) => {
     return http.get<ApiResponse<Class[]>>(`${prefix}/my-classes`, { params });
   },
+
+  getMyEnrolledClasses: (params?: ClassParams) => {
+    return http.get<ApiResponse<Class[]>>(`${prefix}/my-enrolled-classes`, { params });
+  },
 };
 
 export default classService;

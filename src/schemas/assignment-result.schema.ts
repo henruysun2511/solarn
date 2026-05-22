@@ -17,8 +17,10 @@ export const assignmentResultParamsSchema = z.object({
   page: z.coerce.number().optional().default(1),
   limit: z.coerce.number().optional().default(10),
   search: z.string().optional(),
+  classId: z.string().uuid().optional(),
   sessionId: z.string().uuid().optional(),
   studentId: z.string().uuid().optional(),
+  courseId: z.string().optional(),
   sortOrder: z.enum([SortOrder.DESC, SortOrder.ASC]).optional().default(SortOrder.DESC),
   sortBy: z.string().optional().default("createdAt"),
 });

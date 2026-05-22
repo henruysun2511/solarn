@@ -14,9 +14,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useLogout } from "@/queries/useAuthQuery";
 import { Bell, LogOut, Search, Settings, User } from "lucide-react";
 
 export default function AdminHeader() {
+  const logoutMutation = useLogout();
     return (
         <header className="bg-white sticky top-0 z-50 flex h-16 shrink-0 items-center justify-between border-b gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 bg-background/80 backdrop-blur-md shadow-sm">
             {/* LEFT SIDE */}
@@ -73,7 +75,7 @@ export default function AdminHeader() {
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem className="rounded-xl cursor-pointer py-2.5 text-red-600 focus:bg-red-50 focus:text-red-600">
+                        <DropdownMenuItem className="rounded-xl cursor-pointer py-2.5 text-red-600 focus:bg-red-50 focus:text-red-600" onClick={() => logoutMutation.mutate()} disabled={logoutMutation.isPending}>
                             <LogOut className="mr-2 size-4" /> Đăng xuất
                         </DropdownMenuItem>
                     </DropdownMenuContent>

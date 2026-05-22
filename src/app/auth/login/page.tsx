@@ -3,10 +3,8 @@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
-import { RoleType } from "@/constants/type";
 import { useLogin } from "@/queries/useAuthQuery";
 import { LoginInput, loginSchema } from "@/schemas/auth.schema";
-import { useAuthStore } from "@/stores/useAuthStore";
 import { handleError } from "@/utils/handleError";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -15,14 +13,11 @@ import {
     MailIcon
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 
 export default function AuthLoginPage() {
-    const router = useRouter();
     const loginMutation = useLogin();
-    const { setAuth } = useAuthStore();
 
     const {
         register,
@@ -33,33 +28,14 @@ export default function AuthLoginPage() {
     });
 
     const onSubmit = async (data: LoginInput) => {
-        try {
-            await loginMutation.mutateAsync(data, {
-                onSuccess: (response: any) => {
-                    const { roleName, username, accessToken } = response.data.data;
-                    const user = {
-                        roleName, username, accessToken
-                    }
-
-                    setAuth(user, accessToken);
-                    toast.success(response?.message || "Đăng nhập thành công!");
-
-                    // Điều hướng dựa trên role
-                    if (user.roleName === RoleType.ADMIN) {
-                        router.push("/admin/dashboard");
-                    } else if (user.roleName === RoleType.TEACHER) {
-                        router.push("/teacher/dashboard");
-                    } else if (user.roleName === RoleType.STUDENT) {
-                        router.push("/student/dashboard");
-                    }
-                },
-                onError: (error) => {
-                    handleError(error, "Đăng nhập thất bại");
-                }
-            });
-        } catch (error) {
-            console.error("Login failed", error);
-        }
+        await loginMutation.mutateAsync(data, {
+            onSuccess: (response) => {
+                toast.success(response?.data?.message || "Đăng nhập thành công!");
+            },
+            onError: (error) => {
+                handleError(error, "Đăng nhập thất bại");
+            },
+        });
     };
 
     return (

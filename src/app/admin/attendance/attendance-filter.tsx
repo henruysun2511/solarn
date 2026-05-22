@@ -1,6 +1,5 @@
 "use client";
 
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -8,168 +7,99 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ScheduleSession } from "@/schemas/schedule-session.schema";
-import { SearchIcon, XIcon } from "lucide-react";
-import { useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { SortOrder } from "@/constants/sort";
+import { useGetClassesByCourseId } from "@/queries/useClassQuery";
+import { useGetCourses } from "@/queries/useCourseQuery";
+import { useGetScheduleSessionsByClass } from "@/queries/useScheduleSessionQuery";
+import { BookOpen, Layers, CalendarDays } from "lucide-react";
 
 interface AttendanceFilterProps {
-  onSearch: (value: string) => void;
-  onFilterChange: (filters: Record<string, any>) => void;
-  onRowsPerPageChange: (value: number) => void;
-  courses: { courseId: string; courseName: string }[];
-  selectedCourseId: string;
-  classes: { classId: string; classCode?: string }[];
-  selectedClassId: string;
-  sessions: ScheduleSession[];
-  selectedSessionId: string;
-  selectedShiftCode: string;
-  shifts: { shiftCode: string; shiftName: string }[];
+  courseId: string;
+  classId: string;
+  sessionId: string;
+  onFilterChange: (filters: { courseId?: string; classId?: string; sessionId?: string }) => void;
 }
 
-export function AttendanceFilter({
-  onSearch,
-  onFilterChange,
-  onRowsPerPageChange,
-  courses,
-  selectedCourseId,
-  classes,
-  selectedClassId,
-  sessions,
-  selectedSessionId,
-  selectedShiftCode,
-  shifts,
-}: AttendanceFilterProps) {
-  const [searchValue, setSearchValue] = useState("");
+export function AttendanceFilter({ courseId, classId, sessionId, onFilterChange }: AttendanceFilterProps) {
+  const { data: coursesData } = useGetCourses({ limit: 100, page: 1 });
+  const courses = coursesData?.data || [];
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSearch(searchValue);
-  };
+  const { data: classesData, isLoading: classesLoading } = useGetClassesByCourseId(courseId || "", { page: 1, limit: 100 });
+  const classes = courseId ? (classesData?.data || []) : [];
 
-  const clearSearch = () => {
-    setSearchValue("");
-    onSearch("");
-  };
+  const { data: sessionsData, isLoading: sessionsLoading } = useGetScheduleSessionsByClass(classId || "", { page: 1, limit: 100, sortOrder: SortOrder.ASC, sortBy: "studyDate" });
+  const sessions = classId ? (sessionsData?.data || []) : [];
 
   return (
-    <div className="p-5 border-b border-gray-200 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-      <div className="flex flex-wrap items-center gap-3">
-        {/* Tìm kiếm */}
-        <form onSubmit={handleSearch} className="relative w-[220px]">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
-          <Input
-            placeholder="Tìm học viên..."
-            className="pl-9 h-10 border-gray-300 bg-white pr-9"
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-          />
-          {searchValue && (
-            <button
-              type="button"
-              onClick={clearSearch}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-            >
-              <XIcon className="size-4" />
-            </button>
-          )}
-        </form>
-
-        {/* Course Select */}
+    <div className="p-5 border-b border-gray-200 flex flex-wrap items-center gap-4">
+      <div className="flex flex-col gap-1">
+        <label className="text-[10px] font-black uppercase tracking-wider text-gray-400 flex items-center gap-1">
+          <BookOpen className="size-3" /> Khóa học
+        </label>
         <Select
-          value={selectedCourseId}
-          onValueChange={(val) => {
-            onFilterChange({ courseId: val, classId: "", sessionId: "", shiftCode: "all" });
-          }}
-        >
-          <SelectTrigger className="w-[180px] h-10 border-gray-300 bg-white shadow-sm">
-            <SelectValue placeholder="Khóa học" />
-          </SelectTrigger>
-          <SelectContent data-role="admin">
-            {courses.map((c) => (
-              <SelectItem key={c.courseId} value={c.courseId}>
-                {c.courseName}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        {/* Class Select */}
-        <Select
-          value={selectedClassId}
-          onValueChange={(val) => {
-            onFilterChange({ classId: val, sessionId: "", shiftCode: "all" });
-          }}
-          disabled={!selectedCourseId}
-        >
-          <SelectTrigger className="w-[180px] h-10 border-gray-300 bg-white shadow-sm">
-            <SelectValue placeholder={selectedCourseId ? "Lớp học" : "Chọn khóa học"} />
-          </SelectTrigger>
-          <SelectContent data-role="admin">
-            {classes.map((c) => (
-              <SelectItem key={c.classId} value={c.classId}>
-                {c.classCode || c.classId?.substring(0, 8)}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        {/* Shift Filter */}
-        <Select
-          value={selectedShiftCode}
-          onValueChange={(val) => {
-            onFilterChange({ shiftCode: val, sessionId: "" });
-          }}
-          disabled={!selectedClassId}
-        >
-          <SelectTrigger className="w-[160px] h-10 border-gray-300 bg-white shadow-sm">
-            <SelectValue placeholder="Ca học" />
-          </SelectTrigger>
-          <SelectContent data-role="admin">
-            <SelectItem value="all">Tất cả ca</SelectItem>
-            {shifts.map((s) => (
-              <SelectItem key={s.shiftCode} value={s.shiftCode}>
-                {s.shiftName}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        {/* Session Select */}
-        <Select
-          value={selectedSessionId}
-          onValueChange={(val) => {
-            onFilterChange({ sessionId: val });
-          }}
-          disabled={sessions.length === 0}
+          value={courseId || ""}
+          onValueChange={(val) => onFilterChange({ courseId: val || undefined, classId: undefined, sessionId: undefined })}
         >
           <SelectTrigger className="w-[260px] h-10 border-gray-300 bg-white shadow-sm">
-            <SelectValue placeholder="Chọn buổi học" />
+            <SelectValue placeholder="Chọn khóa học" />
           </SelectTrigger>
           <SelectContent data-role="admin">
-            {sessions.map((s) => (
-              <SelectItem key={s.sessionId} value={s.sessionId!}>
-                {s.studyDate} — {s.shift?.shiftName || s.shiftCode}
-              </SelectItem>
+            {courses.map((c: any) => (
+              <SelectItem key={c.courseId} value={c.courseId}>{c.courseName}</SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
 
-      <div className="flex items-center gap-2 text-sm text-gray-500">
-        <span>Hiển thị:</span>
-        <Select
-          defaultValue="10"
-          onValueChange={(val) => onRowsPerPageChange(Number(val))}
-        >
-          <SelectTrigger className="w-[80px] h-10 border-gray-300 bg-white shadow-sm">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent data-role="admin">
-            <SelectItem value="10">10</SelectItem>
-            <SelectItem value="25">25</SelectItem>
-            <SelectItem value="50">50</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="flex flex-col gap-1">
+        <label className="text-[10px] font-black uppercase tracking-wider text-gray-400 flex items-center gap-1">
+          <Layers className="size-3" /> Lớp
+        </label>
+        {classesLoading ? (
+          <Skeleton className="w-[220px] h-10 rounded-xl" />
+        ) : (
+          <Select
+            value={classId || ""}
+            disabled={!courseId}
+            onValueChange={(val) => onFilterChange({ classId: val || undefined, sessionId: undefined })}
+          >
+            <SelectTrigger className="w-[220px] h-10 border-gray-300 bg-white shadow-sm">
+              <SelectValue placeholder={courseId ? "Chọn lớp" : "Chọn khóa học trước"} />
+            </SelectTrigger>
+            <SelectContent data-role="admin">
+              {classes.map((c: any) => (
+                <SelectItem key={c.classId} value={c.classId}>{c.roomCode}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <label className="text-[10px] font-black uppercase tracking-wider text-gray-400 flex items-center gap-1">
+          <CalendarDays className="size-3" /> Buổi học
+        </label>
+        {sessionsLoading ? (
+          <Skeleton className="w-[260px] h-10 rounded-xl" />
+        ) : (
+          <Select
+            value={sessionId || ""}
+            disabled={!classId}
+            onValueChange={(val) => onFilterChange({ sessionId: val || undefined })}
+          >
+            <SelectTrigger className="w-[260px] h-10 border-gray-300 bg-white shadow-sm">
+              <SelectValue placeholder={classId ? "Chọn buổi học" : "Chọn lớp trước"} />
+            </SelectTrigger>
+            <SelectContent data-role="admin">
+              {sessions.map((s: any) => (
+                <SelectItem key={s.sessionId} value={s.sessionId}>
+                  {new Date(s.studyDate).toLocaleDateString("vi-VN")} (Ca {s.shiftCode})
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
     </div>
   );
