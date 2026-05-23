@@ -40,6 +40,7 @@ import {
     XAxis,
     YAxis
 } from "recharts";
+import { Loading } from "@/components/common/loading";
 
 export default function TeacherDashboardPage() {
     const { data: profileData, isLoading: profileLoading } = useGetMyProfile();
@@ -49,10 +50,10 @@ export default function TeacherDashboardPage() {
     const teacher = profileData?.data;
     const dashboard = dashData?.data;
 
-    if (profileLoading || dashLoading) {
+    if (profileLoading) {
         return (
             <div className="flex items-center justify-center min-h-[400px]">
-                <Loader2 className="size-8 animate-spin text-[var(--primary)]" />
+                <Loading message="Đang tải hồ sơ" />
             </div>
         );
     }

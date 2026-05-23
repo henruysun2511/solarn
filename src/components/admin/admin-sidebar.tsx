@@ -24,9 +24,9 @@ export const navMain = [
     items: [
       { title: "Giám sát phòng học", url: "/admin/dashboard/monitor" },
       { title: "Báo cáo tổng quan", url: "/admin/dashboard/overview" },
-      { title: "Báo cáo tư vấn", url: "/admin/dashboard/consultation" },
       { title: "Báo cáo tài chính", url: "/admin/dashboard/finance" },
       { title: "Báo cáo đào tạo", url: "/admin/dashboard/training" },
+      { title: "Báo cáo yêu cầu", url: "/admin/dashboard/request" },
     ],
   },
   {

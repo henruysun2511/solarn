@@ -60,10 +60,16 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const res = await refreshApi.post("/auth/refresh-token");
+        const refreshTokenValue = useAuthStore.getState().refreshToken;
+        const res = await refreshApi.post("/auth/refresh-token", refreshTokenValue ? { refreshToken: refreshTokenValue } : {});
         const newToken = res.data.data.accessToken;
 
         useAuthStore.getState().setAccessToken(newToken);
+
+        const newRefreshToken = res.data.data.refreshToken;
+        if (newRefreshToken) {
+          useAuthStore.getState().setRefreshToken(newRefreshToken);
+        }
 
         queue.forEach((cb) => cb(newToken));
         queue = [];

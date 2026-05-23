@@ -7,7 +7,7 @@ import { useGetMyFeedbacks } from "@/queries/useFeedbackQuery";
 import { MyFeedbackParams } from "@/schemas/feedback.schema";
 import { MessageSquare } from "lucide-react";
 import { useState } from "react";
-import { FeedbackCard } from "./feedback-card";
+import { FeedbackCard } from "@/components/common/feedback-card";
 import { FeedbackFilter } from "./feedback-filter";
 
 export default function TeacherFeedbackPage() {
@@ -79,8 +79,8 @@ export default function TeacherFeedbackPage() {
                     key={fb.feedbackId}
                     studentName={extractStudentName(fb)}
                     avatarUrl={fb.student?.profile?.avatarUrl}
-                    className={extractClassName(fb)}
-                    courseName={extractCourseName(fb)}
+                    gender={fb.student?.profile?.gender}
+                    target={extractCourseName(fb)}
                     content={fb.content}
                     starRating={fb.starRating}
                     createdAt={fb.createdAt}

@@ -16,12 +16,13 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (data: LoginInput) => authService.login(data),
     onSuccess: async (response) => {
-      const { roleName, username, accessToken } = response.data.data;
+      const { roleName, username, accessToken, refreshToken } = response.data.data;
       const user = { roleName, username, accessToken };
       setAuth(user, accessToken);
+      useAuthStore.getState().setRefreshToken(refreshToken);
       Cookies.set(ACCESS_TOKEN_KEY, accessToken, { expires: 7 });
 
-      const rolePath = roleName === RoleType.TEACHER ? "/teacher/overview" : roleName === RoleType.ADMIN ? "/admin/overview" : "/student/overview";
+      const rolePath = roleName === RoleType.TEACHER ? "/teacher/dashboard" : roleName === RoleType.ADMIN ? "/admin/dashboard/overview" : "/student/dashboard";
       router.replace(rolePath);
     }
   });

@@ -15,6 +15,7 @@ export const feedbackSchema = z.object({
     profile: z.object({
       fullName: z.string().nullable().optional(),
       avatarUrl: z.string().nullable().optional(),
+      gender: z.string().nullable().optional(),
     }).nullable().optional(),
   }).nullable().optional(),
   teacher: z.object({

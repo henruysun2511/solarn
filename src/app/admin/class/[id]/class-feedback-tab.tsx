@@ -1,6 +1,7 @@
 "use client";
 
 import { DataPagination } from "@/components/common/data-pagination";
+import { FeedbackCard } from "@/components/common/feedback-card";
 import { Loading } from "@/components/common/loading";
 import { PaginationInfo } from "@/components/common/pagination-info";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,7 @@ import {
 import { FeedbackClassSortBy, FeedbackSortBy, SortOrder } from "@/constants/sort";
 import { useDebounce } from "@/hooks/useDebouce";
 import { useGetFeedbacksByClass } from "@/queries/useFeedbackQuery";
-import { Calendar, MessageSquare, Search, SortAsc, SortDesc } from "lucide-react";
+import { MessageSquare, Search, SortAsc, SortDesc } from "lucide-react";
 import { useState } from "react";
 
 export function ClassFeedbackTab({ classId }: { classId: string }) {
@@ -122,28 +123,22 @@ export function ClassFeedbackTab({ classId }: { classId: string }) {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                    {feedbacks.map((feedback, idx) => (
-                        <div key={feedback.feedbackId || idx} className="bg-white rounded-3xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-                            <div>
-                                <div className="flex items-center gap-3 mb-4">
-                                    <div className="size-10 rounded-full bg-indigo-50 text-indigo-600 flex items-center justify-center font-black">
-                                        {/* Placeholder avatar initial */}
-                                        {"S"}
-                                    </div>
-                                    <div>
-                                        <p className="font-bold text-gray-900 text-sm">Học sinh ID: <span className="font-mono text-gray-500">{feedback.studentId.substring(0, 8)}...</span></p>
-                                        <div className="flex items-center gap-1.5 mt-0.5 text-[10px] text-gray-400 font-medium">
-                                            <Calendar className="size-3" />
-                                            <span>{feedback.createdAt ? new Date(feedback.createdAt).toLocaleDateString("vi-VN") : "N/A"}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="bg-gray-50 p-4 rounded-2xl relative text-sm text-gray-700 leading-relaxed italic">
-                                    "{feedback.content}"
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                    {feedbacks.map((feedback, idx) => {
+                        const studentName = feedback.student?.profile?.fullName || feedback.studentId?.substring(0, 8) || "Học sinh";
+                        const courseName = feedback.class?.course?.courseName || "---";
+                        return (
+                            <FeedbackCard
+                                key={feedback.feedbackId || idx}
+                                studentName={studentName}
+                                avatarUrl={feedback.student?.profile?.avatarUrl}
+                                gender={feedback.student?.profile?.gender}
+                                target={courseName}
+                                content={feedback.content}
+                                starRating={feedback.starRating}
+                                createdAt={feedback.createdAt}
+                            />
+                        );
+                    })}
                 </div>
             )}
 

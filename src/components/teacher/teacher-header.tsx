@@ -4,17 +4,24 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
 import { Bell, Rocket, Search } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Logo } from "../common/logo";
+import { UserAvatar } from "../common/user-avatar";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { useGetMyProfile } from "@/queries/useTeacherQuery";
 
 export default function TeacherHeader() {
     const pathname = usePathname();
+    const router = useRouter();
+    const { user } = useAuthStore();
+    const { data: profileRes } = useGetMyProfile();
+    const profile = profileRes?.data;
 
     const navLinks = [
-        { name: "Khóa học", href: "courses" },
-        { name: "Giảng viên", href: "teachers" },
-        { name: "Đánh giá", href: "reviews" },
-        { name: "Blog", href: "blog" },
+        { name: "Khóa học", href: "/course" },
+        { name: "Giảng viên", href: "/teacher" },
+        { name: "Đánh giá", href: "/feedback" },
+        { name: "Blog", href: "/blog" },
     ];
 
     return (
@@ -67,18 +74,22 @@ export default function TeacherHeader() {
                     </Button>
 
                     {/* Profile Section */}
-                    <div className="flex items-center gap-4 pl-6 border-l border-slate-100 group cursor-pointer">
+                    <div onClick={() => router.push("/teacher/dashboard")} className="flex items-center gap-4 pl-6 border-l border-slate-100 group cursor-pointer">
                         <div className="text-right hidden sm:block">
-                            <p className="text-[14px] font-[1000] text-slate-800 leading-tight group-hover:text-[var(--primary)] transition-colors">Thúy Hoài</p>
+                            <p className="text-[14px] font-[1000] text-slate-800 leading-tight group-hover:text-[var(--primary)] transition-colors">{user?.username}</p>
                             <p className="text-[11px] text-[var(--primary)] font-black uppercase tracking-tighter mt-1 bg-[var(--accent)] px-2 py-0.5 rounded-md inline-block">
-                                Giáo viên
+                                {user?.roleName}
                             </p>
                         </div>
 
                         <div className="relative group">
-                            {/* Avatar với viền Gradient nhịp nhàng */}
                             <div className="size-12 rounded-[1.2rem] bg-gradient-to-br from-[var(--primary)] to-blue-400 p-[3px] shadow-lg shadow-blue-200 transition-transform group-hover:rotate-6">
-                                <img className="size-full rounded-[1rem]  flex items-center justify-center" src="https://i.pinimg.com/736x/9f/99/ba/9f99bae57804191d1e838177220d8600.jpg" alt="" />
+                                <UserAvatar
+                                    avatarUrl={profile?.avatarUrl}
+                                    fullName={profile?.fullName || user?.username}
+                                    gender={profile?.gender}
+                                    className="size-full rounded-[1rem]"
+                                />
                             </div>
                             <span className="absolute -top-1 -right-1 size-4 bg-green-500 border-4 border-white rounded-full animate-pulse" />
                         </div>

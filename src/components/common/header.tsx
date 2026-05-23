@@ -2,19 +2,25 @@
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils/cn";
-import { Search, Sun } from "lucide-react";
+import { Bell, Search, Sun } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Logo } from "../common/logo";
+import { UserAvatar } from "./user-avatar";
+import { useAuthStore } from "@/stores/useAuthStore";
+import { RoleType } from "@/constants/type";
+import { useGetMyStudentProfile } from "@/queries/useStudentQuery";
 
 export default function Header() {
     const pathname = usePathname();
+    const router = useRouter();
+    const { user, accessToken } = useAuthStore();
 
     const navLinks = [
-        { name: "Khóa học", href: "course" },
-        { name: "Giảng viên", href: "teacher" },
-        { name: "Đánh giá", href: "review" },
-        { name: "Blog", href: "blog" },
+        { name: "Khóa học", href: "/course-2" },
+        { name: "Giảng viên", href: "/teacher" },
+        { name: "Đánh giá", href: "/feedback" },
+        { name: "Blog", href: "/blog" },
     ];
 
     return (
@@ -23,20 +29,23 @@ export default function Header() {
 
                 {/* LEFT: Logo & Search */}
                 <div className="flex items-center gap-10">
-                    <Logo
-                        icon={<Sun size={20} fill="currentColor" />}
-                        brandText="SOLAN"
-                        highlightText="RN"
-                        iconBgColor="var(--primary)"
-                    />
+                    <Link href={"/"}>
+                        <Logo
+                            icon={<Sun size={20} fill="currentColor" />}
+                            brandText="SOLAN"
+                            highlightText="RN"
+                            iconBgColor="var(--primary)"
+                        />
+                    </Link>
 
-                    <div className="hidden lg:flex relative group w-72">
+
+                    {/* <div className="hidden lg:flex relative group w-72">
                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-[var(--primary)] transition-colors" />
                         <input
                             placeholder="Tìm bài học, tài liệu..."
                             className="w-full bg-slate-100/80 border-2 border-transparent rounded-[1.5rem] py-2.5 pl-11 pr-4 text-sm font-bold transition-all outline-none focus:bg-white focus:border-[var(--primary)] focus:ring-4 focus:ring-[var(--primary)]/10"
                         />
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* CENTER: Navigation Menu */}
@@ -62,14 +71,38 @@ export default function Header() {
 
                 {/* RIGHT: Actions & Profile */}
                 <div className="flex items-center gap-4">
-
-
-                    <div className="flex items-center gap-4">
-                        <Button variant="ghost" className="font-bold text-muted-foreground rounded-xl hover:text-foreground">Đăng nhập</Button>
-                        <Button className="rounded-2xl px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/20 font-bold transition-all">
-                            Tư vấn ngay
-                        </Button>
-                    </div>
+                    {accessToken && user ? (
+                        <div className="flex items-center gap-4">
+                            <Button variant="ghost" size="icon" className="relative size-12 rounded-2xl hover:bg-[var(--accent)] hover:text-[var(--primary)] transition-all group">
+                                <Bell className="w-5.5 h-5.5 text-slate-700 group-hover:scale-110 transition-transform" />
+                                <span className="absolute top-3 right-3 w-3 h-3 bg-red-500 rounded-full border-2 border-white shadow-sm" />
+                            </Button>
+                            <div onClick={() => {
+                                const role = user.roleName?.toLowerCase();
+                                if (role === RoleType.STUDENT) router.push("/student/dashboard");
+                                else if (role === RoleType.TEACHER) router.push("/teacher/dashboard");
+                                else if (role === RoleType.ADMIN) router.push("/admin/dashboard/overview");
+                            }} className="flex items-center gap-4 pl-6 border-l border-slate-100 group cursor-pointer">
+                                <div className="text-right hidden sm:block">
+                                    <p className="text-[14px] font-[1000] text-slate-800 leading-tight group-hover:text-[var(--primary)] transition-colors">{user.username}</p>
+                                    <p className="text-[11px] text-[var(--primary)] font-black uppercase tracking-tighter mt-1 bg-[var(--accent)] px-2 py-0.5 rounded-md inline-block">{user.roleName}</p>
+                                </div>
+                                <div className="relative group">
+                                    <div className="size-12 rounded-[1.2rem] bg-gradient-to-br from-[var(--primary)] to-blue-400 p-[3px] shadow-lg shadow-blue-200 transition-transform group-hover:rotate-6">
+                                        <UserAvatar username={user.username} className="size-full rounded-[1rem]" />
+                                    </div>
+                                    <span className="absolute -top-1 -right-1 size-4 bg-green-500 border-4 border-white rounded-full animate-pulse" />
+                                </div>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-4">
+                            <Button onClick={() => router.push("/auth/login")} variant="ghost" className="font-bold text-muted-foreground rounded-xl hover:text-foreground">Đăng nhập</Button>
+                            <Button onClick={() => router.push("/auth/register")} className="rounded-2xl px-8 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xl shadow-primary/20 font-bold transition-all">
+                                Tư vấn ngay
+                            </Button>
+                        </div>
+                    )}
                 </div>
             </div>
         </header>

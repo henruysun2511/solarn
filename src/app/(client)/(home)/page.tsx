@@ -3,68 +3,26 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useGetCourses } from "@/queries/useCourseQuery";
+import { Course } from "@/schemas/course.schema";
+import { cn } from "@/utils/cn";
+import { useRouter } from "next/navigation";
 import {
-  Award, BookOpen, CheckCircle2,
+  BookOpen, CheckCircle2,
   ChevronRight,
   Globe,
-  Library, MessagesSquare,
   Quote,
   Star,
   Users
 } from "lucide-react";
+import { levelColors } from "@/constants/label";
 
-// Dữ liệu mẫu - Sử dụng biến màu từ hệ thống
-const courses = [
-  {
-    name: "IELTS Intensive",
-    level: "Band 6.5 - 7.5+",
-    sessions: "32 buổi",
-    price: "Premium",
-    icon: Award,
-    color: "bg-primary/10 text-primary",
-    image: "https://i.pinimg.com/1200x/12/a5/ba/12a5ba210eda3bc30cb930f0fbe37226.jpg",
-    teacherName: "Mr. Darko",
-    teacherAvatar: "https://i.pinimg.com/1200x/12/a5/ba/12a5ba210eda3bc30cb930f0fbe37226.jpg"
-  },
-  {
-    name: "Communication Plus",
-    level: "Mọi trình độ",
-    sessions: "24 buổi",
-    price: "Popular",
-    icon: MessagesSquare,
-    color: "bg-secondary/10 text-secondary",
-    image: "https://i.pinimg.com/1200x/89/0c/c2/890cc25d844b9181e734b0b8a1954540.jpg",
-    teacherName: "Ms. Selena",
-    teacherAvatar: "https://i.pinimg.com/1200x/89/0c/c2/890cc25d844b9181e734b0b8a1954540.jpg"
-  },
-  {
-    name: "Pre-IELTS Foundation",
-    level: "Band 0 - 4.5",
-    sessions: "40 buổi",
-    price: "Hot",
-    icon: BookOpen,
-    color: "bg-primary/10 text-primary",
-    image: "https://i.pinimg.com/1200x/1d/1c/86/1d1c867861498321a988765e3268fbcf.jpg",
-    teacherName: "Ms. Lan Anh",
-    teacherAvatar: "https://i.pinimg.com/1200x/1d/1c/86/1d1c867861498321a988765e3268fbcf.jpg"
-  },
-  {
-    name: "Academic Writing",
-    level: "Band 5.5+",
-    sessions: "12 buổi",
-    price: "Special",
-    icon: Library,
-    color: "bg-accent text-accent-foreground",
-    image: "https://i.pinimg.com/1200x/a9/cc/af/a9ccaf53afe5d50c87c0ba1d6a36d34f.jpg",
-    teacherName: "Mr. James",
-    teacherAvatar: "https://i.pinimg.com/1200x/a9/cc/af/a9ccaf53afe5d50c87c0ba1d6a36d34f.jpg"
-  },
-];
+
 
 const teachers = [
-  { name: "Ms. Thúy Hoài", role: "Founder & Head of IELTS", achievement: "9.0 IELTS Overall", img: "TH" },
-  { name: "Mr. James Nguyen", role: "Senior Mentor", achievement: "8.5 IELTS - Speaking Expert", img: "JN" },
-  { name: "Ms. Sarah Lan", role: "Communication Lead", achievement: "10+ năm kinh nghiệm", img: "SL" },
+  { name: "Ms. Thúy Hoài", role: "Founder & Head of IELTS", achievement: "9.0 IELTS Overall", img: "https://i.pinimg.com/1200x/6a/47/75/6a47752306a5d521c155c3970534fc32.jpg" },
+  { name: "Mr. James Nguyen", role: "Senior Mentor", achievement: "8.5 IELTS - Speaking Expert", img: "https://i.pinimg.com/1200x/64/2d/9d/642d9da4098198039e6442d7b1d76ccd.jpg" },
+  { name: "Ms. Sarah Lan", role: "Communication Lead", achievement: "10+ năm kinh nghiệm", img: "https://i.pinimg.com/1200x/06/83/cf/0683cff6f77c94db738c0809226a6b73.jpg" },
 ];
 
 const reviews = [
@@ -76,6 +34,10 @@ const reviews = [
 
 
 export default function HomePage() {
+  const router = useRouter();
+  const { data: coursesData } = useGetCourses({ page: 1, limit: 4 });
+  const courses: Course[] = coursesData?.data || [];
+
   return (
     <div className="flex flex-col min-h-screen bg-[var(--dashboard-bg)] font-sans antialiased text-foreground">
 
@@ -105,7 +67,7 @@ export default function HomePage() {
               </p>
 
               <div className="flex flex-col sm:flex-row items-center gap-4 pt-4 justify-center lg:justify-start">
-                <Button className="h-16 px-10 rounded-2xl bg-[var(--secondary)] text-white font-black text-lg hover:scale-105 transition-transform shadow-2xl shadow-yellow-500/20">
+                <Button onClick={() => router.push("/auth/register")} className="h-16 px-10 rounded-2xl bg-[var(--secondary)] text-white font-black text-lg hover:scale-105 transition-transform shadow-2xl shadow-yellow-500/20">
                   Bắt đầu lộ trình ngay
                 </Button>
                 <Button variant="ghost" className="h-16 px-8 rounded-2xl border border-white/20 text-white font-bold hover:bg-white/10">
@@ -186,66 +148,74 @@ export default function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {courses.map((course, idx) => (
-            <Card key={idx} className="group border-gray-100 hover:border-[var(--primary)]/30 transition-all duration-500 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-primary/10 bg-white flex flex-col">
-
-              {/* 1. ẢNH KHÓA HỌC TRÊN CÙNG */}
+          {courses.map((course) => (
+            <Card
+              key={course.courseId}
+              onClick={() => router.push(`/course-2/${course.courseId}`)}
+              className="group border-gray-100 hover:border-[var(--primary)]/30 transition-all duration-500 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-primary/10 bg-white flex flex-col cursor-pointer"
+            >
               <div className="relative h-52 overflow-hidden">
                 <img
                   src={course.image || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=800"}
-                  alt={course.name}
+                  alt={course.courseName}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
-                {/* Badge giá lơ lửng trên ảnh */}
-                <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full shadow-sm">
-                  <span className="text-[10px] font-black text-[var(--primary)] uppercase tracking-widest">
-                    {course.price}
-                  </span>
-                </div>
+                {course.level && (
+                  <div className={cn(
+                    "absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm text-[10px] font-black tracking-widest",
+                    levelColors[course.level]?.split(" ").pop() || "text-[var(--primary)]"
+                  )}>
+                    {course.level}
+                  </div>
+                )}
               </div>
 
-              {/* 2. NỘI DUNG THÔNG TIN */}
               <CardHeader className="p-8 pb-0">
                 <p className="text-[10px] font-black text-[var(--primary)] uppercase tracking-[0.2em] mb-2">
-                  {course.level}
+                  {course.level ? `Trình độ ${course.level}` : "Đa trình độ"}
                 </p>
                 <CardTitle className="text-2xl font-black mb-4 text-foreground leading-tight group-hover:text-[var(--primary)] transition-colors">
-                  {course.name}
+                  {course.courseName}
                 </CardTitle>
 
                 <div className="flex items-center justify-between py-4 border-y border-dashed border-gray-100 mb-2 text-muted-foreground">
                   <span className="text-xs font-bold flex items-center gap-1.5">
-                    <Users className="w-4 h-4 text-[var(--primary)]" /> {course.sessions} Học viên
+                    <BookOpen className="w-4 h-4 text-[var(--primary)]" /> {course.totalSessions} buổi
                   </span>
                   <span className="text-[10px] font-black text-[var(--secondary)] bg-[var(--secondary)]/10 px-2 py-1 rounded-md uppercase">
-                    Full Access
+                    {new Intl.NumberFormat("vi-VN", { style: "currency", currency: "VND" }).format(course.tuitionFee)}
                   </span>
                 </div>
               </CardHeader>
 
-              <CardContent className="p-8 pt-4 flex flex-col flex-1 justify-between">
-                {/* 3. THÔNG TIN GIÁO VIÊN */}
-                <div className="flex items-center gap-3 mb-8">
-                  <div className="size-10 rounded-full border-2 border-white shadow-md overflow-hidden flex-shrink-0">
-                    <img
-                      src={course.teacherAvatar || `https://i.pravatar.cc/150?u=${idx}`}
-                      alt={course.teacherName}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-[9px] font-black text-gray-400 uppercase leading-none mb-1">Giảng viên</span>
-                    <span className="text-sm font-bold text-gray-700 leading-none">{course.teacherName || "Ms. Selena"}</span>
-                  </div>
-                </div>
+              <CardContent className="p-8 pt-4 flex flex-col flex-1">
+                {/* {course.description && (
+                  <p className="text-xs text-gray-500 font-medium leading-relaxed mb-6 line-clamp-2">
+                    {course.description}
+                  </p>
+                )} */}
 
-                {/* 4. NÚT ĐĂNG KÝ */}
-                <Button className="w-full rounded-2xl bg-blue-50 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white transition-all duration-300 font-black py-7 border-none text-md shadow-none hover:shadow-md">
+                {course.totalClasses !== undefined && (
+                  <div className="flex items-center gap-2 mb-6 text-xs text-gray-500 font-medium">
+                    <Users className="size-3.5 text-gray-400" />
+                    <span>{course.totalClasses} lớp đang mở</span>
+                  </div>
+                )}
+
+                <Button
+                  onClick={(e) => { e.stopPropagation(); router.push(`/course-2/${course.courseId}`); }}
+                  className="w-full rounded-2xl bg-blue-50 text-[var(--primary)] hover:bg-[var(--primary)] hover:text-white transition-all duration-300 font-black py-7 border-none text-md shadow-none hover:shadow-md mt-auto"
+                >
                   Đăng ký ngay
                 </Button>
               </CardContent>
             </Card>
           ))}
+          {courses.length === 0 && (
+            <div className="col-span-4 text-center py-10 text-gray-400 font-bold">
+              Đang tải khóa học...
+            </div>
+          )}
         </div>
       </section>
 
@@ -302,9 +272,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
             {teachers.map((t, i) => (
               <div key={i} className="group text-center">
-                <div className="w-48 h-48 mx-auto rounded-full bg-muted/10 border-4 border-muted/20 group-hover:border-primary transition-all duration-500 mb-8 flex items-center justify-center overflow-hidden">
-                  <span className="text-4xl font-black text-muted group-hover:text-primary transition-colors">{t.img}</span>
-                </div>
+                <img className="w-48 h-48 mx-auto rounded-full bg-muted/10 border-4 border-muted/20 group-hover:border-primary transition-all duration-500 mb-8 flex items-center justify-center overflow-hidden" src={t.img} alt={t.name} />
                 <h4 className="text-2xl font-black mb-2 text-background">{t.name}</h4>
                 <p className="text-primary font-bold text-xs uppercase tracking-[0.2em] mb-4">{t.role}</p>
                 <p className="text-muted text-sm font-semibold italic opacity-80">"{t.achievement}"</p>
@@ -351,7 +319,7 @@ export default function HomePage() {
           <div className="relative z-10">
             <h2 className="text-5xl md:text-7xl font-black mb-8 tracking-tighter uppercase leading-tight">Sẵn sàng bứt phá?</h2>
             <p className="text-primary-foreground/80 text-xl mb-12 max-w-2xl mx-auto font-bold italic">Tham gia cộng đồng 10,000+ học viên thành công tại SEG ngay hôm nay.</p>
-            <Button size="lg" className="bg-background text-primary hover:bg-accent text-xl font-black px-12 h-20 rounded-2xl shadow-xl transition-all hover:scale-105 border-none">
+            <Button onClick={() => router.push("/auth/register")} size="lg" className="bg-background text-primary hover:bg-accent text-xl font-black px-12 h-20 rounded-2xl shadow-xl transition-all hover:scale-105 border-none">
               Đăng ký tư vấn miễn phí
             </Button>
           </div>

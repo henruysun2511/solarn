@@ -6,8 +6,10 @@ import { persist } from "zustand/middleware";
 interface AuthState {
   user: UserResponse | null;
   accessToken: string | null;
+  refreshToken: string | null;
   setAuth: (user: UserResponse, token: string) => void;
   setAccessToken: (token: string) => void;
+  setRefreshToken: (token: string) => void;
   logout: () => void;
 }
 
@@ -16,10 +18,11 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       accessToken: null,
+      refreshToken: null,
 
       setAuth: (user, token) => {
         set({ user, accessToken: token });
-        Cookies.set("accessToken", token, { expires: 7 }); // Set cookie for middleware if needed
+        Cookies.set("accessToken", token, { expires: 7 });
       },
 
       setAccessToken: (token) => {
@@ -27,8 +30,12 @@ export const useAuthStore = create<AuthState>()(
         Cookies.set("accessToken", token, { expires: 7 });
       },
 
+      setRefreshToken: (token) => {
+        set({ refreshToken: token });
+      },
+
       logout: () => {
-        set({ user: null, accessToken: null });
+        set({ user: null, accessToken: null, refreshToken: null });
         Cookies.remove("accessToken");
         localStorage.removeItem("auth-storage");
       },
@@ -38,6 +45,7 @@ export const useAuthStore = create<AuthState>()(
       partialize: (state) => ({
         user: state.user,
         accessToken: state.accessToken,
+        refreshToken: state.refreshToken,
       }),
     }
   )
