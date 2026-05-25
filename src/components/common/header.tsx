@@ -10,6 +10,7 @@ import { UserAvatar } from "./user-avatar";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { RoleType } from "@/constants/type";
 import { useGetMyStudentProfile } from "@/queries/useStudentQuery";
+import { NotificationDropdown } from "./notification-dropdown";
 
 export default function Header() {
     const pathname = usePathname();
@@ -73,10 +74,7 @@ export default function Header() {
                 <div className="flex items-center gap-4">
                     {accessToken && user ? (
                         <div className="flex items-center gap-4">
-                            <Button variant="ghost" size="icon" className="relative size-12 rounded-2xl hover:bg-[var(--accent)] hover:text-[var(--primary)] transition-all group">
-                                <Bell className="w-5.5 h-5.5 text-slate-700 group-hover:scale-110 transition-transform" />
-                                <span className="absolute top-3 right-3 w-3 h-3 bg-red-500 rounded-full border-2 border-white shadow-sm" />
-                            </Button>
+                            <NotificationDropdown />
                             <div onClick={() => {
                                 const role = user.roleName;
                                 console.log(user.roleName)

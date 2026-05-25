@@ -9,6 +9,7 @@ import { Logo } from "../common/logo";
 import { UserAvatar } from "../common/user-avatar";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useGetMyStudentProfile } from "@/queries/useStudentQuery";
+import { NotificationDropdown } from "../common/notification-dropdown";
 
 export default function StudentHeader() {
     const pathname = usePathname();
@@ -73,10 +74,7 @@ export default function StudentHeader() {
                 {/* RIGHT: Actions & Profile */}
                 <div className="flex items-center gap-4">
                     {/* Notifications */}
-                    <Button variant="ghost" size="icon" className="relative size-12 rounded-2xl hover:bg-[var(--accent)] hover:text-[var(--primary)] transition-all group">
-                        <Bell className="w-5.5 h-5.5 text-slate-700 group-hover:scale-110 transition-transform" />
-                        <span className="absolute top-3 right-3 w-3 h-3 bg-red-500 rounded-full border-2 border-white shadow-sm" />
-                    </Button>
+                    <NotificationDropdown />
 
                     {/* Profile Section */}
                     <div onClick={() => router.push("/student/dashboard")} className="flex items-center gap-4 pl-6 border-l border-slate-100 group cursor-pointer">

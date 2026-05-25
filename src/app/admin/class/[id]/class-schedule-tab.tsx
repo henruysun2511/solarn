@@ -31,10 +31,12 @@ import {
     ListIcon,
     SortAsc,
     SortDesc,
-    EyeIcon
+    EyeIcon,
+    PlusIcon
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { UpdateSessionStatusDialog } from "./update-session-status-dialog";
+import { CreateScheduleSessionDialog } from "@/app/admin/schedule-session/schedule-session-dialog";
 import { ScheduleItem } from "@/components/common/schedule-item";
 import { useRouter } from "next/navigation";
 
@@ -42,6 +44,7 @@ export function ClassScheduleTab({ classId }: { classId: string }) {
     const router = useRouter();
     const [viewMode, setViewMode] = useState<"table" | "calendar">("table");
     const [selectedSession, setSelectedSession] = useState<ScheduleSession | null>(null);
+    const [createOpen, setCreateOpen] = useState(false);
     const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.DESC);
     const [sortBy, setSortBy] = useState<ScheduleSessionSortBy>(ScheduleSessionSortBy.STUDY_DATE);
     const [params, setParams] = useState({
@@ -181,6 +184,14 @@ export function ClassScheduleTab({ classId }: { classId: string }) {
                     </div>
                 </div>
             </div>
+
+            <Button
+                onClick={() => setCreateOpen(true)}
+                className="rounded-xl bg-primary text-white font-black h-10 px-5 shadow-lg shadow-primary/10 hover:opacity-90 transition-all flex items-center gap-2 text-xs"
+            >
+                <PlusIcon className="size-4" />
+                <span>Thêm buổi học</span>
+            </Button>
 
             {/* HIỂN THỊ DẠNG BẢNG */}
             {viewMode === "table" ? (
@@ -366,6 +377,12 @@ export function ClassScheduleTab({ classId }: { classId: string }) {
                     onClose={() => setSelectedSession(null)}
                 />
             )}
+
+            <CreateScheduleSessionDialog
+                isOpen={createOpen}
+                onClose={() => setCreateOpen(false)}
+                classId={classId}
+            />
         </div>
     );
 }

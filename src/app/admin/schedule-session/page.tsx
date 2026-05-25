@@ -14,7 +14,7 @@ import { useGetClasses } from "@/queries/useClassQuery";
 import { useGetShifts } from "@/queries/useShiftQuery";
 
 import { ScheduleSession, ScheduleSessionParams } from "@/schemas/schedule-session.schema";
-import { ListIcon, CalendarDays } from "lucide-react";
+import { ListIcon, CalendarDays, PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -23,6 +23,7 @@ import { ScheduleSessionFilter } from "./schedule-session-filter";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ScheduleSessionCalendar } from "./schedule-session-calendar-view";
 import { UpdateSessionStatusDialog } from "./schedule-session-status-dialog";
+import { CreateScheduleSessionDialog } from "@/app/admin/schedule-session/schedule-session-dialog";
 
 export default function AdminScheduleSessionPage() {
     const router = useRouter();
@@ -39,6 +40,7 @@ export default function AdminScheduleSessionPage() {
     );
 
     const [updatingSession, setUpdatingSession] = useState<ScheduleSession | null>(null);
+    const [createOpen, setCreateOpen] = useState(false);
 
     // Lấy dữ liệu danh sách Schedule Sessions chính
     const { data, isLoading } = useGetScheduleSessions(params);
@@ -122,6 +124,14 @@ export default function AdminScheduleSessionPage() {
                         <span>Lịch tuần</span>
                     </Button>
                 </div>
+
+                <Button
+                    onClick={() => setCreateOpen(true)}
+                    className="rounded-xl bg-primary text-white font-black h-11 px-6 shadow-lg shadow-primary/10 hover:opacity-90 transition-all flex items-center gap-2"
+                >
+                    <PlusIcon className="size-4" />
+                    <span>Thêm buổi học</span>
+                </Button>
             </div>
 
             <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">                <ScheduleSessionFilter
@@ -186,6 +196,11 @@ export default function AdminScheduleSessionPage() {
                 onClose={() => setUpdatingSession(null)}
                 onSubmit={handleStatusSubmit}
                 loading={updateStatusMutation.isPending}
+            />
+
+            <CreateScheduleSessionDialog
+                isOpen={createOpen}
+                onClose={() => setCreateOpen(false)}
             />
         </div>
     );

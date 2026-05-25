@@ -53,3 +53,9 @@ export const updateSessionStatusSchema = z.object({
   status: z.nativeEnum(ClassSessionStatus),
 });
 export type UpdateSessionStatusInput = z.infer<typeof updateSessionStatusSchema>;
+
+export const createScheduleSessionSchema = z.object({
+  shiftCode: z.string().min(1, "Vui lòng chọn ca học"),
+  studyDate: z.string().min(1, "Vui lòng chọn ngày học"),
+});
+export type CreateScheduleSessionInput = z.infer<typeof createScheduleSessionSchema>;

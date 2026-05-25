@@ -3,7 +3,8 @@ import {
   ScheduleSession,
   UpdateSessionStatusInput,
   ScheduleSessionParams,
-  ScheduleSessionClassParams
+  ScheduleSessionClassParams,
+  CreateScheduleSessionInput
 } from "@/schemas/schedule-session.schema";
 import http from "@/utils/http";
 
@@ -24,6 +25,10 @@ const scheduleSessionService = {
 
   getScheduleSessionById: (id: string) => {
     return http.get<ApiResponse<ScheduleSession>>(`${prefix}/${id}`);
+  },
+
+  createOneForClass: (classId: string, data: CreateScheduleSessionInput) => {
+    return http.post<ApiResponse<any>>(`${prefix}/class/${classId}`, data);
   },
 };
 

@@ -101,7 +101,7 @@ export default function TeacherListPage() {
                             <div className="relative z-10 w-full aspect-square max-w-[400px] mx-auto">
                                 <div className="w-full h-full rounded-[3rem] overflow-hidden border-[12px] border-white/10 shadow-2xl rotate-3">
                                     <img
-                                        src="https://i.pinimg.com/1200x/75/48/d8/7548d8bc381f16d63836e6a0ba7aecbe.jpg"
+                                        src="https://i.pinimg.com/1200x/64/59/3a/64593aa2c30b8bbcfef774455a6f4630.jpg"
                                         className="w-full h-full object-cover scale-110"
                                         alt="Teachers"
                                     />

@@ -104,7 +104,7 @@ export default function FeedbackPage() {
                             <div className="relative z-10 w-full aspect-square max-w-[400px] mx-auto">
                                 <div className="w-full h-full rounded-[3rem] overflow-hidden border-[12px] border-white/10 shadow-2xl -rotate-3">
                                     <img
-                                        src="https://i.pinimg.com/1200x/75/48/d8/7548d8bc381f16d63836e6a0ba7aecbe.jpg"
+                                        src="https://i.pinimg.com/1200x/62/c4/c9/62c4c900fa30b311edac4a92a638a9be.jpg"
                                         className="w-full h-full object-cover scale-110"
                                         alt="Happy students"
                                     />
