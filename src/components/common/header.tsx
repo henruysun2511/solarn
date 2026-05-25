@@ -78,7 +78,8 @@ export default function Header() {
                                 <span className="absolute top-3 right-3 w-3 h-3 bg-red-500 rounded-full border-2 border-white shadow-sm" />
                             </Button>
                             <div onClick={() => {
-                                const role = user.roleName?.toLowerCase();
+                                const role = user.roleName;
+                                console.log(user.roleName)
                                 if (role === RoleType.STUDENT) router.push("/student/dashboard");
                                 else if (role === RoleType.TEACHER) router.push("/teacher/dashboard");
                                 else if (role === RoleType.ADMIN) router.push("/admin/dashboard/overview");

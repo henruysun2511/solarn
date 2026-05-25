@@ -21,7 +21,7 @@ const sidebarItems = [
     {
         icon: LayoutDashboard,
         label: "Tổng quan",
-        href: "/teacher/overview"
+        href: "/teacher/dashboard"
     },
     // {
     //     icon: UserCircle,
@@ -84,18 +84,20 @@ export function TeacherSidebar() {
                 const isActive = pathname === item.href;
 
                 return (
-                    <Link key={item.href} href={item.href} passHref legacyBehavior>
-                        <Button
-                            variant="ghost"
-                            className={`cursor-pointer w-full justify-start h-14 rounded-2xl gap-4 font-bold text-base transition-all ${isActive
-                                ? "bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary)] shadow-md"
-                                : "text-muted-foreground hover:bg-[var(--accent)] hover:text-[var(--primary)]"
-                                }`}
-                        >
+                    <Button
+                        key={item.href}
+                        asChild
+                        variant="ghost"
+                        className={`cursor-pointer w-full justify-start h-14 rounded-2xl gap-4 font-bold text-base transition-all ${isActive
+                            ? "bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary)] shadow-md"
+                            : "text-muted-foreground hover:bg-[var(--accent)] hover:text-[var(--primary)]"
+                            }`}
+                    >
+                        <Link href={item.href}>
                             <item.icon className="w-5 h-5" />
                             {item.label}
-                        </Button>
-                    </Link>
+                        </Link>
+                    </Button>
                 );
             })}
         </nav>
