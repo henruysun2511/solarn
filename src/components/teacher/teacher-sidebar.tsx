@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import {
     Bell,
     BookOpen,
@@ -11,7 +10,6 @@ import {
     GraduationCap,
     LayoutDashboard,
     Star,
-    UserCircle,
     Users
 } from "lucide-react";
 import Link from "next/link";
@@ -23,11 +21,6 @@ const sidebarItems = [
         label: "Tổng quan",
         href: "/teacher/dashboard"
     },
-    // {
-    //     icon: UserCircle,
-    //     label: "Hồ sơ",
-    //     href: "/teacher/profile"
-    // },
     {
         icon: Users,
         label: "Học viên",
@@ -84,20 +77,17 @@ export function TeacherSidebar() {
                 const isActive = pathname === item.href;
 
                 return (
-                    <Button
+                    <Link
                         key={item.href}
-                        asChild
-                        variant="ghost"
-                        className={`cursor-pointer w-full justify-start h-14 rounded-2xl gap-4 font-bold text-base transition-all ${isActive
-                            ? "bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[var(--primary)] shadow-md"
+                        href={item.href}
+                        className={`flex items-center gap-4 w-full h-14 rounded-2xl px-4 font-bold text-base transition-all cursor-pointer ${isActive
+                            ? "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-md"
                             : "text-muted-foreground hover:bg-[var(--accent)] hover:text-[var(--primary)]"
                             }`}
                     >
-                        <Link href={item.href}>
-                            <item.icon className="w-5 h-5" />
-                            {item.label}
-                        </Link>
-                    </Button>
+                        <item.icon className="w-5 h-5 shrink-0" />
+                        {item.label}
+                    </Link>
                 );
             })}
         </nav>

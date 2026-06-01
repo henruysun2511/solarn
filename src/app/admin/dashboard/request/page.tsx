@@ -122,7 +122,7 @@ export default function RequestDashboard() {
                         <CardDescription className="font-medium">Số lượng yêu cầu trong 6 tháng gần nhất</CardDescription>
                     </CardHeader>
                     <CardContent className="p-8">
-                        <div className="h-[350px] w-full">
+                        <div className="h-[350px] w-full" style={{ minWidth: 0, minHeight: 0 }}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={monthlyChartData.length > 0 ? monthlyChartData : [{ name: "Chưa có dữ liệu", requests: 0 }]}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
@@ -142,7 +142,7 @@ export default function RequestDashboard() {
                         <CardDescription className="font-medium">Theo loại yêu cầu</CardDescription>
                     </CardHeader>
                     <CardContent className="p-8 flex items-center justify-center">
-                        <div className="h-[350px] w-full">
+                        <div className="h-[350px] w-full" style={{ minWidth: 0, minHeight: 0 }}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
                                     <Pie
@@ -178,7 +178,7 @@ export default function RequestDashboard() {
                         <CardDescription className="font-medium">Phân bố theo trạng thái xử lý</CardDescription>
                     </CardHeader>
                     <CardContent className="p-8">
-                        <div className="h-[300px] w-full">
+                        <div className="h-[300px] w-full" style={{ minWidth: 0, minHeight: 0 }}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={statusChartData.length > 0 ? statusChartData : [{ name: "Chưa có dữ liệu", count: 0, fill: "#e5e7eb" }]} layout="vertical">
                                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f0f0f0" />

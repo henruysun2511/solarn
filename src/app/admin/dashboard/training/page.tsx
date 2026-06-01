@@ -98,7 +98,7 @@ export default function TrainingDashboard() {
                         <CardDescription className="font-medium">Số học viên đăng ký mới</CardDescription>
                     </CardHeader>
                     <CardContent className="p-8">
-                        <div className="h-[350px] w-full">
+                        <div className="h-[350px] w-full" style={{ minWidth: 0, minHeight: 0 }}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={enrollmentChartData.length > 0 ? enrollmentChartData : [{ month: "Chưa có dữ liệu", enrollments: 0 }]}>
                                     <defs>
@@ -124,7 +124,7 @@ export default function TrainingDashboard() {
                         <CardDescription className="font-medium">Thống kê kết quả học tập</CardDescription>
                     </CardHeader>
                     <CardContent className="p-8 flex items-center justify-center">
-                        <div className="h-[350px] w-full">
+                        <div className="h-[350px] w-full" style={{ minWidth: 0, minHeight: 0 }}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <RadarChart data={scoreData.length > 0 ? scoreData : [{ subject: "Chưa có dữ liệu", value: 1, fullMark: 100 }]} cx="50%" cy="50%" outerRadius="75%">
                                     <PolarGrid stroke="#e5e7eb" />

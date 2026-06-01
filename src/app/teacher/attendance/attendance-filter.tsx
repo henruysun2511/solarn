@@ -1,7 +1,6 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -117,56 +116,54 @@ export function AttendanceFilter({
               const isActive = session.sessionId === selectedSessionId;
               const sessionStatus = session.status;
               return (
-                <Card
+                <div
                   key={session.sessionId}
                   onClick={() => onFilterChange({ sessionId: session.sessionId })}
-                  className={`min-w-[280px]  rounded-2xl border-2 cursor-pointer transition-all shrink-0 hover:shadow-md ${isActive
+                  className={`min-w-[280px] rounded-2xl border-2 cursor-pointer transition-all shrink-0 hover:shadow-md p-4 flex flex-col gap-3 ${isActive
                     ? "border-red-500 bg-red-50/30"
                     : "border-transparent bg-white shadow-sm"
                     }`}
                 >
-                  <CardContent className="p-4">
-                    <div className="flex justify-between items-start mb-3">
-                      <div
-                        className={`p-2 rounded-lg ${isActive ? "bg-red-600 text-white" : "bg-gray-100 text-gray-500"
-                          }`}
-                      >
-                        <CalendarIcon className="size-4" />
-                      </div>
-                      <Badge
-                        className={`border-none rounded-full px-3 font-black text-[9px] uppercase ${sessionStatus === ClassSessionStatus.ENDED
-                          ? "bg-green-100 text-green-600"
-                          : sessionStatus === ClassSessionStatus.IN_PROGRESS
-                            ? "bg-red-600 text-white"
-                            : "bg-gray-100 text-gray-400"
-                          }`}
-                      >
-                        {sessionStatus === ClassSessionStatus.ENDED
-                          ? "Hoàn thành"
-                          : sessionStatus === ClassSessionStatus.IN_PROGRESS
-                            ? "Đang học"
-                            : "Sắp tới"}
-                      </Badge>
+                  <div className="flex justify-between items-start">
+                    <div
+                      className={`p-2 rounded-lg ${isActive ? "bg-red-600 text-white" : "bg-gray-100 text-gray-500"
+                        }`}
+                    >
+                      <CalendarIcon className="size-4" />
                     </div>
-                    <h4 className="font-bold text-[var(--foreground)] leading-tight mb-1 text-sm">
-                      {session.shift?.shiftName || session.shiftCode}
-                    </h4>
-                    <div className="flex items-center gap-2 text-xs text-gray-400 font-medium">
-                      <span>{new Date(session.studyDate).toLocaleDateString("vi-VN")}</span>
-                      {session.shift?.timeRange && (
-                        <>
-                          <span>·</span>
-                          <span>{session.shift.timeRange}</span>
-                        </>
-                      )}
-                    </div>
-                    {session.class?.room?.roomCode && (
-                      <p className="text-[10px] font-semibold text-gray-400 uppercase mt-1">
-                        {session.class.room.roomCode}
-                      </p>
+                    <Badge
+                      className={`border-none rounded-full px-3 font-black text-[9px] uppercase ${sessionStatus === ClassSessionStatus.ENDED
+                        ? "bg-green-100 text-green-600"
+                        : sessionStatus === ClassSessionStatus.IN_PROGRESS
+                          ? "bg-red-600 text-white"
+                          : "bg-gray-100 text-gray-400"
+                        }`}
+                    >
+                      {sessionStatus === ClassSessionStatus.ENDED
+                        ? "Hoàn thành"
+                        : sessionStatus === ClassSessionStatus.IN_PROGRESS
+                          ? "Đang học"
+                          : "Sắp tới"}
+                    </Badge>
+                  </div>
+                  <h4 className="font-bold text-[var(--foreground)] leading-tight text-sm">
+                    {session.shift?.shiftName || session.shiftCode}
+                  </h4>
+                  <div className="flex items-center gap-2 text-xs text-gray-400 font-medium">
+                    <span>{new Date(session.studyDate).toLocaleDateString("vi-VN")}</span>
+                    {session.shift?.timeRange && (
+                      <>
+                        <span>·</span>
+                        <span>{session.shift.timeRange}</span>
+                      </>
                     )}
-                  </CardContent>
-                </Card>
+                  </div>
+                  {session.class?.room?.roomCode && (
+                    <p className="text-[10px] font-semibold text-gray-400 uppercase">
+                      {session.class.room.roomCode}
+                    </p>
+                  )}
+                </div>
               );
             })
           )}

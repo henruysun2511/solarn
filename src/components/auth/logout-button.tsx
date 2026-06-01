@@ -20,7 +20,7 @@ export function LogoutButton({ className }: { className?: string }) {
   return (
     <Button
       variant="ghost"
-      className={className}
+      className={`relative overflow-hidden ${className}`}
       disabled={logoutMutation.isPending}
       onClick={handleLogout}
     >
@@ -28,8 +28,9 @@ export function LogoutButton({ className }: { className?: string }) {
         <LogOut className="mr-3 size-5 transition-transform group-hover:-translate-x-1" />
         <span className="uppercase tracking-widest text-[11px]">Đăng xuất</span>
       </div>
-      <div className="absolute inset-0 bg-gradient-to-r from-red-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-red-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
     </Button>
 
   );
 }
+

@@ -9,6 +9,7 @@ import { useGetMyClasses } from "@/queries/useClassQuery";
 import { useGetScheduleSessionsByClass, useUpdateSessionStatus } from "@/queries/useScheduleSessionQuery";
 import { useGetAttendanceBySession, useBulkUpsertAttendance } from "@/queries/useAttendanceQuery";
 import { AttendanceRecord } from "@/schemas/attendance.schema";
+import { ScheduleSessionClassParams } from "@/schemas/schedule-session.schema";
 import { handleError } from "@/utils/handleError";
 import {
   CheckCircle2Icon,
@@ -45,12 +46,14 @@ export default function TeacherAttendancePage() {
     }));
   }, [myClassesData]);
 
-  const { data: sessionsData } = useGetScheduleSessionsByClass(params.classId, {
+  const sessionParams = useMemo<ScheduleSessionClassParams>(() => ({
     page: 1,
     limit: 100,
     sortBy: ScheduleSessionSortBy.STUDY_DATE,
     sortOrder: SortOrder.DESC,
-  });
+  }), []);
+
+  const { data: sessionsData } = useGetScheduleSessionsByClass(params.classId, sessionParams);
   const sessions = sessionsData?.data || [];
 
   const selectedSession = useMemo(() => {
@@ -239,7 +242,7 @@ export default function TeacherAttendancePage() {
               <p className="text-2xl font-black text-red-700">{summary.absent}</p>
             </div>
           </div>
-          <div className="bg-blue-50 rounded-xl p-4 flex items-center gap-3">
+          <div className="bg-blue-100 rounded-xl p-4 flex items-center gap-3">
             <div className="size-10 rounded-lg bg-blue-100 flex items-center justify-center">
               <Users className="size-5 text-blue-600" />
             </div>
@@ -253,9 +256,9 @@ export default function TeacherAttendancePage() {
 
       {/* TABLE */}
       <DataTable
+        key={params.sessionId}
         columns={getColumns({
           attendanceValues,
-          noteValues,
           onAttendanceChange: handleAttendanceChange,
           onNoteChange: handleNoteChange,
           isEnded,

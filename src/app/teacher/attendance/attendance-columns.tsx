@@ -4,13 +4,32 @@ import { Input } from "@/components/ui/input";
 import { AttendanceStatus } from "@/constants/type";
 import { AttendanceRecord } from "@/schemas/attendance.schema";
 import { ColumnDef } from "@tanstack/react-table";
+import { useState } from "react";
 
 interface ColumnProps {
   attendanceValues: Record<string, AttendanceStatus>;
-  noteValues: Record<string, string>;
   onAttendanceChange: (recordId: string, status: AttendanceStatus) => void;
   onNoteChange: (recordId: string, note: string) => void;
   isEnded: boolean;
+}
+
+function NoteCell({ record, isEnded, onNoteChange }: { record: AttendanceRecord; isEnded: boolean; onNoteChange: (recordId: string, note: string) => void }) {
+  const [value, setValue] = useState(record.note || "");
+  const recordId = record.attendanceId || record.studentId;
+  return (
+    <div className="pl-10">
+      <Input
+        placeholder="Write note..."
+        value={value}
+        onChange={(e) => {
+          setValue(e.target.value);
+          onNoteChange(recordId, e.target.value);
+        }}
+        className="h-9 border-gray-200 focus-visible:ring-primary w-[180px] text-black"
+        disabled={isEnded}
+      />
+    </div>
+  );
 }
 
 const attendanceOptions = [
@@ -21,7 +40,6 @@ const attendanceOptions = [
 
 export const getColumns = ({
   attendanceValues,
-  noteValues,
   onAttendanceChange,
   onNoteChange,
   isEnded,
@@ -114,20 +132,8 @@ export const getColumns = ({
   {
     id: "note",
     header: () => <span className="text-sm font-bold text-gray-700 pl-10">Note</span>,
-    cell: ({ row }) => {
-      const record = row.original;
-      const recordId = record.attendanceId || record.studentId;
-      return (
-        <div className="pl-10">
-          <Input
-            placeholder="Write note..."
-            value={noteValues[recordId] !== undefined ? noteValues[recordId] : record.note || ""}
-            onChange={(e) => !isEnded && onNoteChange(recordId, e.target.value)}
-            className="h-9 border-gray-200 focus-visible:ring-primary w-[180px]"
-            disabled={isEnded}
-          />
-        </div>
-      );
-    },
+    cell: ({ row }) => (
+      <NoteCell record={row.original} isEnded={isEnded} onNoteChange={onNoteChange} />
+    ),
   },
 ];

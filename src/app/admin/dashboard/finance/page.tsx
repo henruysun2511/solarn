@@ -97,7 +97,7 @@ export default function FinanceDashboard() {
                         <CardDescription className="font-medium">Biểu đồ cột doanh thu</CardDescription>
                     </CardHeader>
                     <CardContent className="p-8">
-                        <div className="h-[350px] w-full">
+                        <div className="h-[350px] w-full" style={{ minWidth: 0, minHeight: 0 }}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <BarChart data={revenueChartData.length > 0 ? revenueChartData : [{ name: "Chưa có dữ liệu", revenue: 0 }]}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
@@ -117,7 +117,7 @@ export default function FinanceDashboard() {
                         <CardDescription className="font-medium">Trạng thái thanh toán</CardDescription>
                     </CardHeader>
                     <CardContent className="p-8 flex items-center justify-center">
-                        <div className="h-[350px] w-full">
+                        <div className="h-[350px] w-full" style={{ minWidth: 0, minHeight: 0 }}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <PieChart>
                                     <Pie

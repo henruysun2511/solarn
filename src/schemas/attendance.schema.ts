@@ -47,10 +47,10 @@ export const attendanceStudentSchema = z.object({
 });
 
 export const attendanceRecordSchema = z.object({
-  attendanceId: z.string(),
+  attendanceId: z.string().nullable(),
   studentId: z.string(),
   sessionId: z.string(),
-  status: z.nativeEnum(AttendanceStatus),
+  status: z.nativeEnum(AttendanceStatus).nullable(),
   note: z.string().nullable().optional(),
   student: attendanceStudentSchema,
 });
