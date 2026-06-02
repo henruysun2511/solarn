@@ -6,11 +6,13 @@ import { RequestStatus } from "@/constants/type";
 import { REQUEST_STATUS_CONFIG } from "@/constants/label";
 import { ColumnDef } from "@tanstack/react-table";
 import {
-    ThumbsUp,
-    ThumbsDown,
-    Loader2,
-    ArrowRight,
+  ThumbsUp,
+  ThumbsDown,
+  Loader2,
+  Calendar
 } from "lucide-react";
+import { format } from "date-fns";
+import { Request } from "@/schemas/request.schema";
 
 interface ColumnProps {
   onApprove: (requestId: string) => void;
@@ -18,7 +20,7 @@ interface ColumnProps {
   processingId: string | null;
 }
 
-export const getColumns = ({ onApprove, onReject, processingId }: ColumnProps): ColumnDef<any>[] => [
+export const getColumns = ({ onApprove, onReject, processingId }: ColumnProps): ColumnDef<Request>[] => [
   {
     accessorKey: "requestId",
     header: "Mã đơn",
@@ -29,35 +31,44 @@ export const getColumns = ({ onApprove, onReject, processingId }: ColumnProps): 
     ),
   },
   {
-    id: "studentName",
+    id: "student",
     header: "Học sinh",
-    cell: ({ row }) => (
-      <span className="font-semibold text-gray-800">
-        {row.original.senderAccount?.profile?.fullName || "---"}
-      </span>
-    ),
-  },
-  {
-    id: "fromClass",
-    header: "Lớp hiện tại",
     cell: ({ row }) => {
-      const cls = row.original.fromClass;
-      return cls ? (
-        <span className="text-gray-600 text-xs">
-          {cls.course?.courseName} ({cls.roomCode})
-        </span>
-      ) : "---";
+      const profile = row.original.senderAccount?.profile;
+      return (
+        <div className="flex flex-col">
+          <span className="font-semibold text-gray-800 text-sm">
+            {profile?.fullName || "---"}
+          </span>
+          <span className="text-[10px] font-bold text-gray-400">
+            {row.original.enrollment?.class?.course?.courseName || ""}
+          </span>
+        </div>
+      );
     },
   },
   {
-    id: "toClass",
-    header: "Lớp chuyển đến",
+    id: "fromClass",
+    header: "Lớp cũ",
     cell: ({ row }) => {
-      const cls = row.original.toClass;
-      return cls ? (
-        <span className="text-gray-600 text-xs flex items-center gap-1">
-          <ArrowRight className="w-3 h-3 text-primary" />
-          {cls.course?.courseName} ({cls.roomCode})
+      const fromClass = row.original.fromClass;
+      return (
+        <span className="text-gray-600 text-xs">
+          {fromClass?.course?.courseName
+            ? `${fromClass.course.courseName} (${fromClass.roomCode})`
+            : fromClass?.roomCode || "---"}
+        </span>
+      );
+    },
+  },
+  {
+    accessorKey: "createdAt",
+    header: "Ngày gửi",
+    cell: ({ row }) => {
+      const d = row.original.createdAt;
+      return d ? (
+        <span className="text-xs text-gray-500 flex items-center gap-1">
+          <Calendar className="w-3 h-3" /> {format(new Date(d), "dd/MM/yyyy")}
         </span>
       ) : "---";
     },
@@ -92,9 +103,9 @@ export const getColumns = ({ onApprove, onReject, processingId }: ColumnProps): 
       const status = row.original.status;
       const requestId = row.original.requestId;
       const isPending = status === RequestStatus.PENDING;
-      const isProcessing = processingId === requestId;
+      const isProcessing = requestId ? processingId === requestId : false;
 
-      if (!isPending) {
+      if (!isPending || !requestId) {
         return <div className="text-right pr-6 text-[10px] text-gray-400 font-medium">Đã xử lý</div>;
       }
 

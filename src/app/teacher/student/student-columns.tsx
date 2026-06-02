@@ -2,6 +2,7 @@
 
 import { UserAvatar } from "@/components/common/user-avatar";
 import { Student } from "@/schemas/student.schema";
+import { genderLabel } from "@/constants/label";
 import { ColumnDef } from "@tanstack/react-table";
 
 export const getColumns = (): ColumnDef<Student>[] => [
@@ -41,8 +42,7 @@ export const getColumns = (): ColumnDef<Student>[] => [
     header: "Giới tính",
     cell: ({ row }) => {
       const gender = row.original.profile?.gender;
-      const genderLabel = gender === "MALE" ? "Nam" : gender === "FEMALE" ? "Nữ" : "---";
-      return <span className="text-gray-700">{genderLabel}</span>;
+      return <span className="text-gray-700">{gender ? genderLabel[gender] : "---"}</span>;
     },
   },
 ];

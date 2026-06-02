@@ -23,11 +23,11 @@ const sidebarItems = [
         label: "Tổng quan",
         href: "/student/dashboard"
     },
-    // {
-    //     icon: UserCircle,
-    //     label: "Hồ sơ",
-    //     href: "/student/profile"
-    // },
+    {
+        icon: Users,
+        label: "Lớp của tôi",
+        href: "/student/enrollment"
+    },
     {
         icon: Calendar,
         label: "Lịch học",

@@ -3,40 +3,14 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RequestStatus } from "@/constants/type";
+import { REQUEST_STATUS_CONFIG } from "@/constants/label";
 import { ColumnDef } from "@tanstack/react-table";
 import {
-    CheckCircle2,
-    Clock,
-    XCircle,
-    RotateCcw,
     ThumbsUp,
     ThumbsDown,
     Loader2,
     Calendar
 } from "lucide-react";
-
-const statusConfig: Record<string, { label: string; icon: React.ReactNode; className: string }> = {
-  [RequestStatus.PENDING]: {
-    label: "Chờ duyệt",
-    icon: <Clock className="w-3 h-3" />,
-    className: "bg-orange-50 text-orange-600 border-orange-100",
-  },
-  [RequestStatus.APPROVED]: {
-    label: "Đã duyệt",
-    icon: <CheckCircle2 className="w-3 h-3" />,
-    className: "bg-green-50 text-green-600 border-green-100",
-  },
-  [RequestStatus.REJECTED]: {
-    label: "Từ chối",
-    icon: <XCircle className="w-3 h-3" />,
-    className: "bg-red-50 text-red-600 border-red-100",
-  },
-  [RequestStatus.CANCELLED]: {
-    label: "Đã hủy",
-    icon: <RotateCcw className="w-3 h-3" />,
-    className: "bg-gray-50 text-gray-500 border-gray-100",
-  },
-};
 
 interface ColumnProps {
   onApprove: (requestId: string) => void;
@@ -123,7 +97,7 @@ export const getColumns = ({ onApprove, onReject, processingId }: ColumnProps): 
     header: "Trạng thái",
     cell: ({ row }) => {
       const status = row.original.status as string;
-      const config = statusConfig[status];
+      const config = REQUEST_STATUS_CONFIG[status];
       if (!config) return <span className="text-gray-400">{status}</span>;
       return (
         <Badge className={`${config.className} px-3 py-1 rounded-lg flex items-center gap-1.5 w-fit font-black text-[10px]`}>

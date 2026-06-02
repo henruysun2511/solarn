@@ -1,26 +1,8 @@
 "use client";
 
 import { AttendanceStatus } from "@/constants/type";
+import { ATTENDANCE_STATUS_CONFIG } from "@/constants/label";
 import { ColumnDef } from "@tanstack/react-table";
-import { CheckCircle2, Clock, XCircle } from "lucide-react";
-
-const statusConfig: Record<string, { label: string; icon: React.ReactNode; className: string }> = {
-  [AttendanceStatus.PRESENT]: {
-    label: "Có mặt",
-    icon: <CheckCircle2 className="w-3.5 h-3.5" />,
-    className: "bg-green-50 text-green-600",
-  },
-  [AttendanceStatus.LATE]: {
-    label: "Đi muộn",
-    icon: <Clock className="w-3.5 h-3.5" />,
-    className: "bg-amber-50 text-amber-600",
-  },
-  [AttendanceStatus.ABSENT]: {
-    label: "Vắng",
-    icon: <XCircle className="w-3.5 h-3.5" />,
-    className: "bg-red-50 text-red-600",
-  },
-};
 
 export const getColumns = (): ColumnDef<any>[] => [
   {
@@ -52,7 +34,7 @@ export const getColumns = (): ColumnDef<any>[] => [
     header: "Trạng thái",
     cell: ({ row }) => {
       const status = row.original.status as string;
-      const config = statusConfig[status];
+      const config = ATTENDANCE_STATUS_CONFIG[status];
       if (!config) return <span className="text-gray-400">---</span>;
       return (
         <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg font-bold text-[11px] ${config.className}`}>

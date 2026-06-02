@@ -61,11 +61,6 @@ const sidebarItems = [
         label: "Đánh giá từ học viên",
         href: "/teacher/feedback"
     },
-    {
-        icon: Bell,
-        label: "Thông báo",
-        href: "/teacher/notification"
-    },
 ];
 
 export function TeacherSidebar() {

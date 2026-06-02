@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -24,17 +23,16 @@ import { useCreateLeaveRequest, useGetMyLeaveRequests } from "@/queries/useReque
 import { useGetMyEnrolledClasses } from "@/queries/useClassQuery";
 import {
     Calendar,
-    CheckCircle2,
     Clock,
     History,
     LogOut,
     MoreVertical,
-    RotateCcw,
     Send,
-    XCircle
 } from "lucide-react";
 import { SortOrder } from "@/constants/sort";
 import { LeaveRequestInput, leaveRequestSchema } from "@/schemas/request.schema";
+import { StatusBadge } from "@/components/common/badge-level";
+import { getClassLabel } from "@/constants/label";
 
 export default function StudentLeavePage() {
     const { data: enrolledClasses } = useGetMyEnrolledClasses({ limit: 50 });
@@ -56,9 +54,6 @@ export default function StudentLeavePage() {
 
     const selectedEnrollment = enrolled.find((c) => c.classId === selectedClassId);
     const enrollmentId = selectedEnrollment?.enrollmentId ?? "";
-
-    const getClassLabel = (c: { classId: string; roomCode: string; course?: { courseName?: string } }) =>
-        `${c.course?.courseName ?? ""} (${c.roomCode})`;
 
     const handleSubmit = () => {
         if (!enrollmentId || !leaveStartDate || !leaveEndDate || !reason) return;
@@ -190,7 +185,7 @@ export default function StudentLeavePage() {
             <div className="space-y-4">
                 <div className="flex items-center gap-2 px-2">
                     <History className="w-5 h-5 text-[var(--primary)]" />
-                    <h2 className="font-black text-xl tracking-tight text-gray-800">Lịch sử yêu cầu nghỉ học</h2>
+                    <h2 className="font-black text-xl tracking-tight text-gray-800">Lịch sử yêu cầu bảo lưu</h2>
                 </div>
 
                 <div className="bg-white rounded-[2rem] shadow-sm border border-[var(--sidebar-border)] overflow-hidden transition-all">
@@ -262,31 +257,3 @@ export default function StudentLeavePage() {
     );
 }
 
-function StatusBadge({ status }: { status: string }) {
-    switch (status) {
-        case "PENDING":
-            return (
-                <Badge className="bg-orange-50 text-orange-600 border-orange-100 hover:bg-orange-50 px-3 py-1 rounded-lg flex items-center gap-1.5 w-fit font-black text-[10px]">
-                    <Clock className="w-3 h-3" /> CHỜ DUYỆT
-                </Badge>
-            );
-        case "APPROVED":
-            return (
-                <Badge className="bg-green-50 text-green-600 border-green-100 hover:bg-green-50 px-3 py-1 rounded-lg flex items-center gap-1.5 w-fit font-black text-[10px]">
-                    <CheckCircle2 className="w-3 h-3" /> ĐÃ DUYỆT
-                </Badge>
-            );
-        case "REJECTED":
-            return (
-                <Badge className="bg-red-50 text-red-600 border-red-100 hover:bg-red-50 px-3 py-1 rounded-lg flex items-center gap-1.5 w-fit font-black text-[10px]">
-                    <XCircle className="w-3 h-3" /> TỪ CHỐI
-                </Badge>
-            );
-        default:
-            return (
-                <Badge className="bg-slate-50 text-slate-600 border-slate-100 hover:bg-slate-50 px-3 py-1 rounded-lg flex items-center gap-1.5 w-fit font-black text-[10px]">
-                    <RotateCcw className="w-3 h-3" /> ĐÃ HỦY
-                </Badge>
-            );
-    }
-}

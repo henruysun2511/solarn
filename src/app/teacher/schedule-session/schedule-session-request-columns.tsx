@@ -3,19 +3,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Request } from "@/schemas/request.schema";
 import { ColumnDef } from "@tanstack/react-table";
-import { RequestStatus } from "@/constants/type";
-
-const statusLabels: Record<string, string> = {
-  [RequestStatus.PENDING]: "Chờ duyệt",
-  [RequestStatus.APPROVED]: "Đã duyệt",
-  [RequestStatus.REJECTED]: "Từ chối",
-};
-
-const statusColors: Record<string, string> = {
-  [RequestStatus.PENDING]: "bg-amber-100 text-amber-700",
-  [RequestStatus.APPROVED]: "bg-emerald-100 text-emerald-700",
-  [RequestStatus.REJECTED]: "bg-red-100 text-red-700",
-};
+import { REQUEST_STATUS_LABELS, REQUEST_STATUS_COLORS } from "@/constants/label";
 
 export const getScheduleChangeRequestColumns = (): ColumnDef<Request>[] => [
   {
@@ -101,8 +89,8 @@ export const getScheduleChangeRequestColumns = (): ColumnDef<Request>[] => [
     header: "Trạng thái",
     cell: ({ row }) => {
       const status = row.original.status;
-      const label = statusLabels[status] || status;
-      const color = statusColors[status] || "bg-gray-100 text-gray-600";
+      const label = REQUEST_STATUS_LABELS[status] || status;
+      const color = REQUEST_STATUS_COLORS[status] || "bg-gray-100 text-gray-600";
       return <Badge className={`font-bold px-3 py-1 ${color}`}>{label}</Badge>;
     },
   },

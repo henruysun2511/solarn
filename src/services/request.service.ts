@@ -1,6 +1,9 @@
 import { ApiResponse } from "@/constants/apiResponse";
 import {
+  CreateReEnrollmentRequestInput,
   LeaveRequestInput,
+  ProcessReEnrollmentRequestInput,
+  ReEnrollmentRequestParams,
   Request,
   RequestParams,
   RequestClassParams,
@@ -96,6 +99,22 @@ const requestService = {
 
   processSalaryComplaintRequest: (requestId: string, data: { isSuccess: boolean; approvalNote?: string }) => {
     return http.patch<ApiResponse<any>>(`${prefix}/salary-complaint/${requestId}/process`, data);
+  },
+
+  getReEnrollmentRequests: (params?: ReEnrollmentRequestParams) => {
+    return http.get<ApiResponse<Request[]>>(`${prefix}/re-enrollment`, { params });
+  },
+
+  getMyReEnrollmentRequests: (params?: ReEnrollmentRequestParams) => {
+    return http.get<ApiResponse<Request[]>>(`${prefix}/my-re-enrollment-requests`, { params });
+  },
+
+  createReEnrollmentRequest: (data: CreateReEnrollmentRequestInput) => {
+    return http.post<ApiResponse<Request>>(`${prefix}/re-enrollment`, data);
+  },
+
+  processReEnrollmentRequest: (requestId: string, data: ProcessReEnrollmentRequestInput) => {
+    return http.patch<ApiResponse<any>>(`${prefix}/re-enrollment/${requestId}/process`, data);
   },
 };
 

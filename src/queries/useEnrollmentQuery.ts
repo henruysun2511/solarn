@@ -14,6 +14,15 @@ export const useGetEnrollments = (params?: EnrollmentParams) => {
   });
 };
 
+export const MY_ENROLLMENT_QUERY_KEY = ["my-enrollments"];
+
+export const useGetMyEnrollments = () => {
+  return useQuery({
+    queryKey: MY_ENROLLMENT_QUERY_KEY,
+    queryFn: () => enrollmentService.getMyEnrollments().then((res) => res.data),
+  });
+};
+
 export const useCreateEnrollment = () => {
   const queryClient = useQueryClient();
   return useMutation({

@@ -24,12 +24,7 @@ import {
     Legend,
 } from "recharts";
 
-const TYPE_LABELS: Record<string, string> = {
-    LEAVE_REQUEST: "Nghỉ học",
-    SCHEDULE_CHANGE: "Dời lịch",
-    SALARY_COMPLAINT: "Khiếu nại lương",
-    TRANSFER_REQUEST: "Chuyển lớp",
-};
+import { requestTypeLabels } from "@/constants/label";
 
 const STATUS_COLORS: Record<string, string> = {
     PENDING: "#f59e0b",
@@ -53,7 +48,7 @@ export default function RequestDashboard() {
     })) || [];
 
     const typeChartData = dash?.requestsByType?.map((item: any) => ({
-        name: TYPE_LABELS[item.type] || item.type,
+        name: requestTypeLabels[item.type] || item.type,
         value: item.count,
     })) || [];
 
@@ -211,7 +206,7 @@ export default function RequestDashboard() {
                                                 <MessageSquare className="size-4 text-primary" />
                                             </div>
                                             <div className="min-w-0">
-                                                <p className="font-bold text-gray-900 text-sm truncate">{TYPE_LABELS[req.type] || req.type}</p>
+                                                <p className="font-bold text-gray-900 text-sm truncate">{requestTypeLabels[req.type] || req.type}</p>
                                                 <p className="text-[10px] font-bold text-gray-400 truncate">{req.senderName}</p>
                                             </div>
                                         </div>

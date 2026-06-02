@@ -1,22 +1,10 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { InvoiceStatus } from "@/constants/type";
 import { Invoice } from "@/schemas/payment.schema";
 import { ColumnDef } from "@tanstack/react-table";
 import { Receipt } from "lucide-react";
-
-const statusLabels: Record<string, string> = {
-  [InvoiceStatus.PENDING]: "Chờ thanh toán",
-  [InvoiceStatus.PAID]: "Đã thanh toán",
-  [InvoiceStatus.CANCELLED]: "Đã hủy",
-};
-
-const statusColors: Record<string, string> = {
-  [InvoiceStatus.PENDING]: "bg-amber-100 text-amber-700",
-  [InvoiceStatus.PAID]: "bg-emerald-100 text-emerald-700",
-  [InvoiceStatus.CANCELLED]: "bg-red-100 text-red-700",
-};
+import { INVOICE_STATUS_LABELS, INVOICE_STATUS_COLORS } from "@/constants/label";
 
 export const getColumns = (): ColumnDef<Invoice>[] => [
   {
@@ -85,8 +73,8 @@ export const getColumns = (): ColumnDef<Invoice>[] => [
     header: "Trạng thái",
     cell: ({ row }) => {
       const status = row.original.status;
-      const label = statusLabels[status] || status;
-      const color = statusColors[status] || "bg-gray-100 text-gray-600";
+      const label = INVOICE_STATUS_LABELS[status] || status;
+      const color = INVOICE_STATUS_COLORS[status] || "bg-gray-100 text-gray-600";
       return <Badge className={`font-bold px-3 py-1 ${color}`}>{label}</Badge>;
     },
   },

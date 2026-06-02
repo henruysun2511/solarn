@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/table";
 import { RequestClassSortBy, SortOrder } from "@/constants/sort";
 import { RequestStatus, RequestType } from "@/constants/type";
+import { REQUEST_STATUS_CONFIG, requestTypeLabels } from "@/constants/label";
 import { useDebounce } from "@/hooks/useDebouce";
 import { useGetRequestsByClass } from "@/queries/useRequestQuery";
 import { Search, SortAsc, SortDesc } from "lucide-react";
@@ -54,24 +55,19 @@ export function ClassRequestTab({ classId }: { classId: string }) {
     }
 
     const getStatusBadge = (status: RequestStatus) => {
-        switch (status) {
-            case RequestStatus.APPROVED:
-                return <Badge className="bg-emerald-50 text-emerald-600 border-none font-bold text-[10px] uppercase">Đã duyệt</Badge>;
-            case RequestStatus.REJECTED:
-                return <Badge className="bg-red-50 text-red-600 border-none font-bold text-[10px] uppercase">Từ chối</Badge>;
-            default:
-                return <Badge className="bg-yellow-50 text-yellow-600 border-none font-bold text-[10px] uppercase">Chờ xử lý</Badge>;
+        const cfg = REQUEST_STATUS_CONFIG[status];
+        if (!cfg) {
+            return <Badge className="bg-yellow-50 text-yellow-600 border-none font-bold text-[10px] uppercase">Chờ xử lý</Badge>;
         }
+        return (
+            <Badge className={`${cfg.className} border-none font-bold text-[10px] uppercase flex items-center gap-1`}>
+                {cfg.icon} {cfg.label}
+            </Badge>
+        );
     };
 
     const getTypeLabel = (type: RequestType) => {
-        switch (type) {
-            case RequestType.SALARY_COMPLAINT: return "Khiếu nại lương";
-            case RequestType.TRANSFER_REQUEST: return "Chuyển lớp";
-            case RequestType.LEAVE_REQUEST: return "Bảo lưu";
-            case RequestType.SCHEDULE_CHANGE: return "Đổi lịch học";
-            default: return type;
-        }
+        return requestTypeLabels[type] || type;
     };
 
     return (

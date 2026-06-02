@@ -42,6 +42,7 @@ import {
     UserIcon
 } from "lucide-react";
 import { useState } from "react";
+import { CLASS_STATUS_CONFIG } from "@/constants/label";
 
 // Mock Data dựa trên yêu cầu của bạn
 const classData = [
@@ -294,18 +295,10 @@ export default function ClassManagement() {
     );
 }
 
-// Sub-component Badge Trạng thái
 function StatusBadge({ status }: { status: string }) {
-    const configs: Record<string, { label: string, style: string }> = {
-        upcoming: { label: "Upcoming", style: "bg-blue-50 text-blue-600 border-blue-100" },
-        ongoing: { label: "Ongoing", style: "bg-emerald-50 text-emerald-600 border-emerald-100" },
-        finished: { label: "Finished", style: "bg-gray-100 text-gray-500 border-gray-200" }
-    };
-
-    const config = configs[status] || configs.upcoming;
-
+    const config = CLASS_STATUS_CONFIG[status] || CLASS_STATUS_CONFIG.upcoming;
     return (
-        <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${config.style}`}>
+        <span className={`px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border ${config.className}`}>
             {config.label}
         </span>
     );

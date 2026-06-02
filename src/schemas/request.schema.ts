@@ -5,7 +5,20 @@ import z from "zod";
 const classRefSchema = z.object({
   classId: z.string().uuid(),
   roomCode: z.string(),
-  course: z.object({ courseName: z.string() }).optional(),
+  course: z.object({ courseId: z.string().uuid(), courseName: z.string() }).optional(),
+});
+
+const profileRefSchema = z.object({
+  fullName: z.string().nullable().optional(),
+  email: z.string().nullable().optional(),
+  phone: z.string().nullable().optional(),
+  avatarUrl: z.string().nullable().optional(),
+});
+
+const accountRefSchema = z.object({
+  accountId: z.string().uuid(),
+  username: z.string(),
+  profile: profileRefSchema.optional().nullable(),
 });
 
 export const requestSchema = z.object({
@@ -39,6 +52,8 @@ export const requestSchema = z.object({
     status: z.string(),
     class: classRefSchema,
   }).optional().nullable(),
+  senderAccount: accountRefSchema.optional().nullable(),
+  approverAccount: accountRefSchema.optional().nullable(),
 });
 export type Request = z.infer<typeof requestSchema>;
 
@@ -141,4 +156,32 @@ export const scheduleChangeParamsSchema = z.object({
   sortBy: z.string().optional().default("createdAt"),
 });
 export type ScheduleChangeParams = z.infer<typeof scheduleChangeParamsSchema>;
+
+// Re-enrollment request
+export const createReEnrollmentRequestSchema = z.object({
+  enrollmentId: z.string().uuid(),
+  reason: z.string().optional(),
+});
+export type CreateReEnrollmentRequestInput = z.infer<typeof createReEnrollmentRequestSchema>;
+
+export const processReEnrollmentRequestSchema = z.object({
+  isSuccess: z.boolean(),
+  toClassId: z.string().uuid().optional(),
+  approvalNote: z.string().optional(),
+});
+export type ProcessReEnrollmentRequestInput = z.infer<typeof processReEnrollmentRequestSchema>;
+
+export const reEnrollmentRequestParamsSchema = z.object({
+  page: z.coerce.number().optional().default(1),
+  limit: z.coerce.number().optional().default(10),
+  search: z.string().optional(),
+  status: z.nativeEnum(RequestStatus).optional(),
+  senderAccountId: z.string().uuid().optional(),
+  enrollmentId: z.string().uuid().optional(),
+  fromClassId: z.string().uuid().optional(),
+  toClassId: z.string().uuid().optional(),
+  sortOrder: z.enum([SortOrder.DESC, SortOrder.ASC]).optional().default(SortOrder.DESC),
+  sortBy: z.string().optional().default("createdAt"),
+});
+export type ReEnrollmentRequestParams = z.infer<typeof reEnrollmentRequestParamsSchema>;
 

@@ -12,6 +12,10 @@ const enrollmentService = {
   getEnrollments: (params?: EnrollmentParams) => {
     return http.get<ApiResponse<Enrollment[]>>(prefix, { params });
   },
+
+  getMyEnrollments: () => {
+    return http.get<ApiResponse<Enrollment[]>>(`${prefix}/my`);
+  },
   
   createEnrollment: (data: EnrollmentInput) => {
     return http.post<ApiResponse<Enrollment>>(prefix, data);

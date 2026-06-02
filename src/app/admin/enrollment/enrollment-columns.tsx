@@ -8,51 +8,19 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { EnrollmentStatus } from "@/constants/type";
+import { ENROLLMENT_STATUS_CONFIG } from "@/constants/label";
 import { ColumnDef } from "@tanstack/react-table";
 import {
-    CheckCircle2,
-    Clock,
     MoreVerticalIcon,
     PencilIcon,
     TrashIcon,
-    XCircle,
     Ban,
-    RotateCcw
 } from "lucide-react";
 
 interface ColumnProps {
   onEdit?: (enrollment: any) => void;
   onDelete?: (id: string) => void;
 }
-
-const statusConfig: Record<string, { label: string; icon: React.ReactNode; className: string }> = {
-  [EnrollmentStatus.NOT_STARTED]: {
-    label: "Chưa bắt đầu",
-    icon: <Clock className="w-3 h-3" />,
-    className: "bg-orange-50 text-orange-600 border-orange-100"
-  },
-  [EnrollmentStatus.IN_PROGRESS]: {
-    label: "Đang học",
-    icon: <CheckCircle2 className="w-3 h-3" />,
-    className: "bg-blue-50 text-blue-600 border-blue-100"
-  },
-  [EnrollmentStatus.COMPLETED]: {
-    label: "Hoàn thành",
-    icon: <CheckCircle2 className="w-3 h-3" />,
-    className: "bg-green-50 text-green-600 border-green-100"
-  },
-  [EnrollmentStatus.DROPPED]: {
-    label: "Đã hủy",
-    icon: <XCircle className="w-3 h-3" />,
-    className: "bg-red-50 text-red-600 border-red-100"
-  },
-  [EnrollmentStatus.DEFERRED]: {
-    label: "Bảo lưu",
-    icon: <RotateCcw className="w-3 h-3" />,
-    className: "bg-purple-50 text-purple-600 border-purple-100"
-  }
-};
 
 export const getColumns = ({ onEdit, onDelete }: ColumnProps = {}): ColumnDef<any>[] => [
   {
@@ -108,7 +76,7 @@ export const getColumns = ({ onEdit, onDelete }: ColumnProps = {}): ColumnDef<an
     header: "Trạng thái",
     cell: ({ row }) => {
       const status = row.original.status as string;
-      const config = statusConfig[status];
+      const config = ENROLLMENT_STATUS_CONFIG[status];
       if (!config) return <span className="text-gray-400">{status}</span>;
       return (
         <Badge className={`${config.className} px-3 py-1 rounded-lg flex items-center gap-1.5 w-fit font-black text-[10px] hover:${config.className}`}>

@@ -131,7 +131,7 @@ export function AccountDialog({
               </Label>
               <Select
                 value={roleId || ""}
-                onValueChange={(val) => setValue("roleId", val)}
+                onValueChange={(val) => setValue("roleId", val, { shouldValidate: true })}
               >
                 <SelectTrigger className="h-12 rounded-xl border-gray-200 bg-white shadow-none">
                   <SelectValue placeholder="Chọn quyền" />

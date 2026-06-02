@@ -47,6 +47,7 @@ export const navMain = [
     items: [
       { title: "Học viên", url: "/admin/student" },
       { title: "Xét duyệt bảo lưu", url: "/admin/leave" },
+      { title: "Xét duyệt tái nhập học", url: "/admin/re-enrollment" },
       { title: "Xét duyệt chuyển lớp", url: "/admin/transfer" },
     ],
   },

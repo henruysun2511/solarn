@@ -1,4 +1,7 @@
 import { 
+  CreateReEnrollmentRequestInput,
+  ProcessReEnrollmentRequestInput,
+  ReEnrollmentRequestParams,
   RequestParams,
   RequestClassParams,
   SalaryComplaintInput,
@@ -186,6 +189,44 @@ export const useProcessSalaryComplaintRequest = () => {
       requestService.processSalaryComplaintRequest(requestId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: SALARY_COMPLAINT_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: REQUEST_QUERY_KEY });
+    },
+  });
+};
+
+export const RE_ENROLLMENT_QUERY_KEY = ["requests", "re-enrollment"];
+
+export const useGetReEnrollmentRequests = (params?: ReEnrollmentRequestParams) => {
+  return useQuery({
+    queryKey: [...RE_ENROLLMENT_QUERY_KEY, params],
+    queryFn: () => requestService.getReEnrollmentRequests(params).then((res) => res.data),
+  });
+};
+
+export const useGetMyReEnrollmentRequests = (params?: ReEnrollmentRequestParams) => {
+  return useQuery({
+    queryKey: [...REQUEST_QUERY_KEY, "my-re-enrollment-requests", params],
+    queryFn: () => requestService.getMyReEnrollmentRequests(params).then((res) => res.data),
+  });
+};
+
+export const useCreateReEnrollmentRequest = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: CreateReEnrollmentRequestInput) => requestService.createReEnrollmentRequest(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: REQUEST_QUERY_KEY });
+    },
+  });
+};
+
+export const useProcessReEnrollmentRequest = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ requestId, data }: { requestId: string; data: ProcessReEnrollmentRequestInput }) =>
+      requestService.processReEnrollmentRequest(requestId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: RE_ENROLLMENT_QUERY_KEY });
       queryClient.invalidateQueries({ queryKey: REQUEST_QUERY_KEY });
     },
   });

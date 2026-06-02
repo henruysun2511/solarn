@@ -4,6 +4,7 @@ import { UserAvatar } from "@/components/common/user-avatar";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Student } from "@/schemas/student.schema";
+import { genderLabel } from "@/constants/label";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreVerticalIcon, PencilIcon, TrashIcon } from "lucide-react";
 
@@ -49,8 +50,7 @@ export const getColumns = ({ onEdit, onDelete }: ColumnProps = {}): ColumnDef<St
     header: "Giới tính",
     cell: ({ row }) => {
       const gender = row.original.profile?.gender;
-      const genderLabel = gender === "MALE" ? "Nam" : gender === "FEMALE" ? "Nữ" : "---";
-      return <span className="text-gray-700">{genderLabel}</span>;
+      return <span className="text-gray-700">{gender ? genderLabel[gender] : "---"}</span>;
     },
   },
   {

@@ -1,21 +1,9 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { AttendanceStatus } from "@/constants/type";
 import { MyAttendance } from "@/schemas/attendance.schema";
 import { ColumnDef } from "@tanstack/react-table";
-
-const statusLabels: Record<string, string> = {
-  [AttendanceStatus.PRESENT]: "Có mặt",
-  [AttendanceStatus.ABSENT]: "Vắng",
-  [AttendanceStatus.LATE]: "Đi trễ",
-};
-
-const statusColors: Record<string, string> = {
-  [AttendanceStatus.PRESENT]: "bg-emerald-100 text-emerald-700",
-  [AttendanceStatus.ABSENT]: "bg-red-100 text-red-700",
-  [AttendanceStatus.LATE]: "bg-amber-100 text-amber-700",
-};
+import { ATTENDANCE_STATUS_LABELS, ATTENDANCE_STATUS_COLORS } from "@/constants/label";
 
 export const getAttendanceColumns = (): ColumnDef<MyAttendance>[] => [
   {
@@ -79,8 +67,8 @@ export const getAttendanceColumns = (): ColumnDef<MyAttendance>[] => [
     header: "Trạng thái",
     cell: ({ row }) => {
       const status = row.original.status;
-      const label = statusLabels[status] || status;
-      const color = statusColors[status] || "bg-gray-100 text-gray-600";
+      const label = ATTENDANCE_STATUS_LABELS[status] || status;
+      const color = ATTENDANCE_STATUS_COLORS[status] || "bg-gray-100 text-gray-600";
       return <Badge className={`font-bold px-3 py-1 ${color}`}>{label}</Badge>;
     },
   },

@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { FeedbackInput } from "@/schemas/feedback.schema";
+import { getClassLabel } from "@/constants/label";
 
 function StarRating({ value, onChange, readonly }: { value: number; onChange?: (v: number) => void; readonly?: boolean }) {
     return (
@@ -96,9 +97,6 @@ export default function StudentFeedbackPage() {
         if (!d) return "";
         return new Date(d).toLocaleDateString("vi-VN");
     };
-
-    const getClassLabel = (c: any) =>
-        `${c.course?.courseName ?? ""} (${c.roomCode})`;
 
     return (
         <div data-role="student" className="space-y-8 pb-10">

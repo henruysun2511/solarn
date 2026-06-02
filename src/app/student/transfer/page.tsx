@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -24,16 +23,14 @@ import { useCreateTransferRequest, useGetMyTransferRequests } from "@/queries/us
 import { useGetClasses, useGetMyEnrolledClasses } from "@/queries/useClassQuery";
 import {
     Calendar,
-    CheckCircle2,
-    Clock,
     GitPullRequest,
     History,
     MoreVertical,
-    RotateCcw,
     Send,
-    XCircle
 } from "lucide-react";
 import { TransferRequestInput, transferRequestSchema } from "@/schemas/request.schema";
+import { StatusBadge } from "@/components/common/badge-level";
+import { getClassLabel } from "@/constants/label";
 
 export default function StudentTransferPage() {
     const { data: enrolledClasses } = useGetMyEnrolledClasses({ limit: 50 });
@@ -77,9 +74,6 @@ export default function StudentTransferPage() {
         if (!d) return "";
         return new Date(d).toLocaleDateString("vi-VN");
     };
-
-    const getClassLabel = (c: { classId: string; roomCode: string; course?: { courseName?: string } }) =>
-        `${c.course?.courseName ?? ""} (${c.roomCode})`;
 
     const historyItems = transferRequests?.data ?? [];
 
@@ -242,33 +236,4 @@ export default function StudentTransferPage() {
             </div>
         </div>
     );
-}
-
-function StatusBadge({ status }: { status: string }) {
-    switch (status) {
-        case "PENDING":
-            return (
-                <Badge className="bg-orange-50 text-orange-600 border-orange-100 hover:bg-orange-50 px-3 py-1 rounded-lg flex items-center gap-1.5 w-fit font-black text-[10px]">
-                    <Clock className="w-3 h-3" /> CHỜ DUYỆT
-                </Badge>
-            );
-        case "APPROVED":
-            return (
-                <Badge className="bg-green-50 text-green-600 border-green-100 hover:bg-green-50 px-3 py-1 rounded-lg flex items-center gap-1.5 w-fit font-black text-[10px]">
-                    <CheckCircle2 className="w-3 h-3" /> ĐÃ DUYỆT
-                </Badge>
-            );
-        case "REJECTED":
-            return (
-                <Badge className="bg-red-50 text-red-600 border-red-100 hover:bg-red-50 px-3 py-1 rounded-lg flex items-center gap-1.5 w-fit font-black text-[10px]">
-                    <XCircle className="w-3 h-3" /> TỪ CHỐI
-                </Badge>
-            );
-        default:
-            return (
-                <Badge className="bg-slate-50 text-slate-600 border-slate-100 hover:bg-slate-50 px-3 py-1 rounded-lg flex items-center gap-1.5 w-fit font-black text-[10px]">
-                    <RotateCcw className="w-3 h-3" /> ĐÃ HỦY
-                </Badge>
-            );
-    }
 }
