@@ -10,7 +10,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
-import { AtomIcon, BookOpenIcon, CalendarCheckIcon, CircleDollarSignIcon, ClipboardCheckIcon, LayoutDashboardIcon, LogOut, SettingsIcon, ShieldCheckIcon, UserCheckIcon, UsersIcon } from "lucide-react"
+import { AtomIcon, BookOpenIcon, CalendarCheckIcon, CircleDollarSignIcon, ClipboardCheckIcon, FileTextIcon, LayoutDashboardIcon, LogOut, SettingsIcon, ShieldCheckIcon, UserCheckIcon, UsersIcon } from "lucide-react"
 import { Logo } from "../common/logo"
 import { Button } from "../ui/button"
 import { LogoutButton } from "../auth/logout-button"
@@ -104,9 +104,15 @@ export const navMain = [
     ],
   },
   {
+    title: "Bài viết",
+    url: "/admin/blog",
+    icon: <FileTextIcon className="size-4" />,
+    isActive: false,
+  },
+  {
     title: "Cài đặt website",
     url: "/admin/setting",
-    icon: <SettingsIcon className="size-4" />, // Icon bánh răng cài đặt
+    icon: <SettingsIcon className="size-4" />,
     isActive: false,
   }
 ];

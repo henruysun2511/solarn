@@ -89,6 +89,14 @@ export const FeedbackClassSortBy = {
 
 export type FeedbackSortBy = (typeof FeedbackClassSortBy)[keyof typeof FeedbackClassSortBy];
 
+export const BlogSortBy = {
+  TITLE: 'title',
+  PUBLISHED_AT: 'publishedAt',
+  CREATED_AT: 'createdAt'
+} as const;
+
+export type BlogSortBy = (typeof BlogSortBy)[keyof typeof BlogSortBy];
+
 export const SalarySortBy = {
     SALARY_DATE: 'salaryDate',
     TOTAL_SESSIONS: 'totalSessions',

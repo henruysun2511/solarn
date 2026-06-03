@@ -285,3 +285,17 @@
     left: 100%;
   }
 }
+
+.tox-tinymce-aux,
+.tox-dropdown,
+.tox-menu,
+.tox-dialog-wrap,
+.tox-dialog {
+  z-index: 999999 !important;
+  pointer-events: auto !important;
+}
+
+/* Fix trường hợp pointer-events bị dính trên body khi mở modal */
+body[data-radix-pointer-events-disabled] .tox-tinymce-aux {
+  pointer-events: auto !important;
+}

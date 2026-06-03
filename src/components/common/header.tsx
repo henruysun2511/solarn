@@ -22,6 +22,7 @@ export default function Header() {
         { name: "Giảng viên", href: "/teacher" },
         { name: "Đánh giá", href: "/feedback" },
         { name: "Blog", href: "/blog" },
+        { name: "Về chúng tôi", href: "/about" },
     ];
 
     return (

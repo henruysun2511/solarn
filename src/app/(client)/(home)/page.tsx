@@ -226,10 +226,10 @@ export default function HomePage() {
             <Badge className="bg-secondary/10 text-secondary border-none px-4 py-1 font-black text-[10px] uppercase tracking-widest">Hệ thống thông minh</Badge>
             <h3 className="text-5xl font-black leading-tight tracking-tighter text-foreground">Theo dõi tiến độ <br /> <span className="text-primary">Real-time Dashboard</span></h3>
             <p className="text-lg text-muted-foreground font-semibold leading-relaxed italic">
-              Không còn mơ hồ về trình độ của bản thân. Hệ thống tự động phân tích các kỹ năng Listening, Reading, Writing, Speaking qua từng bài tập và hiển thị biểu đồ tăng trưởng chính xác.
+              Bảng điều khiển trực quan dành riêng cho từng vai trò — học viên theo dõi điểm danh, điểm số và tiến trình học tập; giáo viên quản lý lớp, buổi học và thu nhập; admin giám sát toàn bộ hệ thống với các chỉ số tài chính và đào tạo.
             </p>
             <ul className="space-y-4">
-              {["Báo cáo chi tiết từng kỹ năng", "Lịch nhắc học cá nhân hóa", "Kho bài tập thích ứng AI"].map((item, i) => (
+              {["Học viên: điểm danh, điểm TB, lịch sắp tới", "Giáo viên: lớp học, thu nhập, top học sinh", "Admin: doanh thu, tăng trưởng, thống kê đào tạo"].map((item, i) => (
                 <li key={i} className="flex items-center gap-3 font-black text-sm text-foreground">
                   <div className="bg-primary/10 p-1 rounded-full"><CheckCircle2 className="w-4 h-4 text-primary" /></div>
                   {item}
@@ -240,24 +240,98 @@ export default function HomePage() {
           <div className="bg-primary rounded-[4rem] aspect-[4/3] relative overflow-hidden shadow-2xl shadow-primary/20 group">
             <div className="absolute inset-0 bg-foreground/10 group-hover:bg-transparent transition-all" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-3/4 h-3/4 bg-background/20 backdrop-blur-md rounded-3xl border border-white/30 animate-pulse" />
+              <img src="https://i.pinimg.com/1200x/fd/3f/e5/fd3fe5c39e630339fa2d58ad76b9fa17.jpg" className="w-full h-full object-cover rounded-3xl" />
             </div>
           </div>
         </div>
 
         <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
-          <div className="order-2 lg:order-1 bg-secondary rounded-[4rem] aspect-[4/3] relative overflow-hidden shadow-2xl shadow-secondary/20">
-            <div className="absolute inset-0 bg-foreground/5" />
+          <div className="order-2 lg:order-1 rounded-[4rem] aspect-[4/3] relative overflow-hidden shadow-2xl shadow-secondary/20">
+            <img src="https://i.pinimg.com/1200x/d8/56/9c/d8569cdfbde6c602387b82f1f186a1dd.jpg" className="w-full h-full object-cover" />
           </div>
           <div className="space-y-8 order-1 lg:order-2">
-            <Badge className="bg-primary/10 text-primary border-none px-4 py-1 font-black text-[10px] uppercase tracking-widest">Cơ sở vật chất</Badge>
-            <h3 className="text-5xl font-black leading-tight tracking-tighter text-foreground">Không gian học <br /> <span className="text-secondary">Chuẩn 5 Sao</span></h3>
+            <Badge className="bg-primary/10 text-primary border-none px-4 py-1 font-black text-[10px] uppercase tracking-widest">Điểm danh & Bài tập</Badge>
+            <h3 className="text-5xl font-black leading-tight tracking-tighter text-foreground">Quản lý lớp học <br /> <span className="text-secondary">Toàn diện</span></h3>
             <p className="text-lg text-muted-foreground font-semibold leading-relaxed italic">
-              Chúng tôi tin rằng một môi trường sáng tạo và hiện đại sẽ kích thích niềm đam mê học tập. Các phòng học tại SEG được thiết kế mở, tối ưu ánh sáng và trang bị công nghệ tương tác mới nhất.
+              Giáo viên điểm danh học viên theo từng buổi với ba trạng thái (Có mặt / Vắng / Muộn), chấm điểm bài tập và để lại nhận xét chi tiết. Học viên xem lại lịch sử điểm danh và kết quả bài tập mọi lúc.
             </p>
-            <Button variant="outline" className="h-14 px-8 rounded-2xl border-border font-black text-muted-foreground hover:bg-accent hover:text-foreground">
-              Tham quan cơ sở <ChevronRight className="ml-2 w-4 h-4" />
-            </Button>
+            <ul className="space-y-4">
+              {["Điểm danh hàng loạt theo buổi học", "Chấm điểm bài tập kèm nhận xét", "Lịch sử điểm danh & điểm số chi tiết"].map((item, i) => (
+                <li key={i} className="flex items-center gap-3 font-black text-sm text-foreground">
+                  <div className="bg-primary/10 p-1 rounded-full"><CheckCircle2 className="w-4 h-4 text-primary" /></div>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
+          <div className="space-y-8">
+            <Badge className="bg-secondary/10 text-secondary border-none px-4 py-1 font-black text-[10px] uppercase tracking-widest">Thanh toán trực tuyến</Badge>
+            <h3 className="text-5xl font-black leading-tight tracking-tighter text-foreground">Học phí & Hóa đơn <br /> <span className="text-primary">Không chạm</span></h3>
+            <p className="text-lg text-muted-foreground font-semibold leading-relaxed italic">
+              Tích hợp cổng thanh toán PayOS, học viên tạo hóa đơn và thanh toán học phí trực tuyến qua QR code hoặc link thanh toán. Admin theo dõi tất cả giao dịch, trạng thái thu tiền theo từng khóa học.
+            </p>
+            <ul className="space-y-4">
+              {["Tạo hóa đơn & thanh toán online qua PayOS", "QR Code thanh toán tiện lợi", "Quản lý công nợ theo khóa học, lớp học"].map((item, i) => (
+                <li key={i} className="flex items-center gap-3 font-black text-sm text-foreground">
+                  <div className="bg-primary/10 p-1 rounded-full"><CheckCircle2 className="w-4 h-4 text-primary" /></div>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-primary rounded-[4rem] aspect-[4/3] relative overflow-hidden shadow-2xl shadow-primary/20 group">
+            <div className="absolute inset-0 bg-foreground/10 group-hover:bg-transparent transition-all" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <img src="https://i.pinimg.com/1200x/b9/41/12/b941123aa96aa01fe5857d788771a2cd.jpg" className="w-full h-full object-cover rounded-3xl" />
+            </div>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
+          <div className="order-2 lg:order-1 rounded-[4rem] aspect-[4/3] relative overflow-hidden shadow-2xl shadow-secondary/20">
+            <img src="https://i.pinimg.com/1200x/e2/f1/b1/e2f1b15c0e239b99f5c5d3589a9076f9.jpg" className="w-full h-full object-cover" />
+          </div>
+          <div className="space-y-8 order-1 lg:order-2">
+            <Badge className="bg-primary/10 text-primary border-none px-4 py-1 font-black text-[10px] uppercase tracking-widest">Yêu cầu nghiệp vụ</Badge>
+            <h3 className="text-5xl font-black leading-tight tracking-tighter text-foreground">Xử lý yêu cầu <br /> <span className="text-secondary">Trực tuyến</span></h3>
+            <p className="text-lg text-muted-foreground font-semibold leading-relaxed italic">
+              Học viên gửi yêu cầu bảo lưu, chuyển lớp, tái nhập học trực tiếp trên hệ thống. Giáo viên khiếu nại lương, đề xuất đổi ca. Admin duyệt từ chối chỉ với một nút bấm — toàn bộ quy trình không cần giấy tờ.
+            </p>
+            <ul className="space-y-4">
+              {["Bảo lưu / Chuyển lớp / Tái nhập học", "Khiếu nại lương & Đổi ca cho giáo viên", "Duyệt / Từ chối nhanh chóng, minh bạch"].map((item, i) => (
+                <li key={i} className="flex items-center gap-3 font-black text-sm text-foreground">
+                  <div className="bg-primary/10 p-1 rounded-full"><CheckCircle2 className="w-4 h-4 text-primary" /></div>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
+          <div className="space-y-8">
+            <Badge className="bg-secondary/10 text-secondary border-none px-4 py-1 font-black text-[10px] uppercase tracking-widest">Tự động hóa</Badge>
+            <h3 className="text-5xl font-black leading-tight tracking-tighter text-foreground">Lương giáo viên <br /> <span className="text-primary">Tự động</span></h3>
+            <p className="text-lg text-muted-foreground font-semibold leading-relaxed italic">
+              Hệ thống tự động tính lương giáo viên hàng tháng dựa trên số buổi đã dạy, học phí khóa học và mức lương cơ bản. Admin xem trước bảng lương trước khi lưu, giáo viên tra cứu lịch sử lương mọi lúc.
+            </p>
+            <ul className="space-y-4">
+              {["Tính lương tự động theo số buổi dạy thực tế", "Xem trước bảng lương trước khi phê duyệt", "Tra cứu lịch sử lương theo tháng"].map((item, i) => (
+                <li key={i} className="flex items-center gap-3 font-black text-sm text-foreground">
+                  <div className="bg-primary/10 p-1 rounded-full"><CheckCircle2 className="w-4 h-4 text-primary" /></div>
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="bg-primary rounded-[4rem] aspect-[4/3] relative overflow-hidden shadow-2xl shadow-primary/20 group">
+            <div className="absolute inset-0 bg-foreground/10 group-hover:bg-transparent transition-all" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <img src="https://i.pinimg.com/1200x/a7/7d/77/a77d7706d5413f440b1c637f83a50d05.jpg" className="w-full h-full object-cover rounded-3xl" />
+            </div>
           </div>
         </div>
       </section>

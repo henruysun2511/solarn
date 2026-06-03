@@ -152,7 +152,7 @@ export default function AuthLoginPage() {
                             {loginMutation.isPending ? "Đang xử lý..." : "Đăng nhập"}
                         </Button>
 
-                        <div className="relative py-4">
+                        {/* <div className="relative py-4">
                             <div className="absolute inset-0 flex items-center"><span className="w-full border-t border-gray-100"></span></div>
                             <div className="relative flex justify-center text-[10px] font-black uppercase tracking-widest text-gray-300">
                                 <span className="bg-white px-4">Hoặc</span>
@@ -170,7 +170,7 @@ export default function AuthLoginPage() {
                                 className="size-4"
                             />
                             Tiếp tục với Google
-                        </Button>
+                        </Button> */}
                     </form>
 
                     {/* Registration Link */}
