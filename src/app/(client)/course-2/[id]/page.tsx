@@ -34,6 +34,8 @@ import {
     ChevronLeft,
     ChevronRight,
     Clock,
+    Copy,
+    ExternalLink,
     Globe,
     Sparkle,
     Star,
@@ -41,16 +43,34 @@ import {
     Users,
 } from "lucide-react";
 import { useParams } from "next/navigation";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { levelLabels } from "@/constants/label";
 import { formatCurrency } from "@/utils/format";
 
+
+interface PaymentResult {
+    bin: string;
+    accountNumber: string;
+    accountName: string;
+    amount: number;
+    description: string;
+    orderCode: number;
+    currency: string;
+    paymentLinkId: string;
+    status: string;
+    expiredAt: string | null;
+    checkoutUrl: string;
+    qrCode: string;
+}
 
 export default function CourseDetailV2Page() {
     const { id } = useParams() as { id: string };
     const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
     const [feedbackClassId, setFeedbackClassId] = useState<string | "all">("all");
     const [feedbackStarRating, setFeedbackStarRating] = useState<number | 0>(0);
+
+    const [paymentResult, setPaymentResult] = useState<PaymentResult | null>(null);
+    const [showPaymentDialog, setShowPaymentDialog] = useState(false);
 
     const createInvoice = useCreateInvoice();
 
@@ -356,7 +376,17 @@ export default function CourseDetailV2Page() {
                                                                 Xem lịch học
                                                             </Button>
                                                             <Button
-                                                                onClick={() => createInvoice.mutate({ classId: cls.classId })}
+                                                                onClick={() => createInvoice.mutate(
+                                                                    { classId: cls.classId },
+                                                                    {
+                                                            onSuccess: (res) => {
+                                                                            if (res?.data?.data) {
+                                                                                setPaymentResult(res.data.data as PaymentResult);
+                                                                                setShowPaymentDialog(true);
+                                                                            }
+                                                                        },
+                                                                    },
+                                                                )}
                                                                 disabled={createInvoice.isPending}
                                                                 className="rounded-xl text-[10px] font-black uppercase tracking-widest bg-primary text-white hover:bg-primary/90 transition-all h-10 px-5"
                                                             >
@@ -631,6 +661,101 @@ export default function CourseDetailV2Page() {
                     </div>
                 </DialogContent>
             </Dialog>
+
+            {/* PAYMENT DIALOG */}
+            <Dialog open={showPaymentDialog} onOpenChange={setShowPaymentDialog}>
+                <DialogContent className="sm:max-w-[480px] rounded-[2rem] bg-white border border-gray-100 shadow-2xl p-0 overflow-hidden font-sans">
+                    <div className="bg-gradient-to-br from-[var(--primary)] to-blue-700 p-8 text-white text-center">
+                        <div className="size-16 rounded-2xl bg-white/15 backdrop-blur-sm flex items-center justify-center mx-auto mb-4">
+                            <BookOpen className="size-8" />
+                        </div>
+                        <h2 className="text-2xl font-black tracking-tight">Thanh toán học phí</h2>
+                        <p className="text-sm text-white/70 font-medium mt-1">
+                            Mã đơn: <span className="font-black text-white">#{paymentResult?.orderCode}</span>
+                        </p>
+                    </div>
+
+                    <div className="p-8 space-y-6">
+                        {/* QR Code */}
+                        {paymentResult?.qrCode && (
+                            <div className="flex justify-center">
+                                <img
+                                    src={`https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(paymentResult.qrCode)}`}
+                                    alt="QR thanh toán"
+                                    className="rounded-2xl shadow-md"
+                                />
+                            </div>
+                        )}
+
+                        {/* Amount */}
+                        <div className="text-center">
+                            <div className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1">Số tiền</div>
+                            <div className="text-4xl font-black text-[var(--primary)]">
+                                {formatCurrency(paymentResult?.amount || 0)}
+                            </div>
+                        </div>
+
+                        {/* Bank Info */}
+                        <div className="bg-gray-50 rounded-2xl p-6 space-y-4">
+                            <BankInfoRow
+                                label="Ngân hàng"
+                                value="Ngân hàng TMCP Quân Đội (MB Bank)"
+                            />
+                            <BankInfoRow
+                                label="Số tài khoản"
+                                value={paymentResult?.accountNumber || ""}
+                                copyable
+                            />
+                            <BankInfoRow
+                                label="Chủ tài khoản"
+                                value={paymentResult?.accountName || ""}
+                            />
+                            <BankInfoRow
+                                label="Nội dung"
+                                value={paymentResult?.description || ""}
+                                copyable
+                            />
+                        </div>
+
+                        {/* Actions */}
+                        <div className="space-y-3">
+                            <Button
+                                onClick={() => { window.open(paymentResult?.checkoutUrl, "_blank"); }}
+                                className="w-full h-14 rounded-2xl bg-[var(--primary)] text-white font-black text-base hover:scale-[1.01] transition-transform shadow-xl shadow-blue-200 gap-2"
+                            >
+                                <ExternalLink className="size-5" />
+                                Thanh toán trực tuyến
+                            </Button>
+                            <p className="text-[11px] text-center font-bold text-gray-400">
+                                Hoặc quét mã QR bằng ứng dụng ngân hàng để chuyển khoản
+                            </p>
+                        </div>
+                    </div>
+                </DialogContent>
+            </Dialog>
+        </div>
+    );
+}
+
+function BankInfoRow({ label, value, copyable }: { label: string; value: string; copyable?: boolean }) {
+    const [copied, setCopied] = useState(false);
+    const handleCopy = useCallback(() => {
+        navigator.clipboard.writeText(value);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+    }, [value]);
+    return (
+        <div className="flex items-center justify-between gap-4">
+            <span className="text-[11px] font-black text-gray-400 uppercase tracking-wider shrink-0">{label}</span>
+            <div className="flex items-center gap-2">
+                <span className="text-sm font-bold text-gray-900 text-right">{value}</span>
+                {copyable && (
+                    <button onClick={handleCopy} className="shrink-0 text-gray-400 hover:text-[var(--primary)] transition-colors">
+                        <Copy className="size-4" />
+                        {copied && <span className="text-[9px] text-green-600 font-black ml-1">Đã sao chép</span>}
+                    </button>
+                )}
+            </div>
         </div>
     );
 }
