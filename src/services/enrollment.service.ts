@@ -1,8 +1,8 @@
 import { ApiResponse } from "@/constants/apiResponse";
-import { 
-  Enrollment, 
-  EnrollmentInput, 
-  EnrollmentParams 
+import {
+  Enrollment,
+  EnrollmentInput,
+  EnrollmentParams
 } from "@/schemas/enrollment.schema";
 import http from "@/utils/http";
 
@@ -13,10 +13,16 @@ const enrollmentService = {
     return http.get<ApiResponse<Enrollment[]>>(prefix, { params });
   },
 
+  getAllEnrollmentsForExport: (params?: Omit<EnrollmentParams, "page" | "limit">) => {
+    return http.get<ApiResponse<Enrollment[]>>(prefix, {
+      params: { ...params, page: 1, limit: 100 },
+    });
+  },
+
   getMyEnrollments: () => {
     return http.get<ApiResponse<Enrollment[]>>(`${prefix}/my`);
   },
-  
+
   createEnrollment: (data: EnrollmentInput) => {
     return http.post<ApiResponse<Enrollment>>(prefix, data);
   },

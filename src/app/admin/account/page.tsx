@@ -12,7 +12,9 @@ import {
   useChangeAccountStatus,
   useCreateAccount,
   useGetAccounts,
+  useUpdateAccountRole,
 } from "@/queries/useAccountQuery";
+import { useGetRoles } from "@/queries/useRoleQuery";
 import { AccountInput, AccountParams } from "@/schemas/account.schema";
 import { handleError } from "@/utils/handleError";
 import { UserPlusIcon } from "lucide-react";
@@ -31,12 +33,23 @@ export default function AdminAccountPage() {
   });
 
   const { data, isLoading } = useGetAccounts(params);
+  const { data: rolesData } = useGetRoles();
   const createMutation = useCreateAccount();
   const changeStatusMutation = useChangeAccountStatus();
+  const updateRoleMutation = useUpdateAccountRole();
+
+  const roles = rolesData?.data || [];
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [statusChangeId, setStatusChangeId] = useState<{ id: string; status: AccountStatus } | null>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [roleChangeTarget, setRoleChangeTarget] = useState<{
+    accountId: string;
+    newRoleId: string;
+    oldRoleName: string;
+    newRoleName: string;
+  } | null>(null);
+  const [roleConfirmOpen, setRoleConfirmOpen] = useState(false);
 
   const handleAdd = () => {
     setDialogOpen(true);
@@ -45,6 +58,11 @@ export default function AdminAccountPage() {
   const handleStatusChangeTrigger = (id: string, status: AccountStatus) => {
     setStatusChangeId({ id, status });
     setConfirmOpen(true);
+  };
+
+  const handleRoleChangeTrigger = (accountId: string, newRoleId: string, oldRoleName: string, newRoleName: string) => {
+    setRoleChangeTarget({ accountId, newRoleId, oldRoleName, newRoleName });
+    setRoleConfirmOpen(true);
   };
 
   const handleConfirmStatusChange = async () => {
@@ -62,6 +80,27 @@ export default function AdminAccountPage() {
       });
     } catch (error) {
       console.error("Status change failed", error);
+    }
+  };
+
+  const handleConfirmRoleChange = async () => {
+    if (!roleChangeTarget) return;
+    try {
+      await updateRoleMutation.mutateAsync(
+        { id: roleChangeTarget.accountId, roleId: roleChangeTarget.newRoleId },
+        {
+          onSuccess: (response: any) => {
+            toast.success(response?.message || "Cập nhật quyền thành công");
+            setRoleConfirmOpen(false);
+            setRoleChangeTarget(null);
+          },
+          onError: (error: any) => {
+            handleError(error, "Không thể cập nhật quyền");
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Role change failed", error);
     }
   };
 
@@ -114,6 +153,8 @@ export default function AdminAccountPage() {
           <DataTable
             columns={getColumns({
               onChangeStatus: handleStatusChangeTrigger,
+              onChangeRole: handleRoleChangeTrigger,
+              roles,
             })}
             data={accounts}
             loading={isLoading}
@@ -150,6 +191,16 @@ export default function AdminAccountPage() {
         title="Xác nhận thay đổi trạng thái"
         description={`Bạn có chắc chắn muốn ${statusChangeId?.status === AccountStatus.ACTIVE ? "mở khóa" : "khóa"} tài khoản này không?`}
         buttonText="Cập nhật trạng thái"
+      />
+
+      <ConfirmDialog
+        open={roleConfirmOpen}
+        onOpenChange={setRoleConfirmOpen}
+        onConfirm={handleConfirmRoleChange}
+        loading={updateRoleMutation.isPending}
+        title="Xác nhận thay đổi quyền"
+        description={`Bạn có chắc chắn muốn thay đổi quyền của tài khoản từ "${roleChangeTarget?.oldRoleName}" sang "${roleChangeTarget?.newRoleName}"? Hành động này có thể ảnh hưởng đến quyền truy cập của tài khoản.`}
+        buttonText="Cập nhật quyền"
       />
     </div>
   );

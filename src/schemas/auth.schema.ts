@@ -45,3 +45,14 @@ export interface RefreshTokenResponse {
   roleName: string;
   username: string;
 }
+
+export const changePasswordSchema = z.object({
+  oldPassword: z.string().min(1, "Vui lòng nhập mật khẩu cũ"),
+  newPassword: z.string().min(6, "Mật khẩu mới phải có ít nhất 6 ký tự"),
+  newPasswordConfirm: z.string().min(6, "Vui lòng xác nhận mật khẩu mới"),
+}).refine((data) => data.newPassword === data.newPasswordConfirm, {
+  message: "Mật khẩu xác nhận không khớp",
+  path: ["newPasswordConfirm"],
+});
+
+export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;

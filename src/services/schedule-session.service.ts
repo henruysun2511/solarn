@@ -15,6 +15,12 @@ const scheduleSessionService = {
     return http.get<ApiResponse<ScheduleSession[]>>(prefix, { params });
   },
 
+  getAllScheduleSessionsForExport: (params?: Omit<ScheduleSessionParams, "page" | "limit">) => {
+    return http.get<ApiResponse<ScheduleSession[]>>(prefix, {
+      params: { ...params, page: 1, limit: 100 },
+    });
+  },
+
   getScheduleSessionsByClass: (classId: string, params?: ScheduleSessionClassParams) => {
     return http.get<ApiResponse<ScheduleSession[]>>(`${prefix}/class/${classId}`, { params });
   },

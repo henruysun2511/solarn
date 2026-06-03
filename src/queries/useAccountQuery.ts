@@ -28,3 +28,12 @@ export const useChangeAccountStatus = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ACCOUNT_QUERY_KEY }),
   });
 };
+
+export const useUpdateAccountRole = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, roleId }: { id: string; roleId: string }) =>
+      accountService.updateAccountRole(id, roleId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ACCOUNT_QUERY_KEY }),
+  });
+};

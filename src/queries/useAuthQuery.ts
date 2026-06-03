@@ -1,5 +1,5 @@
 import { handleError } from "@/utils/handleError";
-import { LoginInput, RegisterInput, VerifyOtpInput } from "@/schemas/auth.schema";
+import { ChangePasswordInput, LoginInput, RegisterInput, VerifyOtpInput } from "@/schemas/auth.schema";
 import authService from "@/services/auth.service";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -65,5 +65,11 @@ export const useSignUp = () => {
 export const useVerifyEmail = () => {
   return useMutation({
     mutationFn: (data: VerifyOtpInput) => authService.verifyEmail(data),
+  });
+};
+
+export const useChangePassword = () => {
+  return useMutation({
+    mutationFn: (data: ChangePasswordInput) => authService.changePassword(data),
   });
 };

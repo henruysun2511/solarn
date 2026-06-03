@@ -1,7 +1,7 @@
 import { ApiResponse } from "@/constants/apiResponse";
-import { 
-  Salary, 
-  CalculateSalaryInput, 
+import {
+  Salary,
+  CalculateSalaryInput,
   SalaryParams,
   MySalaryParams
 } from "@/schemas/salary.schema";
@@ -13,7 +13,13 @@ const salaryService = {
   getSalaries: (params?: SalaryParams) => {
     return http.get<ApiResponse<Salary[]>>(prefix, { params });
   },
-  
+
+  getAllSalariesForExport: (params?: Omit<SalaryParams, "page" | "limit">) => {
+    return http.get<ApiResponse<Salary[]>>(prefix, {
+      params: { ...params, page: 1, limit: 100 },
+    });
+  },
+
   getMySalaries: (params?: MySalaryParams) => {
     return http.get<ApiResponse<Salary[]>>(`${prefix}/my-salaries`, { params });
   },

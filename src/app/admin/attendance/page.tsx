@@ -1,10 +1,15 @@
 "use client";
 
 import { DataTable } from "@/components/common/data-table";
+import { Button } from "@/components/ui/button";
+import { ATTENDANCE_STATUS_CONFIG } from "@/constants/label";
 import { useGetAttendanceBySession } from "@/queries/useAttendanceQuery";
 import { AttendanceRecord } from "@/schemas/attendance.schema";
-import { CheckCircle2, Clock, Users, XCircle } from "lucide-react";
+import { exportToExcel } from "@/utils/exportToExcel";
+import { handleError } from "@/utils/handleError";
+import { CheckCircle2, Clock, FileDownIcon, Users, XCircle } from "lucide-react";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import { getColumns } from "./attendance-columns";
 import { AttendanceFilter } from "./attendance-filter";
 
@@ -21,6 +26,37 @@ export default function AdminAttendancePage() {
 
   const summary = attendanceData?.summary;
 
+  const [exporting, setExporting] = useState(false);
+
+  const handleExport = () => {
+    if (records.length === 0) {
+      toast.error("Không có dữ liệu điểm danh để xuất");
+      return;
+    }
+    setExporting(true);
+    try {
+      const rows = records.map((r) => ({
+        "Mã HS": r.student?.studentCode || "---",
+        "Học sinh": r.student?.profile?.fullName || "---",
+        "Trạng thái": ATTENDANCE_STATUS_CONFIG[r.status as string]?.label || r.status || "Chưa điểm danh",
+        "Ghi chú": r.note || "---",
+      }));
+
+      exportToExcel(rows, [
+        { key: "Mã HS", header: "Mã HS" },
+        { key: "Học sinh", header: "Học sinh" },
+        { key: "Trạng thái", header: "Trạng thái" },
+        { key: "Ghi chú", header: "Ghi chú" },
+      ], "danh-sach-diem-danh");
+
+      toast.success("Xuất file Excel thành công");
+    } catch (error) {
+      handleError(error, "Xuất file thất bại");
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const handleFilterChange = (filters: { courseId?: string; classId?: string; sessionId?: string }) => {
     if (filters.courseId !== undefined) setCourseId(filters.courseId);
     if (filters.classId !== undefined) setClassId(filters.classId);
@@ -28,7 +64,7 @@ export default function AdminAttendancePage() {
   };
 
   return (
-    <div className="flex flex-col gap-6 min-h-screen">
+    <div data-role="admin" className="flex flex-col gap-6 min-h-screen">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1 ml-0.5">
@@ -38,6 +74,14 @@ export default function AdminAttendancePage() {
             Điểm danh
           </h1>
         </div>
+        <Button
+          onClick={handleExport}
+          disabled={exporting || records.length === 0}
+          className="bg-primary text-white px-6 h-11 rounded-md font-semibold"
+        >
+          <FileDownIcon className="mr-2 size-4" />
+          {exporting ? "Đang xuất..." : "Xuất Excel"}
+        </Button>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">

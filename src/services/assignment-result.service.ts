@@ -13,6 +13,12 @@ const assignmentResultService = {
   getAssignmentResults: (params?: AssignmentResultParams) => {
     return http.get<ApiResponse<AssignmentResult[]>>(prefix, { params });
   },
+
+  getAllAssignmentResultsForExport: (params?: Omit<AssignmentResultParams, "page" | "limit">) => {
+    return http.get<ApiResponse<AssignmentResult[]>>(prefix, {
+      params: { ...params, page: 1, limit: 9999999 },
+    });
+  },
   
   getMyTeacherAssignmentResults: (params?: MyAssignmentResultParams) => {
     return http.get<ApiResponse<AssignmentResult[]>>(`${prefix}/my-teacher`, { params });

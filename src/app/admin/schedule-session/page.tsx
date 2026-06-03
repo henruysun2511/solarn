@@ -14,7 +14,10 @@ import { useGetClasses } from "@/queries/useClassQuery";
 import { useGetShifts } from "@/queries/useShiftQuery";
 
 import { ScheduleSession, ScheduleSessionParams } from "@/schemas/schedule-session.schema";
-import { ListIcon, CalendarDays, PlusIcon } from "lucide-react";
+import scheduleSessionService from "@/services/schedule-session.service";
+import { exportToExcel } from "@/utils/exportToExcel";
+import { handleError } from "@/utils/handleError";
+import { ListIcon, CalendarDays, PlusIcon, FileDownIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -55,6 +58,53 @@ export default function AdminScheduleSessionPage() {
     const shiftsList = shiftsResponse?.data || [];
 
     const sessions = data?.data || [];
+    const [exporting, setExporting] = useState(false);
+
+    const handleExport = async () => {
+        setExporting(true);
+        try {
+            const res = await scheduleSessionService.getAllScheduleSessionsForExport({
+                search: params.search,
+                classId: params.classId,
+                shiftCode: params.shiftCode,
+                status: params.status,
+                sortBy: params.sortBy,
+                sortOrder: params.sortOrder,
+            });
+            const allData = res.data.data || [];
+
+            const statusMap: Record<string, string> = {
+                NOT_STARTED: "Chưa bắt đầu",
+                IN_PROGRESS: "Đang diễn ra",
+                ENDED: "Đã kết thúc",
+            };
+
+            const rows = allData.map((e: any) => ({
+                "Mã lớp": e.class?.classCode || "---",
+                "Ca học": e.shiftCode || "---",
+                "Khung giờ": e.shift?.timeRange || "---",
+                "Ngày học": e.studyDate ? new Date(e.studyDate).toLocaleDateString("vi-VN") : "---",
+                "Phòng học": e.class?.room?.roomCode || "---",
+                "Trạng thái": statusMap[e.status] || e.status,
+            }));
+
+            exportToExcel(rows, [
+                { key: "Mã lớp", header: "Mã lớp" },
+                { key: "Ca học", header: "Ca học" },
+                { key: "Khung giờ", header: "Khung giờ" },
+                { key: "Ngày học", header: "Ngày học" },
+                { key: "Phòng học", header: "Phòng học" },
+                { key: "Trạng thái", header: "Trạng thái" },
+            ], "danh-sach-lich-hoc");
+
+            toast.success("Xuất file Excel thành công");
+        } catch (error) {
+            handleError(error, "Xuất file thất bại");
+        } finally {
+            setExporting(false);
+        }
+    };
+
     const totalItems = data?.meta?.total || 0;
     const totalPages = Math.ceil(totalItems / (params.limit || 10));
 
@@ -125,6 +175,14 @@ export default function AdminScheduleSessionPage() {
                     </Button>
                 </div>
 
+                <Button
+                    onClick={handleExport}
+                    disabled={exporting}
+                    className="rounded-xl bg-primary text-white font-black h-11 px-6 shadow-lg shadow-primary/10 hover:opacity-90 transition-all flex items-center gap-2"
+                >
+                    <FileDownIcon className="size-4" />
+                    <span>{exporting ? "Đang xuất..." : "Xuất Excel"}</span>
+                </Button>
                 <Button
                     onClick={() => setCreateOpen(true)}
                     className="rounded-xl bg-primary text-white font-black h-11 px-6 shadow-lg shadow-primary/10 hover:opacity-90 transition-all flex items-center gap-2"

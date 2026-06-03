@@ -1,20 +1,22 @@
 "use client";
 
 import { UserAvatar } from "@/components/common/user-avatar";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { AccountStatus } from "@/constants/status";
-import { GenderType } from "@/constants/type";
 import { Account } from "@/schemas/account.schema";
+import { Role } from "@/schemas/role.schema";
 import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 
 interface ColumnProps {
   onChangeStatus: (id: string, status: AccountStatus) => void;
+  onChangeRole: (accountId: string, newRoleId: string, oldRoleName: string, newRoleName: string) => void;
+  roles: Role[];
 }
 
-export const getColumns = ({ onChangeStatus }: ColumnProps): ColumnDef<Account>[] => [
+export const getColumns = ({ onChangeStatus, onChangeRole, roles }: ColumnProps): ColumnDef<Account>[] => [
   {
     accessorKey: "username",
     header: "Tài khoản",
@@ -55,11 +57,35 @@ export const getColumns = ({ onChangeStatus }: ColumnProps): ColumnDef<Account>[
   {
     accessorKey: "role.roleName",
     header: "Quyền",
-    cell: ({ row }) => (
-      <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-100 uppercase text-[10px]">
-        {row.original.role?.roleName}
-      </Badge>
-    ),
+    cell: ({ row }) => {
+      const currentRoleId = row.original.roleId;
+      return (
+        <Select
+          value={currentRoleId}
+          onValueChange={(newRoleId) => {
+            if (newRoleId === currentRoleId) return;
+            const newRole = roles.find((r) => r.roleId === newRoleId);
+            onChangeRole(
+              row.original.accountId!,
+              newRoleId,
+              row.original.role?.roleName || "",
+              newRole?.roleName || ""
+            );
+          }}
+        >
+          <SelectTrigger className="h-8 w-36 border-gray-200 bg-white text-xs">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent data-role="admin">
+            {roles.map((role) => (
+              <SelectItem key={role.roleId} value={role.roleId} className="text-xs">
+                {role.roleName}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      );
+    },
   },
   {
     accessorKey: "status",

@@ -9,6 +9,7 @@ import {
     FileWarning,
     GraduationCap,
     LayoutDashboard,
+    Lock,
     Star,
     Users
 } from "lucide-react";
@@ -60,6 +61,11 @@ const sidebarItems = [
         icon: Star,
         label: "Đánh giá từ học viên",
         href: "/teacher/feedback"
+    },
+    {
+        icon: Lock,
+        label: "Bảo mật",
+        href: "/teacher/security"
     },
 ];
 

@@ -12,8 +12,10 @@ import {
   useSaveSalary,
 } from "@/queries/useSalaryQuery";
 import { CalculateSalaryInput, Salary, SalaryParams } from "@/schemas/salary.schema";
+import salaryService from "@/services/salary.service";
+import { exportToExcel } from "@/utils/exportToExcel";
 import { handleError } from "@/utils/handleError";
-import { CalculatorIcon, PlusIcon } from "lucide-react";
+import { CalculatorIcon, FileDownIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { getColumns } from "./salary-columns";
@@ -78,6 +80,51 @@ export default function AdminSalaryPage() {
   const totalItems = meta?.total || 0;
   const totalPages = meta?.totalPages || 0;
 
+  const [exporting, setExporting] = useState(false);
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      const res = await salaryService.getAllSalariesForExport({
+        search: params.search,
+        year: params.year,
+        month: params.month,
+        sortBy: params.sortBy,
+        sortOrder: params.sortOrder,
+      });
+      const allData = res.data.data || [];
+
+      const rows = allData.map((e: any) => {
+        const d = new Date(e.salaryDate);
+        return {
+          "Giảng viên": e.teacher?.profile?.fullName || "N/A",
+          "Mã GV": e.teacher?.teacherCode || "---",
+          "Kỳ lương": `Tháng ${d.getMonth() + 1}/${d.getFullYear()}`,
+          "Số buổi": e.totalSessions ?? 0,
+          "Thưởng": e.bonus ? Number(e.bonus).toLocaleString() + "₫" : "---",
+          "Khấu trừ": e.deduction ? Number(e.deduction).toLocaleString() + "₫" : "---",
+          "Thực nhận": e.totalAmount ? Number(e.totalAmount).toLocaleString() + "₫" : "---",
+        };
+      });
+
+      exportToExcel(rows, [
+        { key: "Giảng viên", header: "Giảng viên" },
+        { key: "Mã GV", header: "Mã GV" },
+        { key: "Kỳ lương", header: "Kỳ lương" },
+        { key: "Số buổi", header: "Số buổi" },
+        { key: "Thưởng", header: "Thưởng" },
+        { key: "Khấu trừ", header: "Khấu trừ" },
+        { key: "Thực nhận", header: "Thực nhận" },
+      ], "danh-sach-luong-giang-vien");
+
+      toast.success("Xuất file Excel thành công");
+    } catch (error) {
+      handleError(error, "Xuất file thất bại");
+    } finally {
+      setExporting(false);
+    }
+  };
+
   return (
     <div data-role="admin" className="flex flex-col gap-6 min-h-screen">
       {/* Header Section */}
@@ -92,6 +139,14 @@ export default function AdminSalaryPage() {
         </div>
 
         <div className="flex items-center gap-4">
+          <Button
+            onClick={handleExport}
+            disabled={exporting}
+            className="bg-primary text-white px-6 h-11 rounded-md font-semibold"
+          >
+            <FileDownIcon className="mr-2 size-4" />
+            {exporting ? "Đang xuất..." : "Xuất Excel"}
+          </Button>
           <Button
             onClick={handleAdd}
             className="bg-primary text-white px-6 h-11 rounded-md font-semibold"

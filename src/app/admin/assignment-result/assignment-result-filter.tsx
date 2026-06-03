@@ -1,11 +1,11 @@
 "use client";
 
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SortOrder } from "@/constants/sort";
@@ -30,7 +30,7 @@ export function AssignmentResultFilter({ params, onFilterChange }: AssignmentRes
   const { data: classesData, isLoading: classesLoading } = useGetClassesByCourseId(courseId || "", { page: 1, limit: 100 });
   const classes = courseId ? (classesData?.data || []) : [];
 
-  const { data: sessionsData, isLoading: sessionsLoading } = useGetScheduleSessionsByClass(classId || "", { page: 1, limit: 200, sortOrder: SortOrder.ASC, sortBy: "studyDate" });
+  const { data: sessionsData, isLoading: sessionsLoading } = useGetScheduleSessionsByClass(classId || "", { page: 1, limit: 100, sortOrder: SortOrder.ASC, sortBy: "studyDate" });
   const sessions = classId ? (sessionsData?.data || []) : [];
 
   return (

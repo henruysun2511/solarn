@@ -9,6 +9,12 @@ const paymentService = {
     return http.get<ApiResponse<Invoice[]>>(prefix, { params });
   },
 
+  getAllInvoicesForExport: (params?: Omit<InvoiceParams, "page" | "limit">) => {
+    return http.get<ApiResponse<Invoice[]>>(prefix, {
+      params: { ...params, page: 1, limit: 100 },
+    });
+  },
+
   createInvoice: (data: InvoiceInput) => {
     return http.post<ApiResponse<any>>(prefix, data);
   },

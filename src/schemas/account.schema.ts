@@ -49,3 +49,9 @@ export const accountInputSchema = z.object({
 });
 
 export type AccountInput = z.infer<typeof accountInputSchema>;
+
+export const updateAccountRoleSchema = z.object({
+  roleId: z.string().uuid("Vui lòng chọn quyền"),
+});
+
+export type UpdateAccountRoleInput = z.infer<typeof updateAccountRoleSchema>;

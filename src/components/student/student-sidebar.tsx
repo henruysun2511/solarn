@@ -10,6 +10,7 @@ import {
     GitPullRequest,
     GraduationCap,
     LayoutDashboard,
+    Lock,
     MessageSquareQuote,
     UserCircle,
     Users
@@ -69,9 +70,9 @@ const sidebarItems = [
         href: "/student/feedback"
     },
     {
-        icon: Bell,
-        label: "Thông báo",
-        href: "/student/notification"
+        icon: Lock,
+        label: "Bảo mật",
+        href: "/student/security"
     },
 ];
 

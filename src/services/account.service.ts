@@ -17,6 +17,10 @@ const accountService = {
   changeStatus: (accountId: string, status: AccountStatus) => {
     return http.patch<ApiResponse<Account>>(`${prefix}/${accountId}/status`, { status });
   },
+
+  updateAccountRole: (accountId: string, roleId: string) => {
+    return http.patch<ApiResponse<Account>>(`${prefix}/${accountId}/role`, { roleId });
+  },
 };
 
 export default accountService;

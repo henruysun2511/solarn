@@ -1,5 +1,5 @@
 import { ApiResponse } from "@/constants/apiResponse";
-import { AuthResponse, LoginInput, RefreshTokenResponse, RegisterInput, VerifyOtpInput } from "@/schemas/auth.schema";
+import { AuthResponse, ChangePasswordInput, LoginInput, RefreshTokenResponse, RegisterInput, VerifyOtpInput } from "@/schemas/auth.schema";
 import http from "@/utils/http";
 import { refreshApi } from "@/utils/axios";
 
@@ -20,6 +20,10 @@ const authService = {
 
   logout: () => {
     return http.post<ApiResponse<null>>(`${prefix}/logout`);
+  },
+
+  changePassword: (data: ChangePasswordInput) => {
+    return http.post<ApiResponse<any>>(`${prefix}/change-password`, data);
   },
 
   refreshToken: () => {

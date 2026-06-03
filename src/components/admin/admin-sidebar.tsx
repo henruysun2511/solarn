@@ -37,6 +37,7 @@ export const navMain = [
     items: [
       { title: "Tài khoản", url: "/admin/account" },
       { title: "Vai trò", url: "/admin/role" },
+      { title: "Bảo mật", url: "/admin/security" },
     ],
   },
   {
