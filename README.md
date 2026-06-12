@@ -262,29 +262,40 @@ Các chức năng chính của trang Admin:
 - **Cấu hình hệ thống** – Thiết lập thông tin chung, bảo mật, phân quyền tài khoản.
 
 
-<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px 40px;">
-  
-  <div align="center" style="flex: 1 1 40%; max-width: 45%;">
-    <img src="public/images/admin.png" alt="Homepage" width="100%">
-    <br>Trang admin
-  </div>
-
-  <div align="center" style="flex: 1 1 40%; max-width: 45%;">
-    <img src="public/images/students.png" alt="Homepage" width="100%">
-    <br>Quản lý học viên
-  </div>
-
-  <div align="center" style="flex: 1 1 40%; max-width: 45%;">
-    <img src="public/images/teachers.png" alt="Homepage" width="100%">
-    <br>Quản lý giáo viên
-  </div>
-
-  <div align="center" style="flex: 1 1 40%; max-width: 45%;">
-    <img src="public/images/courses.png" alt="Homepage" width="100%">
-    <br>Quản lý khóa học
-  </div>
-
-</div>
+<table align="center" width="100%">
+  <thead>
+    <tr>
+      <th align="center" width="50%">Trang Admin & Học viên</th>
+      <th align="center" width="50%">Giáo viên & Khóa học</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">
+        <img src="public/images/admin.png" alt="Admin" width="100%">
+        <br>
+        <sub><b>Trang admin</b></sub>
+      </td>
+      <td align="center">
+        <img src="public/images/students.png" alt="Students" width="100%">
+        <br>
+        <sub><b>Quản lý học viên</b></sub>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="public/images/teachers.png" alt="Teachers" width="100%">
+        <br>
+        <sub><b>Quản lý giáo viên</b></sub>
+      </td>
+      <td align="center">
+        <img src="public/images/courses.png" alt="Courses" width="100%">
+        <br>
+        <sub><b>Quản lý khóa học</b></sub>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 ### 🧑‍🏫 Giáo viên – Cổng thông tin giảng dạy
 
